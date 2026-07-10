@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Feels Creative | Platform V2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+      :root { 
+        --primary-color: #d4af37;
+        /* UI Kaca Transparan */
+        --bg-color: rgba(255, 255, 255, 0.6);
+        --card-bg: rgba(255, 255, 255, 0.85); 
+        --text-main: #1c1c1e; 
+        --text-muted: #6b7280; 
+        --border-color: rgba(255, 255, 255, 0.5);
+      }
+      
+      body { 
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main); 
+    margin: 0; 
+    
+    /* SOLUSI: Berikan padding-top sebesar 36px (sesuai tinggi tarikan iframe) */
+    padding-top: 36px; 
+    
+    /* Penting: Pastikan padding tidak membuat layar menjadi scroll panjang */
+    box-sizing: border-box; 
+    
+    -webkit-user-select: none; 
+    user-select: none;
+        /* Mesh Gradient Premium */
+        background-color: #fce7f3;
+        background-image: 
+          radial-gradient(at 80% 0%, hsla(280, 80%, 60%, 1) 0px, transparent 50%),
+          radial-gradient(at 0% 50%, hsla(30, 90%, 60%, 1) 0px, transparent 50%),
+          radial-gradient(at 10% 90%, hsla(190, 90%, 50%, 1) 0px, transparent 50%),
+          radial-gradient(at 90% 90%, hsla(320, 80%, 50%, 1) 0px, transparent 50%);
+        background-attachment: fixed;
+        background-size: cover;
+      }
+      
+      img { pointer-events: auto; -webkit-user-drag: none; }
+      h2, h3 { color: var(--text-main); margin-top: 0; letter-spacing: -0.5px; }
+      
+      /* Layout Management */
+      .view-section { min-height: 100vh; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+      .panel-section { display: none; padding: 30px 20px; max-width: 800px; margin: 0 auto; min-height: 100vh; box-sizing: border-box; }
+      
+      /* Elemen Kaca (Glassmorphism) */
+      .card-box { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 30px; border-radius: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.4); margin-bottom: 20px; }
+      .gallery-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 16px; padding: 8px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.05); border: 4px solid transparent; transition: all 0.3s ease; }
+      .gallery-card.selected { 
+          border-color: var(--primary-color); 
+          transform: scale(1.02);
+          /* Tambahan efek cahaya glowing premium */
+          box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 0 15px var(--primary-color) !important; 
+          background: rgba(255, 255, 255, 0.9);
+      }
+      .gallery-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; cursor: pointer; transition: transform 0.2s ease; }
+      .gallery-card img:active { transform: scale(0.95); }
+      
+      .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-top: 20px; }
+      .menu-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+      @media (min-width: 768px) { .menu-grid { grid-template-columns: 1fr 1fr; } }
+      
+      /* Input & Buttons */
+      .dash-input { width: 100%; background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.5); color: var(--text-main); padding: 14px 16px; border-radius: 12px; box-sizing: border-box; font-size: 15px; margin-top: 10px; font-family: inherit; }
+      .dash-input:focus { border-color: var(--primary-color); outline: none; background: rgba(255,255,255,0.9); }
+      .solid-input { background: #ffffff !important; border: 1px solid #d1d1d6 !important; color: #1c1c1e !important; }
+      .glass-container { background: rgba(255,255,255,0.5); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.8); }
+
+      .btn-action { width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 15px; margin-bottom: 10px; transition: all 0.2s; font-family: inherit; }
+      .btn-save { background: var(--primary-color); color: #fff; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+      .btn-share { background: #34C759; color: #fff; box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3); }
+      .btn-dark { background: #1c1c1e; color: #fff; }
+
+      /* --- EFEK ANIMASI TOMBOL (HOVER & CLICK) --- */
+      
+      /* 1. Efek saat disentuh mouse (Desktop) */
+      .btn-action:hover {
+          transform: translateY(-2px) scale(1.01);
+          filter: brightness(1.08);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      }
+      
+      /* 2. Efek saat ditekan/di-tap (HP & Desktop) */
+      .btn-action:active {
+          transform: translateY(2px) scale(0.96) !important;
+          filter: brightness(0.9);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+      }
+      
+      /* 3. Efek membal untuk tombol kategori (Menu Cetak dll) */
+      .size-btn:hover {
+          background: rgba(255, 255, 255, 0.9);
+          transform: translateY(-1px) scale(1.01);
+          box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+      }
+      .size-btn:active {
+          transform: scale(0.97) !important;
+          background: rgba(255, 255, 255, 0.5);
+      }
+      
+      /* 4. Efek khusus tombol minus/plus di Keranjang */
+      .qty-btn {
+          transition: all 0.15s ease;
+      }
+      .qty-btn:active {
+          transform: scale(0.85);
+          background: #e5e5ea;
+      }
+      /* ------------------------------------------- */
+
+      /* --- ANIMASI FOTO MUNCUL HALUS --- */
+      .gallery-card {
+          animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          opacity: 0; /* Mulai dari transparan */
+      }
+      
+      @keyframes fadeUp {
+          from { 
+              opacity: 0; 
+              transform: translateY(20px); 
+          }
+          to { 
+              opacity: 1; 
+              transform: translateY(0); 
+          }
+      }
+
+      .size-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(255,255,255,0.6); color: var(--text-main); padding: 18px 20px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; cursor: pointer; font-weight: 600; font-size: 16px; transition: 0.2s; }
+      .size-btn span { background: var(--primary-color); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+      
+      .sticky-header { position: sticky; top: 0; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 15px 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.3); }
+      .drawer { display: none; position: fixed; top: 0; right: 0; width: 100%; max-width: 440px; height: 100vh; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); z-index: 1000; box-shadow: -10px 0 40px rgba(0,0,0,0.1); padding: 30px; box-sizing: border-box; overflow-y: auto; transition: transform 0.3s; }
+      
+      .file-label { display: flex; align-items: center; margin-top: 12px; font-size: 12px; color: var(--text-main); font-weight: 500; cursor: pointer; }
+      .file-label input { transform: scale(1.2); margin-right: 8px; accent-color: var(--primary-color); }
+      
+      #saveOverlay, #imageModal, #addonModalOverlay, .custom-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 100000; justify-content: center; align-items: center; flex-direction: column; text-align: center; }
+      
+      .addon-box { background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.5); }
+      .addon-row { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; font-size: 15px; font-weight: 600; background: rgba(255,255,255,0.5); padding: 15px; border-radius: 12px; }
+      .cart-item { background: #fff; padding: 18px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); }
+      .qty-btn { background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); font-weight: bold; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+      
+      .footer-watermark { position: fixed; bottom: 15px; width: 100%; text-align: center; color: var(--text-muted); font-size: 11px; z-index: 999; pointer-events: none; font-weight: 600; }
+      #btnBackToDash { display: none; position: fixed; top: 15px; left: 15px; background: #FF3B30; color: #fff; border: none; padding: 12px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; z-index: 10000; }
+      .brand-logo-area { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+      .brand-logo-img { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display: none; margin-bottom: 15px; border: 2px solid #fff; }
+      
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+  </head>
+  <body>
+    <script>document.addEventListener('contextmenu', function(e) { e.preventDefault(); });</script>
+
+    <div id="saveOverlay">
+      <div class="spinner" style="border: 4px solid rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 50%; border-left-color: var(--primary-color); animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+      <h3 id="saveTitle" style="color:#fff; margin:0; font-size: 22px;">Menyimpan Pilihan...</h3>
+      <p id="saveDesc" style="color:#ddd; font-size:14px; margin-top:10px; font-weight: 500; text-align:center;">Tolong jangan ditutup.</p>
+    </div>
+
+    <div id="loadingView" class="view-section" style="display: flex; flex-direction: column;">
+      <div class="spinner" style="border: 4px solid rgba(0,0,0,0.1); width: 45px; height: 45px; border-radius: 50%; border-left-color: var(--primary-color); animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+      <h2 style="font-size: 20px;">Memuat Aplikasi...</h2>
+      <p id="loadingLog" style="color:var(--text-muted); font-size:13px;">Sinkronisasi V2 Development...</p>
+    </div>
+
+    <div id="addonModalOverlay">
+      <div class="addon-box">
+        <h3 style="margin-top:0; border-bottom:1px solid var(--border-color); padding-bottom:15px;">💎 Add-on Premium</h3>
+        <p style="font-size:13px; color:var(--text-main); line-height: 1.5; font-weight:500;">Kuota ukuran ini sudah penuh. Tambahkan sebagai pesanan tambahan?</p>
+        <div id="addonOptions" style="margin-top: 15px;"></div>
+        <div style="display:flex; gap:12px; margin-top:25px;">
+          <button class="btn-action btn-dark" style="margin:0;" onclick="closeAddonModal(false)">Batal</button>
+          <button class="btn-action btn-save" style="margin:0;" onclick="closeAddonModal(true)">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="imageModal">
+      <span onclick="closeModal()" style="color:#fff; font-size:40px; position:absolute; top:20px; right:30px; cursor:pointer; font-weight:bold;">×</span>
+      <div style="position:relative; max-width:95%; max-height:85%;">
+        <img id="fullImage" src="" style="max-width:100%; max-height:100%; border-radius: 16px;">
+      </div>
+    </div>
+
+    <div id="customModalOverlay" class="custom-modal-overlay">
+      <div class="addon-box" style="text-align:center;">
+        <p id="customModalMessage" style="font-size:15px; font-weight:500; line-height:1.6; color:var(--text-main);"></p>
+        <div style="display:flex; gap:12px; justify-content:center; margin-top:20px;">
+          <button id="btnModalCancel" class="btn-action btn-dark" style="margin:0;">Batal</button>
+          <button id="btnModalOk" class="btn-action btn-save" style="margin:0;">Mengerti</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal4ROverlay" class="custom-modal-overlay">
+      <div class="addon-box" style="text-align:center;">
+        <p id="modal4RMessage" style="font-size:15px; font-weight:500; line-height:1.6; color:var(--text-main);"></p>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+          <button id="btn4RSatuan" class="btn-action btn-dark" style="margin:0;">Cetak Satuan Saja</button>
+          <button id="btn4RAlbum" class="btn-action btn-save" style="margin:0;">Setuju & Beli Album</button>
+          <button id="btn4RBatal" class="btn-action" style="margin:0; background:transparent; color:#FF3B30; border:1px solid #FF3B30;">Batal Pilih Foto</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="btnBackToDash" onclick="exitPreview()">🔙 Keluar Preview</button>
+
+    <div id="loginView" class="view-section">
+      <div class="brand-box card-box" style="width:100%; max-width:400px;">
+        <h2>LOGIN VENDOR V2</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Masuk menggunakan alamat email kamu.</p>
+        <input type="email" id="username" class="dash-input solid-input" placeholder="Alamat Email">
+        <input type="password" id="password" class="dash-input solid-input" placeholder="Password Akun">
+        <div style="text-align:right; margin-top:5px; margin-bottom:15px;"><span style="color:var(--primary-color); font-size:12px; cursor:pointer; font-weight:600;" onclick="showForgotPassword()">Lupa Password?</span></div>
+        <button class="btn-action btn-save" style="margin-top:20px;" onclick="prosesLogin()">MASUK PORTAL</button>
+        <p style="font-size:13px; margin-top:15px;">Belum terdaftar? <span style="color:var(--primary-color); cursor:pointer; font-weight:bold;" onclick="showRegister()">Daftar Studio</span></p>
+      </div>
+    </div>
+
+    <div id="registerView" class="view-section">
+      <div class="brand-box card-box" style="width:100%; max-width:400px;">
+        <h2>DAFTAR STUDIO BARU</h2>
+        <input type="text" id="regName" class="dash-input solid-input" placeholder="Nama Studio Foto">
+        <input type="text" id="regWa" class="dash-input solid-input" placeholder="Nomor WhatsApp Admin">
+        <input type="email" id="regUser" class="dash-input solid-input" placeholder="Alamat Email Resmi">
+        <input type="password" id="regPass" class="dash-input solid-input" placeholder="Buat Password Keamanan">
+        <input type="password" id="regPassConfirm" class="dash-input solid-input" placeholder="Ketik Ulang Password (Konfirmasi)">
+        <button class="btn-action btn-share" style="margin-top:20px;" onclick="prosesRegister()">DAFTAR SEKARANG</button>
+        <p style="font-size:13px; margin-top:15px; text-align:center;">Sudah punya akun? <span style="color:var(--primary-color); cursor:pointer; font-weight:bold;" onclick="showLogin()">Masuk</span></p>
+      </div>
+    </div>
+
+    <div id="otpView" class="view-section">
+      <div class="brand-box card-box" style="width:100%; max-width:400px; text-align:center;">
+        <h2>VERIFIKASI OTP</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Cek kotak masuk/spam email kamu untuk melihat 6 digit kode keamanan.</p>
+        <input type="text" id="otpCode" class="dash-input solid-input" placeholder="Masukkan 6 Digit OTP" style="text-align:center; font-size:20px; font-weight:bold; letter-spacing:5px;" maxlength="6">
+        <button class="btn-action btn-save" style="margin-top:20px;" onclick="prosesVerifikasiOTP()">VERIFIKASI SEKARANG</button>
+        <p style="font-size:13px; margin-top:15px; text-align:center;"><span style="color:var(--primary-color); cursor:pointer; font-weight:bold;" onclick="showLogin()">Batal & Kembali ke Login</span></p>
+      </div>
+    </div>
+
+    <div id="forgotPasswordView" class="view-section">
+      <div class="brand-box card-box" style="width:100%; max-width:400px;">
+        <h2>LUPA PASSWORD</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Kirim OTP untuk mereset password sekaligus membersihkan riwayat kunci perangkat.</p>
+        <input type="email" id="forgotEmail" class="dash-input solid-input" placeholder="Alamat Email Terdaftar">
+        <button class="btn-action btn-share" style="margin-top:20px;" onclick="prosesMintaReset()">KIRIM KODE RESET</button>
+        <p style="font-size:13px; margin-top:15px; text-align:center;">Ingat password? <span style="color:var(--primary-color); cursor:pointer; font-weight:bold;" onclick="showLogin()">Kembali Login</span></p>
+      </div>
+    </div>
+
+    <div id="resetPasswordView" class="view-section">
+      <div class="brand-box card-box" style="width:100%; max-width:400px;">
+        <h2>BUAT PASSWORD BARU</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Masukkan OTP dari email dan buat password baru kamu.</p>
+        <input type="text" id="resetOtpCode" class="dash-input solid-input" placeholder="6 Digit OTP" style="text-align:center; font-weight:bold; letter-spacing:2px; margin-bottom:10px;" maxlength="6">
+        <input type="password" id="newPassword" class="dash-input solid-input" placeholder="Ketik Password Baru">
+        <input type="password" id="newPasswordConfirm" class="dash-input solid-input" placeholder="Ketik Ulang Password Baru">
+        <button class="btn-action btn-save" style="margin-top:20px;" onclick="prosesGantiPassword()">SIMPAN PASSWORD</button>
+        <p style="font-size:13px; margin-top:15px; text-align:center;"><span style="color:var(--primary-color); cursor:pointer; font-weight:bold;" onclick="showLogin()">Batal & Kembali</span></p>
+      </div>
+    </div>
+
+    <div id="dashboardView" class="panel-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+        <h2 id="dashStudioName" style="font-size: 26px; margin:0;">Dashboard V2</h2>
+        <button class="btn-action btn-dark" style="width:auto; margin:0; padding:10px 20px;" onclick="toggleSettingsDrawer()">⚙️ Pengaturan</button>
+      </div>
+
+      <div class="brand-logo-area">
+         <img id="adminDisplayLogo" class="brand-logo-img" src="" style="display:none;">
+      </div>
+
+      <div class="card-box">
+        <h3 style="color:var(--primary-color); font-size:16px; border-bottom:1px solid rgba(255,255,255,0.5); padding-bottom:10px;">📋 PENGATURAN KUOTA KLIEN (GRATIS)</h3>
+        <div style="margin-top:15px;">
+          <label style="font-weight:700; font-size:13px;">1. Pilih Kategori Kuota Cetak:</label>
+          <select id="kuotaCategoryDropdown" class="dash-input solid-input" onchange="renderDynamicKuotaFields()">
+            <option value="MAGNETIC">Cetak Album Magnetic (4R)</option>
+            <option value="MAGAZINE">Cetak Album Magazine (M1 & M2)</option>
+            <option value="PEMBESARAN">Cetak Pembesaran (10RS - 24RS)</option>
+          </select>
+        </div>
+        
+        <div id="dynamicKuotaInputsContainer" style="margin-top:15px;"></div>
+        
+        <div style="margin-top:20px; border-top:1px dashed rgba(255,255,255,0.5); padding-top:15px;">
+          <label style="font-weight:700; font-size:13px; color:#34C759;">✨ Batas Edit Utama (Gratis):</label>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:8px;" class="glass-container">
+            <span style="font-size:13px; font-weight:700;">Kuota Khusus Edit</span>
+            <div style="display:flex; align-items:center; gap:12px; margin-left:auto;">
+               <input type="number" id="L_EDIT" value="0" class="dash-input solid-input" style="margin:0; width:70px; text-align:center; padding:8px;" onchange="updateParsedLimit('EDIT', this.value, null)">
+               <label style="font-size:12px; font-weight:700; display:flex; align-items:center; cursor:pointer;"><input type="checkbox" id="S_EDIT" style="transform:scale(1.2); margin-right:6px;" checked onchange="updateParsedLimit('EDIT', null, this.checked)"> Aktif</label>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:25px;">
+          <label style="font-weight:700; font-size:13px; color:#FF3B30;">📅 Batas Waktu Akses (Deadline):</label>
+          <input type="date" id="setDeadlineDate" class="dash-input solid-input">
+        </div>
+      </div>
+
+      <div class="card-box">
+        <label style="color:var(--text-main); font-size:13px; font-weight: bold;">📁 ID Folder Google Drive Klien (Sumber Foto):</label>
+        <input type="text" id="setClientFolderId" class="dash-input solid-input" placeholder="Paste link folder atau ID GDrive klien di sini...">
+      </div>
+
+      <div class="card-box" style="border: 2px solid #34C759;">
+        <h3 style="font-size:16px; color:#34C759;">🔗 PENYEBARAN LINK & NOTIFIKASI KLIEN</h3>
+        <div class="menu-grid" style="margin-top:15px;">
+            <button id="btnCopyPesan" class="btn-action btn-save" style="margin:0;" onclick="generateLinkKlien('copy')">🔗 Copy Paket Pesan</button>
+            <button id="btnKirimWaMaster" class="btn-action btn-share" style="margin:0;" onclick="generateLinkKlien('wa')">🚀 Kirim Via WhatsApp</button>
+        </div>
+        <button class="btn-action btn-dark" style="margin-top:15px;" onclick="previewAplikasi()">📱 Lihat Preview Halaman Klien</button>
+        <button style="background:var(--text-main); color:#fff; border:none; padding:12px 20px; border-radius:12px; cursor:pointer; font-weight:800; font-size:14px; width:100%; margin-top:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);" onclick="openVendorPortal()">
+  📊 DATA & PROGRESS SELEKSI KLIEN
+      </div>
+      
+</button>
+    </div>
+
+    <div id="settingsDrawer" class="drawer">
+      <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom:20px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 15px;">
+        <h3 style="margin:0; font-size: 18px;">Pengaturan Studio Pusat</h3>
+        <span onclick="toggleSettingsDrawer()" style="font-size:30px; color:var(--text-muted); cursor:pointer; line-height:1;">×</span>
+      </div>
+      
+      <label style="font-size:12px; font-weight:700;">Logo Studio:</label>
+      <div style="display:flex; gap:10px; margin-top:5px; margin-bottom:15px; align-items:center;">
+        <img id="previewLogoAdminDrawer" src="" style="width:40px; height:40px; border-radius:8px; object-fit:cover; display:none; border:1px solid #ccc;">
+        <input type="file" id="uploadLogoInput" accept="image/*" style="font-size:11px;">
+        <button class="btn-action btn-dark" style="margin:0; padding:8px; font-size:12px; width:auto;" onclick="prosesUploadLogo(event)">Unggah</button>
+      </div>
+
+      <label style="font-size:12px; font-weight:700; color:var(--primary-color);">💳 METODE PEMBAYARAN STUDIO:</label>
+      <div class="glass-container" style="margin-top:5px; margin-bottom:15px;">
+         <label style="font-size:11px; font-weight:600;">1. Unggah Gambar QRIS:</label>
+         <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
+           <img id="previewQrisAdminDrawer" src="" style="width:40px; height:40px; border-radius:8px; object-fit:cover; display:none; border:1px solid #ccc;">
+           <input type="file" id="uploadQrisInput" accept="image/*" style="font-size:11px;">
+         </div>
+         <button class="btn-action btn-share" style="margin-top:8px; padding:8px; font-size:11px;" onclick="prosesUploadQris(event)">Unggah QRIS</button>
+         
+         <label style="font-size:11px; font-weight:600; margin-top:10px; display:block;">2. Rincian Nomor Rekening Manual:</label>
+         <input type="text" id="setRekeningManual" class="dash-input solid-input" style="padding:10px; margin-top:5px; font-size:13px;" placeholder="BCA - 12345 a/n Studio">
+      </div>
+
+      <label style="font-size:12px; font-weight: 700;">Profil Dasar:</label>
+      <input type="text" id="setVendorName" class="dash-input solid-input" placeholder="Nama Studio" style="margin-bottom:10px;">
+      <input type="text" id="setWaNumber" class="dash-input solid-input" placeholder="Nomor WhatsApp Admin" style="margin-bottom:15px;">
+      <textarea id="setWelcomeText" class="dash-input solid-input" placeholder="Pesan selamat datang klien..." style="height:60px; resize:none; margin-bottom:10px;"></textarea>
+      <textarea id="setWaText" class="dash-input solid-input" placeholder="Teks sapaan checkout..." style="height:60px; resize:none; margin-bottom:15px;"></textarea>
+      
+      <div class="glass-container" style="margin-bottom:20px; padding:15px;">
+        <h4 style="color:#34C759; margin:0 0 10px 0; font-size:14px;">Katalog Harga Add-on (Upsell)</h4>
+        <label style="font-weight:700; font-size:12px;">Pilih Kategori Add-on:</label>
+        <select id="addonCategoryDropdown" class="dash-input solid-input" style="margin-top:5px;" onchange="renderDynamicAddonFields()">
+          <option value="CETAK">Cetak & Bingkai Tambahan</option>
+          <option value="ALBUM">Album Eksklusif Fisik</option>
+          <option value="MAGAZINE_ADDON">Album Magazine Fisik</option>
+          <option value="LAINNYA">FlashDisk, Copy Asli & Edit</option>
+        </select>
+        <div id="dynamicAddonInputsContainer" style="margin-top:15px;"></div>
+      </div>
+
+      <button class="btn-action btn-save" onclick="simpanSettinganPusat()">SIMPAN PENGATURAN</button>
+      <button class="btn-action" style="background:#fff; color:#FF3B30; border:1px solid #FF3B30;" onclick="prosesLogout()">LOGOUT AKUN</button>
+    </div>
+
+    <div id="welcomeView" class="view-section">
+      <div class="brand-box card-box">
+        <div class="brand-logo-area">
+            <img id="clientDisplayLogo" class="brand-logo-img" src="" style="display:none;">
+            <h1 id="clientDisplayName" class="elVendorName" style="font-size: 26px;">Studio</h1>
+        </div>
+        <div style="color:var(--primary-color); margin-bottom:20px; letter-spacing:3px; font-size:11px; font-weight:bold;">PHOTO SELECTION PORTAL V2</div>
+        <p id="clientWelcomeText" style="color:var(--text-main); font-size:14px; line-height:1.6; margin-bottom:20px; font-weight:500;"></p>
+        
+        <div id="clientDeadlineWarning" style="display:none; background:rgba(255,59,48,0.1); border:1px solid rgba(255,59,48,0.3); color:#FF3B30; padding:15px; border-radius:16px; margin-bottom:25px; font-size:13px; line-height:1.5; font-weight:500;"></div>
+
+        <button class="btn-action btn-save" style="border-radius:30px;" onclick="handleMulaiMemilih()">MULAI MEMILIH FOTO 📸</button>
+      </div>
+    </div>
+    
+    <div id="mainNavView" class="view-section">
+      <div class="brand-box">
+        <h2 style="font-size: 26px; margin-bottom:25px;">Kategori Pilihan</h2>
+        <div class="menu-grid">
+            <button class="btn-action btn-dark" style="padding:22px 10px; font-size:14px; background:rgba(255,255,255,0.7); color:var(--text-main); border:1px solid var(--border-color);" onclick="openCetakSubMenu()">📸 Menu Cetak Foto</button>
+            <button class="btn-action btn-dark" style="padding:22px 10px; font-size:14px; background:rgba(255,255,255,0.7); color:var(--text-main); border:1px solid var(--primary-color);" onclick="goToEditMenu()">✨ Edit Foto Khusus</button>
+        </div>
+        <button class="btn-action" style="padding:15px; background:#f59e0b; color:#fff; margin-top:15px;" onclick="openCartView()">🛒 Aksesoris & FlashDisk (<span id="cartCount">0</span>)</button>
+        <button class="btn-action btn-dark" style="margin-top:20px;" onclick="showPreview()">📋 Lihat Nota Rekap & Checkout</button>
+      </div>
+    </div>
+
+    <div id="homeView" class="view-section">
+      <div class="brand-box card-box" style="text-align: left;">
+        <h2 style="font-size:16px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-bottom:12px;">A. Cetak Magnetic (4R)</h2>
+        <div id="menuMagneticArea"></div>
+        
+        <h2 style="font-size:16px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-top:20px; margin-bottom:12px;">B. Cetak Magazine (M1 & M2)</h2>
+        <div id="menuMagazineArea"></div>
+        
+        <h2 style="font-size:16px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-top:20px; margin-bottom:12px;">C. Cetak Pembesaran (10RS - 24RS)</h2>
+        <div id="menuPembesaranArea"></div>
+        
+        <h2 style="font-size:16px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-top:20px; margin-bottom:12px;">D. Cetak Tambahan (Berbayar)</h2>
+        <div id="menuAddonArea"></div>
+        
+        <button class="btn-action" style="margin-top:20px; background:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.8); color:var(--text-main);" onclick="backToMainMenuOrWelcome()">⬅ KEMBALI</button>
+      </div>
+    </div>
+    
+    <div id="galleryView" class="panel-section" style="padding-top: 0;">
+      <div style="position: sticky; top: 0; z-index: 100; background: rgba(252, 231, 243, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); margin: 0 -20px; padding: 20px 20px 15px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.4);">
+        
+        <div style="background: rgba(255,255,255,0.7); padding: 15px 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 30px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.3);">
+          <div style="display:flex; flex-direction:column;">
+              <span id="activeModeText" style="font-size:14px; font-weight:800;">Memuat...</span>
+          </div>
+          <button style="background:#34C759; color:#fff; border:none; padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:800; font-size:13px;" onclick="saveAndBack()">💾 SIMPAN</button>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+          <button id="backBtn" class="btn-action" style="width:auto; padding:8px 14px; display:none; margin:0; background:rgba(255,255,255,0.6); color:var(--text-main); font-size:12px; border:1px solid rgba(255,255,255,0.5);" onclick="goBack()">⬅ Atas</button>
+          <div id="currentFolderName" style="color:var(--primary-color); font-weight:800; font-size:16px;">Folder</div>
+        </div>
+        
+        <div style="background:var(--card-bg); backdrop-filter:blur(10px); border:1px solid var(--border-color); border-radius:10px; padding:8px 14px; display:inline-flex; align-items:center; gap:8px; font-size:12px; cursor:pointer; margin-top:10px;" onclick="toggleReviewMode()">
+          <input type="checkbox" id="reviewToggleCheck" style="pointer-events:none;"> Tampilkan Pilihan Saya
+        </div>
+        
+      </div>
+      <div class="gallery" id="gallery"></div>
+    </div>
+
+    <div id="cartView" class="panel-section">
+      <div class="card-box">
+          <h2>🛒 Tambahan Aksesoris</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Sesuaikan opsi album dan penyimpanan fisik.</p>
+          <div id="accessoriesListArea"></div>
+          <button class="btn-action btn-save" style="margin-top:20px;" onclick="saveFromCart()">💾 Simpan Dan Kembali</button>
+      </div>
+    </div>
+
+    <div id="previewView" class="panel-section">
+      <div class="card-box">
+          <h2 style="text-align:center; font-size:22px; margin-bottom:20px;">Nota & Metode Pembayaran</h2>
+          <button class="btn-action" style="background:rgba(255,255,255,0.6); border:1px dashed var(--primary-color); color:var(--text-main); margin-bottom:15px;" onclick="openVisualPreview()">👀 Cek Visual Foto Pilihan</button>
+          
+          <div id="previewContent" style="background:rgba(255,255,255,0.5); border-radius:14px; padding:15px; font-size:13px; line-height:1.6; margin-bottom:20px; white-space:pre-wrap; font-family:monospace; border:1px solid var(--border-color);"></div>
+          
+          <div id="clientPaymentRenderArea" style="margin-bottom:20px;"></div>
+          
+          <label style="font-size:13px; font-weight:700;">Catatan Instuksi Khusus Editor:</label>
+          <textarea id="generalInstruction" class="dash-input solid-input" placeholder="Ketik arahan edit tambahan..." style="height:60px; resize:none; margin-top:5px; margin-bottom:20px;"></textarea>
+          
+          <button id="btnKirimWa" class="btn-action btn-share" style="padding:16px;" onclick="eksekusiOpsiBWhatsApp()">🚀 KIRIM REKAP FINAL KE WHATSAPP</button>
+          <button class="btn-action" style="background:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.5); color:var(--text-main);" onclick="backToMenuFromPreview()">🔙 Batal & Edit Lagi</button>
+      </div>
+    </div>
+
+    <div id="visualPreviewView" class="panel-section">
+      <div class="card-box">
+          <h2 style="text-align:center;">Galeri Pilihan Final</h2>
+          <div id="visualPreviewGrid" style="margin-bottom:20px;"></div>
+          <button class="btn-action btn-dark" onclick="closeVisualPreview()">⬅ Kembali Ke Nota</button>
+      </div>
+    </div>
+
+    <div class="footer-watermark">⚡ Powered by Feels Creative</div>
+
+    <script>
+      // 1. Ambil parameter dari URL saat aplikasi dibuka di Vercel
+      var urlParams = new URLSearchParams(window.location.search);
+      
+      var MASTER_URL = 'photo-selector-steel.vercel.app'; 
+      var MASTER_FOLDER_ID = urlParams.get('f') || ''; 
+      var URL_FID = urlParams.get('f') || ''; 
+      var URL_VUSER = urlParams.get('v') || ''; 
+      
+      // 2. Hologram penawar google.script.run
+      var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx83HDvB_fhPy9G21YYpW3zLHUjmhGFmLEnGiZ_ZfX-DVxWwHSQoIEfY22YxoNeU6ch/exec"; // <-- JANGAN LUPA GANTI INI DENGAN URL WEB APP DARI LANGKAH SEBELUMNYA
+
+      window.google = {
+        script: {
+          run: new Proxy({}, {
+            get: function(target, propKey) {
+              if (propKey === 'withSuccessHandler') {
+                return function(callback) {
+                  target._success = callback;
+                  return window.google.script.run;
+                };
+              }
+              if (propKey === 'withFailureHandler') {
+                return function(callback) {
+                  target._failure = callback;
+                  return window.google.script.run;
+                };
+              }
+              return function(...args) {
+                var onSuccess = target._success;
+                var onFailure = target._failure;
+                target._success = null;
+                target._failure = null;
+
+                fetch(WEB_APP_URL, {
+                  method: 'POST',
+                  body: JSON.stringify({ action: propKey, args: args }),
+                  headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                })
+                .then(res => res.json())
+                .then(resData => {
+                  if (resData.status === "success" && onSuccess) onSuccess(resData.data);
+                  else if (resData.status === "error") {
+                    if (onFailure) onFailure(new Error(resData.message));
+                    else console.error("Backend Error:", resData.message);
+                  }
+                })
+                .catch(err => {
+                  if (onFailure) onFailure(err);
+                  else console.error("Network Error:", err);
+                });
+              };
+            }
+          })
+        }
+      }; 
+      
+      var activeVendor = {};
+      var globalSelections = {};
+      var cartAlbums = {}; // Ini keranjang manual (klien klik di menu)
+ 
+      var currentMode = "";
+      var currentFolderName = "";
+      var folderHistory = [];
+      var currentItems = [];
+      var isReviewMode = false;
+      var ALL_KUOTA_KEYS = ["MAGNETIC_4R", "MAGAZINE_M1", "MAGAZINE_M2", "PEMBESARAN_10RS", "PEMBESARAN_12RS", "PEMBESARAN_16RS", "PEMBESARAN_20RS", "PEMBESARAN_24RS"];
+      var parsedLimits = {};
+      var catPrices = {prints:{}, frames:{}, albums:{}, magazines:{}, extraEdit:0, flashdisk:{}, copyOriginal:0, rekening:""};
+      var pendingAddon = null;
+      var isDataLoaded = false;
+      var tempEmailDaftar = ""; 
+      var tempEmailReset = "";
+
+      function hideAllViews() {
+          var views = document.querySelectorAll('.view-section, .panel-section');
+          for(var i=0; i<views.length; i++) {
+              views[i].style.display = 'none';
+          }
+      }
+
+      function resetSaveOverlayText() {
+          var title = document.getElementById('saveTitle');
+          var desc = document.getElementById('saveDesc');
+          if(title) title.innerText = "Menyimpan Pilihan...";
+          if(desc) desc.innerHTML = "Tolong jangan ditutup.";
+      }
+
+      function parseLimitsStr(str) {
+          var result = {};
+          if (!str) return result;
+          var parts = str.split(',');
+          for (var i = 0; i < parts.length; i++) {
+              var kv = parts[i].split(':');
+              if (kv.length >= 2) {
+                  var k = kv[0].trim();
+                  var maxVal = parseInt(kv[1], 10);
+                  if (isNaN(maxVal)) maxVal = 0;
+                  var st = kv.length >= 3 ? (kv[2].trim() === "1") : true;
+                  result[k] = { max: maxVal, status: st };
+              }
+          }
+          return result;
+      }
+
+      function getLimitsStr() { 
+          var sList = [];
+          for(var i=0; i<ALL_KUOTA_KEYS.length; i++) {
+             var k = ALL_KUOTA_KEYS[i];
+             var val = parsedLimits[k] ? parsedLimits[k].max : 0;
+             var stat = parsedLimits[k] ? (parsedLimits[k].status?1:0) : 1;
+             sList.push(k + ":" + val + ":" + stat);
+          }
+          var eVal = parsedLimits["EDIT"] ? parsedLimits["EDIT"].max : 0;
+          var eStat = parsedLimits["EDIT"] ? (parsedLimits["EDIT"].status?1:0) : 1;
+          sList.push("EDIT:" + eVal + ":" + eStat);
+          return sList.join(',');
+      }
+
+      function toggleSettingsDrawer() { 
+        var d = document.getElementById('settingsDrawer');
+        if (d.style.display === 'block') { d.style.transform = 'translateX(100%)'; setTimeout(function(){ d.style.display = 'none'; }, 300); }
+        else { d.style.display = 'block'; setTimeout(function(){ d.style.transform = 'translateX(0)'; }, 10); }
+      }
+      
+      function showModal(msg, cb) { 
+        document.getElementById('customModalMessage').innerHTML = msg;
+        document.getElementById('btnModalCancel').style.display = cb ? 'block' : 'none'; 
+        
+        var btnOk = document.getElementById('btnModalOk');
+        var newBtnOk = btnOk.cloneNode(true);
+        btnOk.parentNode.replaceChild(newBtnOk, btnOk);
+        
+        newBtnOk.onclick = function() { 
+            document.getElementById('customModalOverlay').style.display = 'none';
+            if(cb) cb(); 
+        }; 
+
+        var btnCancel = document.getElementById('btnModalCancel');
+        var newBtnCancel = btnCancel.cloneNode(true);
+        btnCancel.parentNode.replaceChild(newBtnCancel, btnCancel);
+        newBtnCancel.onclick = function() { 
+            document.getElementById('customModalOverlay').style.display = 'none'; 
+        };
+        document.getElementById('customModalOverlay').style.display = 'flex'; 
+      }
+
+      function showModal4R(msg, cbBeli, cbSatuan) {
+        document.getElementById('modal4RMessage').innerHTML = msg;
+        var btnBeli = document.getElementById('btn4RAlbum');
+        var newBtnBeli = btnBeli.cloneNode(true);
+        btnBeli.parentNode.replaceChild(newBtnBeli, btnBeli);
+        newBtnBeli.onclick = function() { 
+            document.getElementById('modal4ROverlay').style.display = 'none';
+            if(cbBeli) cbBeli(); 
+        }
+
+        var btnSatuan = document.getElementById('btn4RSatuan');
+        var newBtnSatuan = btnSatuan.cloneNode(true);
+        btnSatuan.parentNode.replaceChild(newBtnSatuan, btnSatuan);
+        newBtnSatuan.onclick = function() { 
+            document.getElementById('modal4ROverlay').style.display = 'none';
+            if(cbSatuan) cbSatuan(); 
+        }
+
+        var btnBatal = document.getElementById('btn4RBatal');
+        var newBtnBatal = btnBatal.cloneNode(true);
+        btnBatal.parentNode.replaceChild(newBtnBatal, btnBatal);
+        newBtnBatal.onclick = function() { 
+            document.getElementById('modal4ROverlay').style.display = 'none';
+        }
+
+        document.getElementById('modal4ROverlay').style.display = 'flex';
+      }
+
+      function closeModal() { document.getElementById('imageModal').style.display='none'; }
+      function openModal(src) { document.getElementById('imageModal').style.display='flex'; document.getElementById('fullImage').src=src; }
+      
+      function showLogin() { hideAllViews(); document.getElementById('loginView').style.display='flex'; }
+      function showRegister() { hideAllViews(); document.getElementById('registerView').style.display='flex'; }
+      function showForgotPassword() { hideAllViews(); document.getElementById('forgotPasswordView').style.display='flex'; }
+      function handleMulaiMemilih() { hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }
+      function backToMainMenuOrWelcome() { hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }
+      function backToMenuFromPreview() { hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }
+      function closeVisualPreview() { hideAllViews(); document.getElementById('previewView').style.display='block'; }
+      
+      function prosesLogout() { 
+          var uEmail = activeVendor ? activeVendor.username : "";
+          var savedToken = localStorage.getItem('fc_device_token') || "";
+          
+          var overlay = document.getElementById('saveOverlay');
+          if(overlay) {
+              document.getElementById('saveTitle').innerText = "Keluar Akun...";
+              document.getElementById('saveDesc').innerText = "Menghapus sesi perangkat...";
+              overlay.style.display = 'flex';
+          }
+          
+          if (uEmail !== "" && savedToken !== "") {
+              google.script.run.withSuccessHandler(function() {
+                  completeLogout();
+              }).withFailureHandler(function() {
+                  completeLogout();
+              }).logoutVendor(uEmail, savedToken);
+          } else {
+              completeLogout();
+          }
+      }
+
+      function completeLogout() {
+  var overlay = document.getElementById('saveOverlay'); 
+  if(overlay) overlay.style.display = 'none';
+  
+  // Bersihkan semua memori sesi dan stopwatch
+  localStorage.removeItem('avSession'); 
+  localStorage.removeItem('fc_device_token'); 
+  localStorage.removeItem('fc_last_active');
+  
+  document.getElementById('settingsDrawer').style.display = 'none'; 
+  resetSaveOverlayText();
+  
+  // Arahkan (redirect) paksa browser ke web cangkang Vercel kamu
+  window.top.location.href = 'https://photoselectorpremium.vercel.app/';
+}
+
+      function logLoading(msg) { 
+          var el = document.getElementById('loadingLog');
+          if(el) el.innerText = msg; 
+      }
+
+      // ANTI PHANTOM RESET
+      function syncInputsToParsedLimits() {} 
+
+      window.onload = function() {
+        try {
+          if (MASTER_FOLDER_ID) {
+            logLoading("Memulai sinkronisasi studio...");
+            google.script.run.withSuccessHandler(function(v) {
+              if(!v) { hideAllViews(); document.getElementById('loginView').style.display='flex'; return; }
+              activeVendor = v; 
+              document.documentElement.style.setProperty('--primary-color', v.themeColor);
+              
+              var els = document.querySelectorAll('.elVendorName');
+              for(var i=0; i<els.length; i++) { els[i].innerText = v.namaVendor; }
+              if(document.getElementById('clientWelcomeText')) document.getElementById('clientWelcomeText').innerText = v.welcomeText;
+              
+              if(v.logoUrl && v.logoUrl !== "") {
+                  document.getElementById('clientDisplayLogo').src = v.logoUrl;
+                  document.getElementById('clientDisplayLogo').style.display = 'block';
+                  document.getElementById('clientDisplayName').style.display = 'none'; 
+              }
+
+              try { 
+                  var c = JSON.parse(v.addonCatalog);
+                  catPrices = { prints: c.prints || {}, frames: c.frames || {}, albums: c.albums || {}, magazines: c.magazines || {}, extraEdit: c.extraEdit || 0, flashdisk: c.flashdisk || {}, copyOriginal: c.copyOriginal || 0, rekening: c.rekening || "" };
+              } catch(e){}
+
+              google.script.run.withSuccessHandler(function(configStr) {
+                  var clientLimitsStr = v.limits;
+                  var clientDeadline = "";
+                  
+                  if (configStr) {
+                      try {
+                          var configData = JSON.parse(configStr);
+                          if (configData.limits) clientLimitsStr = configData.limits;
+                          if (configData.deadline) clientDeadline = configData.deadline;
+                      } catch(e) {}
+                  }
+
+                  if (clientDeadline && clientDeadline !== "") {
+                      var today = new Date();
+                      var parts = clientDeadline.split("-");
+                      var dlDate = new Date(parts[0], parts[1] - 1, parts[2], 23, 59, 59);
+                      if (today.getTime() > dlDate.getTime()) { 
+                          hideAllViews();
+                          showModal("Batas waktu pemilihan foto untuk sesi ini telah berakhir.");
+                          return;
+                      } else {
+                          var diffTime = dlDate.getTime() - today.getTime();
+                          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                          var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                          var formattedDL = dlDate.getDate() + " " + months[dlDate.getMonth()] + " " + dlDate.getFullYear();
+                          var warnBox = document.getElementById('clientDeadlineWarning');
+                          if (warnBox) {
+                              if (diffDays <= 1 && today.getDate() === dlDate.getDate()) {
+                                  warnBox.innerHTML = "⏳ <b>PERINGATAN:</b> Waktu pemilihan foto Anda akan <b style='text-decoration:underline;'>BERAKHIR HARI INI</b> (" + formattedDL + "). Mohon segera simpan pilihan Anda sebelum ditutup sistem.";
+                              } else {
+                                  warnBox.innerHTML = "⏳ <b>PERINGATAN:</b> Sisa waktu pemilihan foto Anda <b>" + diffDays + " hari</b> lagi, hingga tanggal <b>" + formattedDL + "</b>.";
+                              }
+                              warnBox.style.display = "block";
+                          }
+                      }
+                  }
+
+                  parsedLimits = parseLimitsStr(clientLimitsStr);
+                  google.script.run.withSuccessHandler(function(d) {
+                      try { 
+                          var p = d ? JSON.parse(d) : null; 
+                          var localStr = localStorage.getItem('fc_draft_' + MASTER_FOLDER_ID);
+                          var pLocal = localStr ? JSON.parse(localStr) : null;
+                          var tServer = (p && p.lastModified) ? p.lastModified : 0;
+                          var tLocal = (pLocal && pLocal.lastModified) ? pLocal.lastModified : 0;
+                          var toUse = (tLocal > tServer) ? pLocal : p;
+                          if(toUse && toUse.selections) { 
+                              globalSelections = toUse.selections; 
+                              cartAlbums = toUse.cart || {}; 
+                          }
+                      } catch(e){}
+                      
+                      isDataLoaded = true;
+                      updateCartCount();
+                      hideAllViews();
+                      document.getElementById('welcomeView').style.display='flex';
+                  }).loadDraftPusat(MASTER_FOLDER_ID);
+
+              }).ambilKonfigurasiKlien(MASTER_FOLDER_ID);
+
+            }).withFailureHandler(function(err){
+                hideAllViews();
+                showModal("Error Data: " + err.toString()); 
+            }).getVendorData(URL_VUSER);
+          } else {
+            hideAllViews();
+            cekLoginSession();
+          }
+        } catch (err) { console.error(err); }
+      };
+
+      function cekLoginSession() { 
+  try { 
+      var sess = localStorage.getItem('avSession');
+      var lastActive = localStorage.getItem('fc_last_active');
+      var savedToken = localStorage.getItem('fc_device_token');
+      var now = new Date().getTime();
+      
+      // UBAH: Disamakan menjadi 10 menit (600.000 milidetik) agar seragam dengan sensor gerak
+      var batasWaktu = 10 * 60 * 1000; 
+      
+      if (sess) { 
+          var parsed = JSON.parse(sess);
+          
+          // Cek apakah waktu idle saat tab tertutup sudah melewati batas
+          if (lastActive && (now - parseInt(lastActive)) > batasWaktu) {
+              
+              // UBAH: Bersihkan token yang nyangkut di Spreadsheet!
+              if (parsed && parsed.username && savedToken) {
+                  google.script.run.logoutVendor(parsed.username, savedToken);
+              }
+
+              // Bersihkan sisa memori lokal
+              localStorage.removeItem('avSession');
+              localStorage.removeItem('fc_device_token');
+              localStorage.removeItem('fc_last_active');
+              
+              // Munculkan Pop-up peringatan, lalu lempar ke layar awal
+              showModal("Sesi login kamu sudah berakhir karena tidak membuka aplikasi selama 10 menit. Silakan login kembali demi keamanan.", function() {
+                  window.top.location.href = 'https://photoselectorpremium.vercel.app/';
+              });
+              return;
+          }
+          
+          // Jika belum lewat 10 menit (misal tak sengaja refresh/tutup tab lalu langsung buka lagi), perbarui stopwatch
+          localStorage.setItem('fc_last_active', now.toString());
+          
+          if (parsed && parsed.username) { 
+              openDashboard(parsed); 
+              return; 
+          } 
+      } 
+      document.getElementById('loginView').style.display='flex'; 
+  } catch(e) { 
+      document.getElementById('loginView').style.display='flex'; 
+  } 
+}
+
+function prosesLogin() {
+  var u = document.getElementById('username').value;
+  var p = document.getElementById('password').value;
+  if(!u || !p) return showModal("Mohon isi email dan password!");
+  
+  var btn = document.querySelector('#loginView .btn-save'); 
+  var ori = btn ? btn.innerText : "MASUK PORTAL"; 
+  if(btn) { btn.innerText = "⏳ MASUK..."; btn.style.pointerEvents = "none"; }
+  
+  var savedToken = localStorage.getItem('fc_device_token') || "";
+  
+  google.script.run.withSuccessHandler(function(r){
+    if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; }
+    if(r.success){ 
+      localStorage.setItem('fc_device_token', r.token); 
+      localStorage.setItem('avSession', JSON.stringify(r.data)); 
+      
+      // Mulai stopwatch saat berhasil login
+      localStorage.setItem('fc_last_active', new Date().getTime().toString()); 
+      
+      openDashboard(r.data); 
+    } else { showModal(r.message); }
+  }).withFailureHandler(function(){
+    if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; } 
+    showModal("Gagal koneksi ke server.");
+  }).loginVendor(u, p, savedToken);
+}
+
+      function prosesRegister() {
+        var u = document.getElementById('regUser').value;
+        var p = document.getElementById('regPass').value;
+        var pConfirm = document.getElementById('regPassConfirm').value;
+        var n = document.getElementById('regName').value;
+        var w = document.getElementById('regWa').value;
+        if(!u || !p || !pConfirm || !n || !w) return showModal("Lengkapi semua kolom pendaftaran!");
+        if(p !== pConfirm) return showModal("Password yang kamu ulangi tidak cocok! Silakan cek kembali.");
+        
+        var btn = document.querySelector('#registerView .btn-share');
+        var oriText = btn ? btn.innerText : "DAFTAR SEKARANG";
+        if(btn) { btn.innerText = "⏳ MENGIRIM OTP..."; btn.style.pointerEvents = "none"; }
+        
+        google.script.run.withSuccessHandler(function(res) {
+            if(btn) { btn.innerText = oriText; btn.style.pointerEvents = "auto"; }
+            if(res.success) {
+              tempEmailDaftar = u; 
+              hideAllViews();
+              document.getElementById('otpView').style.display='flex';
+              showModal("OTP Terkirim! Cek kotak masuk atau spam di email kamu.");
+            } else { showModal(res.message); }
+        }).registerVendor({ username: u, password: p, namaVendor: n, nomorWa: w });
+      }
+
+      function prosesVerifikasiOTP() {
+        var otp = document.getElementById('otpCode').value;
+        if(otp.length < 6) return showModal("Masukkan 6 digit OTP!");
+        
+        var btn = document.querySelector('#otpView .btn-save');
+        var ori = btn.innerText;
+        btn.innerText = "⏳ MEMERIKSA..."; btn.style.pointerEvents = "none";
+        
+        google.script.run.withSuccessHandler(function(res) {
+            btn.innerText = ori; btn.style.pointerEvents = "auto";
+            if(res.success) {
+                showModal("Berhasil! Akun studio sudah aktif. Silakan login.", function(){
+                    showLogin();
+                });
+            } else { showModal(res.message); }
+        }).verifikasiOTP(tempEmailDaftar, otp);
+      }
+
+      function prosesMintaReset() {
+        var e = document.getElementById('forgotEmail').value;
+        if(!e) return showModal("Ketik email kamu!");
+        
+        var btn = document.querySelector('#forgotPasswordView .btn-share');
+        var ori = btn.innerText; btn.innerText = "⏳ MENGIRIM..."; btn.style.pointerEvents = "none";
+        
+        google.script.run.withSuccessHandler(function(res) {
+            btn.innerText = ori; btn.style.pointerEvents = "auto";
+            if(res.success) {
+                tempEmailReset = e;
+                hideAllViews();
+                document.getElementById('resetPasswordView').style.display='flex';
+                showModal("Email terkirim! Masukkan kode OTP dan buat password barumu.");
+            } else { showModal(res.message); }
+        }).mintaResetPassword(e);
+      }
+
+      function prosesGantiPassword() {
+        var otp = document.getElementById('resetOtpCode').value;
+        var pBaru = document.getElementById('newPassword').value;
+        var pConfirm = document.getElementById('newPasswordConfirm').value;
+        
+        if(otp.length < 6 || !pBaru || !pConfirm) return showModal("Lengkapi OTP dan Password Baru!");
+        if(pBaru !== pConfirm) return showModal("Password yang kamu ulangi tidak cocok! Coba lagi.");
+        
+        var btn = document.querySelector('#resetPasswordView .btn-save');
+        var ori = btn.innerText; btn.innerText = "⏳ MENYIMPAN..."; btn.style.pointerEvents = "none";
+        
+        google.script.run.withSuccessHandler(function(res) {
+            btn.innerText = ori; btn.style.pointerEvents = "auto";
+            if(res.success) {
+                showModal("Password sukses diubah dan riwayat kunci perangkat telah dibersihkan! Silakan login kembali.", function(){
+                    showLogin();
+                });
+            } else { showModal(res.message); }
+        }).eksekusiResetPassword(tempEmailReset, otp, pBaru);
+      }
+
+      function openDashboard(v) {
+        activeVendor = v;
+        hideAllViews();
+        document.getElementById('dashboardView').style.display='block';
+        document.getElementById('dashStudioName').innerText = v.namaVendor;
+        
+        var elUser = document.getElementById('username'); if(elUser) elUser.value = v.username;
+        var elVen = document.getElementById('setVendorName'); if(elVen) elVen.value = v.namaVendor;
+        var elWa = document.getElementById('setWaNumber'); if(elWa) elWa.value = v.nomorWa;
+        var elWel = document.getElementById('setWelcomeText'); if(elWel) elWel.value = v.welcomeText || '';
+        var elWaT = document.getElementById('setWaText'); if(elWaT) elWaT.value = v.waText || '';
+        if(v.logoUrl) {
+            document.getElementById('adminDisplayLogo').src = v.logoUrl;
+            document.getElementById('adminDisplayLogo').style.display = 'block';
+            document.getElementById('previewLogoAdminDrawer').src = v.logoUrl;
+            document.getElementById('previewLogoAdminDrawer').style.display = 'block';
+        }
+        if(v.qrisUrl) {
+            document.getElementById('previewQrisAdminDrawer').src = v.qrisUrl;
+            document.getElementById('previewQrisAdminDrawer').style.display = 'block';
+        }
+
+        parsedLimits = parseLimitsStr(v.limits || "");
+        try {
+          var c = JSON.parse(v.addonCatalog);
+          catPrices = { prints: c.prints || {}, frames: c.frames || {}, albums: c.albums || {}, magazines: c.magazines || {}, extraEdit: c.extraEdit || 0, flashdisk: c.flashdisk || {}, copyOriginal: c.copyOriginal || 0, rekening: c.rekening || "" };
+          var elRekening = document.getElementById('setRekeningManual');
+          if(elRekening) elRekening.value = catPrices.rekening;
+          renderDynamicAddonFields();
+        } catch(e){}
+        
+        var elLedit = document.getElementById('L_EDIT');
+        if(elLedit) elLedit.value = parsedLimits["EDIT"] ? parsedLimits["EDIT"].max : 0;
+        var elSedit = document.getElementById('S_EDIT');
+        if(elSedit) elSedit.checked = parsedLimits["EDIT"] ? parsedLimits["EDIT"].status : true;
+        renderDynamicKuotaFields();
+      }
+
+      function updateParsedLimit(key, maxVal, statusVal) {
+          if(!parsedLimits[key]) parsedLimits[key] = {max:0, status:true};
+          if(maxVal !== null) {
+              var v = parseInt(maxVal);
+              parsedLimits[key].max = isNaN(v) ? 0 : v;
+          }
+          if(statusVal !== null) parsedLimits[key].status = statusVal;
+      }
+
+      function renderDynamicKuotaFields() {
+         var cat = document.getElementById('kuotaCategoryDropdown').value;
+         var box = document.getElementById('dynamicKuotaInputsContainer');
+         box.innerHTML = "";
+         
+         var filterKeys = [];
+         if(cat === "MAGNETIC") filterKeys = ["MAGNETIC_4R"];
+         else if(cat === "MAGAZINE") filterKeys = ["MAGAZINE_M1", "MAGAZINE_M2"];
+         else filterKeys = ["PEMBESARAN_10RS", "PEMBESARAN_12RS", "PEMBESARAN_16RS", "PEMBESARAN_20RS", "PEMBESARAN_24RS"];
+         
+         for(var i=0; i<filterKeys.length; i++) {
+            var k = filterKeys[i];
+            var label = k.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+            var currentVal = parsedLimits[k] ? parsedLimits[k].max : 0;
+            var currentStatus = parsedLimits[k] ? parsedLimits[k].status : true;
+            
+            var html = '<div class="glass-container" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">';
+            html += '<span style="font-size:13px; font-weight:700;">Ukuran ' + label + '</span>';
+            html += '<div style="display:flex; align-items:center; gap:12px;">';
+            html += '<input type="number" id="L_'+k+'" onchange="updateParsedLimit(\''+k+'\', this.value, null)" value="' + currentVal + '" class="dash-input solid-input" style="margin:0; padding:8px; width:70px; text-align:center;">';
+            html += '<label style="font-size:12px; font-weight:700; display:flex; align-items:center; cursor:pointer;"><input type="checkbox" style="transform:scale(1.2); margin-right:6px;" id="S_'+k+'" onchange="updateParsedLimit(\''+k+'\', null, this.checked)" ' + (currentStatus?'checked':'') + '> Aktif</label>';
+            html += '</div></div>';
+            box.innerHTML += html;
+         }
+      }
+      
+      function renderDynamicAddonFields() {
+          var cat = document.getElementById('addonCategoryDropdown').value;
+          var box = document.getElementById('dynamicAddonInputsContainer');
+          var html = '';
+
+          if (cat === "CETAK") {
+              var cetakSizes = ["4R", "10RS", "12RS", "16RS", "20RS", "24RS"];
+              html += '<label style="font-size:12px; font-weight:800;">Cetak Tambahan (Rp/Lbr):</label>';
+              html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px; margin-bottom:20px;">';
+              for(var i=0; i<cetakSizes.length; i++) {
+                  var p = (catPrices.prints && catPrices.prints[cetakSizes[i]]) ? catPrices.prints[cetakSizes[i]] : 0;
+                  html += '<div class="glass-container" style="display:flex; flex-direction:column; padding:10px;">';
+                  html += '<span style="font-size:12px; margin-bottom:6px; font-weight:700;">Ukuran '+cetakSizes[i]+'</span>';
+                  html += '<input type="number" id="CP_PRINT_' + cetakSizes[i] + '" class="dash-input solid-input" style="width:100%; padding:10px; margin:0;" value="'+p+'" onchange="updateAddonPrice(\'prints\', \''+cetakSizes[i]+'\', this.value)"></div>';
+              }
+              html += '</div>';
+              
+              var frameSizes = ["10RS", "12RS", "16RS", "20RS", "24RS"];
+              html += '<label style="font-size:12px; font-weight:800;">Bingkai Tambahan (Rp/Pcs):</label>';
+              html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">';
+              for(var i=0; i<frameSizes.length; i++) {
+                  var f = (catPrices.frames && catPrices.frames[frameSizes[i]]) ? catPrices.frames[frameSizes[i]] : 0;
+                  html += '<div class="glass-container" style="display:flex; flex-direction:column; padding:10px;">';
+                  html += '<span style="font-size:12px; margin-bottom:6px; font-weight:700;">Ukuran '+frameSizes[i]+'</span>';
+                  html += '<input type="number" id="CP_FRAME_' + frameSizes[i] + '" class="dash-input solid-input" style="width:100%; padding:10px; margin:0;" value="'+f+'" onchange="updateAddonPrice(\'frames\', \''+frameSizes[i]+'\', this.value)"></div>';
+              }
+              html += '</div>';
+          }
+          else if (cat === "ALBUM") {
+              var albumSizes = ["40", "80", "120", "180", "240"];
+              html += '<label style="font-size:12px; font-weight:800;">Harga Album Fisik (Rp/Pcs):</label>';
+              html += '<div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">';
+              for(var i=0; i<albumSizes.length; i++) {
+                  var a = (catPrices.albums && catPrices.albums[albumSizes[i]]) ? catPrices.albums[albumSizes[i]] : 0;
+                  html += '<div class="glass-container" style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px;">';
+                  html += '<span style="font-size:13px; font-weight:700;">Isi '+albumSizes[i]+' Foto</span>';
+                  html += '<input type="number" id="CP_ALBUM_' + albumSizes[i] + '" class="dash-input solid-input" style="width:120px; padding:10px; margin:0; text-align:right;" value="'+a+'" onchange="updateAddonPrice(\'albums\', \''+albumSizes[i]+'\', this.value)"></div>';
+              }
+              html += '</div>';
+          }
+          else if (cat === "MAGAZINE_ADDON") { 
+            var magSizes = ["M1", "M2"];
+            html += '<label style="font-size:12px; font-weight:800;">Harga Album Magazine (Rp/Pcs):</label>';
+            html += '<div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">';
+            for(var i=0; i<magSizes.length; i++) {
+                var currentPrice = (catPrices.magazines && catPrices.magazines[magSizes[i]]) ? catPrices.magazines[magSizes[i]] : 0;
+                html += '<div class="glass-container" style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px;">';
+                html += '<span style="font-size:13px; font-weight:700;">Magazine '+magSizes[i]+'</span>';
+                html += '<input type="number" id="CP_MAG_' + magSizes[i] + '" class="dash-input solid-input" style="width:120px; padding:10px; margin:0; text-align:right;" value="'+currentPrice+'" onchange="updateAddonPrice(\'magazines\', \''+magSizes[i]+'\', this.value)"></div>';
+            }
+            html += '</div>';
+          }
+          else if (cat === "LAINNYA") {
+              var fdSizes = ["64GB", "128GB", "256GB"];
+              html += '<label style="font-size:12px; font-weight:800;">Harga FlashDisk Premium (Rp):</label>';
+              html += '<div style="display:flex; flex-direction:column; gap:10px; margin-top:8px; margin-bottom:20px;">';
+              for(var i=0; i<fdSizes.length; i++) {
+                  var fd = (catPrices.flashdisk && catPrices.flashdisk[fdSizes[i]]) ? catPrices.flashdisk[fdSizes[i]] : 0;
+                  html += '<div class="glass-container" style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px;">';
+                  html += '<span style="font-size:13px; font-weight:700;">Kapasitas '+fdSizes[i]+'</span>';
+                  html += '<input type="number" id="CP_FD_' + fdSizes[i] + '" class="dash-input solid-input" style="width:120px; padding:10px; margin:0; text-align:right;" value="'+fd+'" onchange="updateAddonPrice(\'flashdisk\', \''+fdSizes[i]+'\', this.value)"></div>';
+              }
+              html += '</div>';
+              
+              html += '<label style="font-size:12px; font-weight:800;">Biaya Copy Semua File Asli (Rp):</label>';
+              html += '<input type="number" id="CP_COPY_ORIGINAL" class="dash-input solid-input" style="padding:12px; margin-top:6px; margin-bottom:20px;" value="'+(catPrices.copyOriginal||0)+'" onchange="updateAddonPrice(\'copyOriginal\', null, this.value)">';
+
+              html += '<label style="font-size:12px; font-weight:800;">Biaya Edit Tambahan / Foto (Rp):</label>';
+              html += '<input type="number" id="CP_EDIT_TAMBAHAN" class="dash-input solid-input" style="padding:12px; margin-top:6px;" value="'+(catPrices.extraEdit||0)+'" onchange="updateAddonPrice(\'extraEdit\', null, this.value)">';
+          }
+          box.innerHTML = html;
+      }
+      
+      function updateAddonPrice(category, key, value) {
+          var val = parseInt(value);
+          if (isNaN(val)) val = 0; 
+          
+          if (key) {
+              if (!catPrices[category]) catPrices[category] = {};
+              catPrices[category][key] = val;
+          } else {
+              catPrices[category] = val;
+          }
+      }
+
+      function simpanSettinganPusat() {
+        var elRekening = document.getElementById('setRekeningManual');
+        if(elRekening) catPrices.rekening = elRekening.value;
+        
+        var d = {
+          namaVendor: document.getElementById('setVendorName').value,
+          nomorWa: document.getElementById('setWaNumber').value,
+          welcomeText: document.getElementById('setWelcomeText').value,
+          waText: document.getElementById('setWaText').value,
+          themeColor: '#d4af37',
+          addonCatalog: JSON.stringify(catPrices),
+          limits: getLimitsStr()
+        };
+        var btn = document.querySelector('#settingsDrawer .btn-save'); 
+        var ori = btn ? btn.innerText : "SIMPAN"; 
+        if(btn) { btn.innerText = "⏳ MENYIMPAN..."; btn.style.pointerEvents="none"; }
+        
+        var uEmail = document.getElementById('username');
+        if(!uEmail || !uEmail.value) {
+           if(btn) { btn.innerText = ori; btn.style.pointerEvents="auto"; }
+           showModal("Sesi terputus. Silakan muat ulang halaman."); return;
+        }
+
+        google.script.run.withSuccessHandler(function(r) {
+            if(btn) { btn.innerText = ori; btn.style.pointerEvents="auto"; }
+            localStorage.setItem('avSession', JSON.stringify(r.data));
+            toggleSettingsDrawer(); 
+            showModal("Seluruh Konfigurasi Pengaturan V2 Berhasil Disimpan! ✅");
+        }).withFailureHandler(function(){ 
+            if(btn) { btn.innerText = ori; btn.style.pointerEvents="auto"; }
+            showModal("Gagal Menyimpan. Periksa koneksi internet."); 
+        }).saveVendorSettings(uEmail.value, d);
+      }
+
+      function prosesUploadLogo(event) {
+          var fileInput = document.getElementById('uploadLogoInput');
+          if(!fileInput.files.length) return showModal("Pilih gambar logo!");
+          var file = fileInput.files[0]; 
+          var reader = new FileReader(); 
+          var btn = event.target;
+          btn.innerText = "⏳..."; btn.style.pointerEvents = "none";
+          
+          reader.onload = function(e) {
+              google.script.run.withSuccessHandler(function(res){
+                  btn.innerText = "Unggah"; btn.style.pointerEvents = "auto";
+                  if(res.success) { 
+                      localStorage.setItem('avSession', JSON.stringify(res.data)); 
+                      document.getElementById('previewLogoAdminDrawer').src = res.logoUrl; 
+                      document.getElementById('previewLogoAdminDrawer').style.display = 'block'; 
+                      document.getElementById('adminDisplayLogo').src = res.logoUrl; 
+                      document.getElementById('adminDisplayLogo').style.display = 'block'; 
+                      showModal("Logo studio berhasil diperbarui!"); 
+                  }
+              }).uploadVendorLogo(document.getElementById('username').value, e.target.result, file.name);
+          }; 
+          reader.readAsDataURL(file);
+      }
+
+      function prosesUploadQris(event) {
+        var fileInput = document.getElementById('uploadQrisInput');
+        if(!fileInput.files.length) return showModal("Pilih gambar QRIS!");
+        var file = fileInput.files[0]; 
+        var reader = new FileReader(); 
+        var btn = event.target;
+        btn.innerText = "⏳..."; btn.style.pointerEvents = "none";
+        
+        reader.onload = function(e) {
+          google.script.run.withSuccessHandler(function(res){
+            btn.innerText = "Unggah QRIS"; btn.style.pointerEvents = "auto";
+            if(res.success) { 
+                localStorage.setItem('avSession', JSON.stringify(res.data)); 
+                document.getElementById('previewQrisAdminDrawer').src = res.qrisUrl; 
+                document.getElementById('previewQrisAdminDrawer').style.display = 'block'; 
+                showModal("Gambar QR Code Pembayaran Berhasil Diperbarui! ✅"); 
+            }
+          }).uploadVendorQris(document.getElementById('username').value, e.target.result, file.name);
+        }; 
+        reader.readAsDataURL(file);
+      }
+
+      function generateLinkKlien(mode) {
+        var rawId = document.getElementById('setClientFolderId').value.trim();
+        if (!rawId) return showModal("Mohon masukkan Link / ID Folder GDrive klien terlebih dahulu!");
+        var idMatch = rawId.match(/[-\w]{25,}/);
+        if(!idMatch) return showModal("Link / ID Folder GDrive tidak valid!"); 
+        var id = idMatch[0];
+        
+        var dl = document.getElementById('setDeadlineDate').value || "";
+        if(!activeVendor || !activeVendor.username) {
+            showModal("Sesi kamu habis. Silahkan refresh/login ulang.");
+            return;
+        }
+
+        var configObj = { limits: getLimitsStr(), deadline: dl, vendor: activeVendor.namaVendor };
+        var lnk = 'https://' + MASTER_URL + '?f=' + id + '&v=' + encodeURIComponent(activeVendor.username);
+        var cleanLink = lnk.replace(/\s+/g, "");
+        var gdriveLink = rawId.includes("http") ? rawId : "https://drive.google.com/drive/folders/" + id;
+        
+        var deadlineText = "";
+        if (dl !== "") {
+            var parts = dl.split("-");
+            var dObj = new Date(parts[0], parts[1] - 1, parts[2]);
+            var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            var formattedDate = dObj.getDate() + " " + months[dObj.getMonth()] + " " + dObj.getFullYear();
+            deadlineText = "\n\n⏳ *BATAS WAKTU PEMILIHAN: " + formattedDate + "*\n_(Mohon segera dipilih sebelum tanggal tersebut karena akses link akan otomatis tertutup oleh sistem)_";
+        }
+
+        var warningText = "\n\n*_PENTING: Perlu diingat bahwa file foto kakak yang ada di Google Drive kami hanya akan tersimpan selama 3 BULAN. Mohon segera didownload dan di-backup ke HP atau Flashdisk/Laptop pribadi ya kak._*";
+        var msg = "Halo kak! 👋\nFoto-foto momen spesialmu sudah siap! ✨\n\n📁 Ini link Google Drive untuk melihat semua fotonya (Kualitas HD):\n" + gdriveLink + "\n\n📸 Dan silakan masuk ke aplikasi website di bawah ini untuk mulai proses seleksi foto cetak & edit:\n\n" + cleanLink + "\n\n*(Mohon klik link di atas perlahan sampai terbuka)*" + deadlineText + warningText + "\n\nTerima kasih! 🙏🏻\n\n" + activeVendor.namaVendor;
+        
+        if(mode === 'copy') { 
+            navigator.clipboard.writeText(msg).then(function() {
+                showModal("Pesan lengkap beserta link berhasil disalin! Silakan paste ke chat klien."); 
+            }).catch(function() {
+                showModal("Gagal menyalin. Silakan coba lagi atau update browser.");
+            });
+        } else { 
+            var waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(msg);
+            window.open(waLink, '_blank'); 
+        }
+
+        google.script.run.simpanKonfigurasiKlien(id, configObj);
+      }
+
+      function previewAplikasi() {
+        var rawInput = document.getElementById('setClientFolderId').value.trim();
+        if(!rawInput) { showModal("Wajib isi Link/ID Folder GDrive klien terlebih dahulu."); return; } 
+        
+        var idMatch = rawInput.match(/[-\w]{25,}/);
+        MASTER_FOLDER_ID = idMatch ? idMatch[0] : rawInput;
+        URL_FID = MASTER_FOLDER_ID; 
+        
+        var dl = document.getElementById('setDeadlineDate').value || "";
+        if (dl && dl !== "") {
+            var parts = dl.split("-");
+            var dlDate = new Date(parts[0], parts[1] - 1, parts[2], 23, 59, 59);
+            var today = new Date();
+            if (today.getTime() > dlDate.getTime()) { 
+                showModal("Batas waktu deadline yang kamu atur sudah lewat!");
+                return;
+            }
+        }
+        
+        if(activeVendor) {
+          hideAllViews();
+          document.getElementById('btnBackToDash').style.display='block'; 
+          document.documentElement.style.setProperty('--primary-color', activeVendor.themeColor);
+          var els = document.querySelectorAll('.elVendorName');
+          for(var i=0; i<els.length; i++) els[i].innerText = activeVendor.namaVendor;
+          if(document.getElementById('clientWelcomeText')) document.getElementById('clientWelcomeText').innerText = activeVendor.welcomeText;
+          if(activeVendor.logoUrl && activeVendor.logoUrl !== "") { 
+              document.getElementById('clientDisplayLogo').src = activeVendor.logoUrl;
+              document.getElementById('clientDisplayLogo').style.display = 'block'; 
+              document.getElementById('clientDisplayName').style.display = 'none'; 
+          }
+          parsedLimits = parseLimitsStr(getLimitsStr());
+          document.getElementById('welcomeView').style.display='flex';
+        }
+      }
+
+      function exitPreview() { 
+        hideAllViews();
+        document.getElementById('btnBackToDash').style.display='none'; 
+        globalSelections={}; 
+        if (activeVendor) { openDashboard(activeVendor); } else { showLogin(); }
+      }
+      
+      function openCetakSubMenu() {
+        hideAllViews();
+        document.getElementById('homeView').style.display='flex';
+        var hMag='', hMgz='', hPem='';
+        
+        for (var i=0; i<ALL_KUOTA_KEYS.length; i++) {
+          var k = ALL_KUOTA_KEYS[i];
+          var lim = parsedLimits[k] || {max:0, status:false};
+          var label = k.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+          var c = (globalSelections[k]||[]).length;
+          
+          var effMax = lim.max;
+          if(k.indexOf("MAGAZINE_") === 0) {
+              var qtyDariAddonPaksa = 0;
+              if(lim.max > 0 && c > lim.max) {
+                 qtyDariAddonPaksa = Math.ceil((c - lim.max) / lim.max);
+              }
+              effMax += qtyDariAddonPaksa * lim.max;
+          }
+          
+          var btnHtml = '';
+          if(!lim.status || effMax === 0) {
+              btnHtml = '<button class="size-btn" style="background:rgba(255,255,255,0.4); color:#8e8e93; border-color:#d1d1d6; cursor:not-allowed;" disabled>Ukuran ' + label + ' <span style="background:#8e8e93;">🔒 Terkunci (Kuota 0)</span></button>';
+          } else {
+              var txt = effMax > 0 ? (c + '/' + effMax) : c + " Foto";
+              btnHtml = '<button class="size-btn" onclick="openGallery(\'' + k + '\', \'Cetak ' + label + '\')">Ukuran ' + label + ' <span>' + txt + '</span></button>';
+          }
+          
+          if(k.indexOf("MAGNETIC_") === 0) hMag += btnHtml;
+          else if(k.indexOf("MAGAZINE_") === 0) hMgz += btnHtml;
+          else hPem += btnHtml;
+        }
+        
+        document.getElementById('menuMagneticArea').innerHTML = hMag;
+        document.getElementById('menuMagazineArea').innerHTML = hMgz;
+        document.getElementById('menuPembesaranArea').innerHTML = hPem;
+        
+        var hAddon = '';
+        for(var size in catPrices.prints) {
+            var p = catPrices.prints[size] || 0;
+            if(p > 0) {
+                hAddon += '<button class="size-btn" onclick="openGallery(\'ADDON_PRINT_' + size + '\', \'Cetak ' + size + '\')">Cetak '+size+' <span>+Rp ' + p.toLocaleString('id') + '</span></button>';
+            }
+        }
+        document.getElementById('menuAddonArea').innerHTML = hAddon || '<p style="font-size:12px;color:var(--text-muted);">Belum ada harga cetak tambahan diatur.</p>';
+      }
+
+      function goToEditMenu() { 
+          currentMode = "Edit Utama";
+          openGallery("Edit Utama", "Pilihan File Khusus Edit"); 
+      }
+      
+      function openGallery(m, l) { 
+          currentMode=m;
+          hideAllViews(); 
+          document.getElementById('galleryView').style.display='block'; 
+          updateGalleryCounter(); 
+          loadFolder(URL_FID, false); 
+      }
+      
+      function loadFolder(id, back) {
+        document.getElementById('gallery').innerHTML='<div style="color:var(--text-main);text-align:center;padding:80px 0;grid-column:1/-1; font-weight:600; font-size:16px;">Mengambil foto dari awan... ⏳</div>';
+        if(!back && currentItems.length>0) {
+            folderHistory.push({id: URL_FID, name: currentFolderName});
+        }
+        URL_FID = id;
+        google.script.run.withSuccessHandler(function(d) { 
+            if(d.error) return showModal(d.error); 
+            currentFolderName = d.folderName; 
+            document.getElementById('currentFolderName').innerText = d.folderName; 
+            currentItems = d.items; 
+            document.getElementById('backBtn').style.display = folderHistory.length>0 ? 'block' : 'none'; 
+            renderGallery(); 
+        }).getFolderContents(id);
+      }
+      
+      function goBack() { 
+          if(folderHistory.length>0) loadFolder(folderHistory.pop().id, true);
+      }
+      
+      function toggleReviewMode() { 
+          isReviewMode = !isReviewMode;
+          document.getElementById('reviewToggleCheck').checked = isReviewMode; 
+          renderGallery(); 
+      }
+
+      function updateGalleryCounter() { 
+          var modeAlias = currentMode;
+          var count = 0;
+          var labelAdd = "";
+          
+          if (currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+             var maxEdit = parsedLimits["EDIT"] ? parsedLimits["EDIT"].max : 0;
+             var combinedEdit = (globalSelections["Edit Utama"]||[]).length + (globalSelections["Edit Tambahan"]||[]).length;
+             labelAdd = maxEdit > 0 ? " (" + combinedEdit + "/" + maxEdit + " Gratis)" : " (" + combinedEdit + " Foto)";
+             modeAlias = "Edit Terpilih";
+          } else if (currentMode.indexOf("ADDON_") === 0) {
+             count = (globalSelections[currentMode]||[]).length;
+             labelAdd = " (" + count + " Foto)";
+             modeAlias = currentMode.replace("ADDON_PRINT_","");
+          } else if (currentMode.indexOf("MAGAZINE_") === 0) {
+             var lim = parsedLimits[currentMode] || {max: 0};
+             count = (globalSelections[currentMode]||[]).length;
+             var qtyDariAddonPaksa = 0;
+             if(lim.max > 0 && count > lim.max) {
+                 qtyDariAddonPaksa = Math.ceil((count - lim.max) / lim.max);
+             }
+             var effMax = lim.max > 0 ? lim.max + (qtyDariAddonPaksa * lim.max) : 0;
+             labelAdd = effMax > 0 ? " (" + count + "/" + effMax + ")" : " (" + count + " Foto)";
+             modeAlias = currentMode.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+          } else {
+             var lim = parsedLimits[currentMode] || {max: 0};
+             count = (globalSelections[currentMode]||[]).length;
+             labelAdd = lim.max > 0 ? " (" + count + "/" + lim.max + ")" : " (" + count + " Foto)";
+             modeAlias = currentMode.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+          }
+          
+          var el = document.getElementById('activeModeText');
+          if(el) el.innerText = "Memilih " + modeAlias + labelAdd; 
+      }
+
+      function renderGallery() {
+        var g = document.getElementById('gallery');
+        var htmlBuilder = []; 
+        var sel = [];
+        
+        if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+           sel = (globalSelections["Edit Utama"]||[]).concat(globalSelections["Edit Tambahan"]||[]);
+        } else {
+           sel = globalSelections[currentMode]||[];
+        }
+
+        if (isReviewMode) {
+            // MODE TAMPILKAN PILIHAN SAYA (Global, Menampilkan dari Semua Folder)
+            for(var k = 0; k < sel.length; k++) {
+                var f = sel[k];
+                var cardClass = "gallery-card selected";
+                var addTag = "";
+                if (f.isExtra) {
+                    var badgeTxt = f.mode === "Edit Tambahan" ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
+                    addTag = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
+                }
+                
+                var escapedName = f.file.replace(/'/g, "\\'");
+                
+                // UI Tambahan: Label kecil agar klien tahu foto ini asalnya dari folder mana
+                var folderBadge = '<div style="font-size:9px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-align:left;">📁 ' + f.folder + '</div>';
+
+                var htmlStr = '<div class="' + cardClass + '">' + folderBadge + '<img loading="lazy" src="https://drive.google.com/thumbnail?id=' + f.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + f.id + '&sz=w1200\')"><label class="file-label"><input type="checkbox" onchange="toggleSel(this, \'' + escapedName + '\', \'' + f.id + '\')" checked>' + f.file + '</label><br>' + addTag;
+                
+                if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+                    var noteVal = f.note || '';
+                    htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:block" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + f.id + '\')">';
+                }
+                htmlBuilder.push(htmlStr + '</div>');
+            }
+        } else {
+            // MODE NORMAL (Hanya menampilkan isi folder yang sedang dibuka)
+            for(var k = 0; k < currentItems.length; k++) {
+              var i = currentItems[k];
+              if(i.type === 'folder') { 
+                  htmlBuilder.push('<div class="gallery-card" onclick="loadFolder(\'' + i.id + '\', false)"><div style="font-size:45px;cursor:pointer; padding:15px 0;">📁</div><div style="font-size:13px;color:var(--text-main);font-weight:700;">' + i.name + '</div></div>');
+              }
+              else if(i.type === 'file') {
+                var f = null;
+                for(var j=0; j<sel.length; j++) { if(sel[j].id === i.id) { f = sel[j]; break; } }
+                
+                var cardClass = f ? "gallery-card selected" : "gallery-card";
+                var addTag = "";
+                if (f && f.isExtra) {
+                    var badgeTxt = f.mode === "Edit Tambahan" ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
+                    addTag = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
+                }
+                
+                var escapedName = i.name.replace(/'/g, "\\'");
+                var htmlStr = '<div class="' + cardClass + '"><img loading="lazy" src="https://drive.google.com/thumbnail?id=' + i.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + i.id + '&sz=w1200\')"><label class="file-label"><input type="checkbox" onchange="toggleSel(this, \'' + escapedName + '\', \'' + i.id + '\')" ' + (f?'checked':'') + '>' + i.name + '</label><br>' + addTag;
+                
+                if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+                    var noteVal = f ? f.note : '';
+                    htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:' + (f?'block':'none') + '" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + i.id + '\')">';
+                }
+                htmlBuilder.push(htmlStr + '</div>');
+              }
+            }
+        }
+        
+        if(isReviewMode && htmlBuilder.length === 0) {
+            g.innerHTML = '<div style="color:var(--text-main);text-align:center;grid-column:1/-1;padding:60px; font-weight:600;">Belum ada foto yang dicentang.</div>';
+        } else {
+            g.innerHTML = htmlBuilder.join('');
+        }
+        updateGalleryCounter(); 
+      }
+
+      function getRequiredAlbumSizeForExtra(E) {
+          if (E <= 0) return 0;
+          if (E <= 40) return 40; 
+          if (E <= 80) return 80; 
+          if (E <= 120) return 120;
+          if (E <= 180) return 180;
+          return 240; 
+      }
+
+      // ==========================================
+      // OTAK BARU 1: AUTO-SLIDING ENGINE
+      // ==========================================
+      function applyAutoSliding() {
+          // 1. Geser otomatis kuota Edit
+          var utama = globalSelections["Edit Utama"] || [];
+          var tambahan = globalSelections["Edit Tambahan"] || [];
+          var limitEdit = parsedLimits["EDIT"] ? parsedLimits["EDIT"].max : 0;
+          var hargaEdit = catPrices.extraEdit || 0;
+          
+          if (limitEdit > 0) {
+              var allEdits = utama.concat(tambahan);
+              utama = [];
+              tambahan = [];
+              for(var i=0; i<allEdits.length; i++) {
+                  if (i < limitEdit) {
+                      allEdits[i].mode = "Edit Utama";
+                      allEdits[i].isExtra = false;
+                      allEdits[i].price = 0;
+                      utama.push(allEdits[i]);
+                  } else {
+                      allEdits[i].mode = "Edit Tambahan";
+                      allEdits[i].isExtra = true;
+                      allEdits[i].price = hargaEdit;
+                      tambahan.push(allEdits[i]);
+                  }
+              }
+              globalSelections["Edit Utama"] = utama;
+              globalSelections["Edit Tambahan"] = tambahan;
+          }
+
+          // 2. Geser otomatis kuota Cetak/Album
+          for(var key in globalSelections) {
+              if(key === "Edit Utama" || key === "Edit Tambahan" || key.indexOf("ADDON_") === 0) continue;
+              
+              var arr = globalSelections[key];
+              var lim = parsedLimits[key] ? parsedLimits[key].max : 0;
+              var keyStr = key.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+              var basePriceCetak = (catPrices.prints && catPrices.prints[keyStr]) ? catPrices.prints[keyStr] : 0;
+
+              if (lim > 0 && arr && arr.length > 0) {
+                  for(var i=0; i<arr.length; i++) {
+                      if(i < lim) {
+                          arr[i].isExtra = false;
+                          arr[i].priceCetak = 0; // Ubah otomatis jadi gratis
+                      } else {
+                          arr[i].isExtra = true;
+                          // Pastikan harga cetak dikembalikan normal jika terlanjur diset 0
+                          if(arr[i].priceCetak === 0) {
+                              arr[i].priceCetak = basePriceCetak; 
+                          }
+                      }
+                  }
+              }
+              
+              // AUTO ADJUST KEBUTUHAN ALBUM 4R JIKA KUOTA TURUN
+              if (keyStr === "4R" && lim > 0 && arr) {
+                  var E_after = arr.length - lim;
+                  var maxAllowedAlbum = getRequiredAlbumSizeForExtra(E_after);
+                  var currentAuto = cartAlbums["AUTO_4R_ALBUM"] || 0;
+                  if (currentAuto > maxAllowedAlbum) {
+                      if (maxAllowedAlbum <= 0) delete cartAlbums["AUTO_4R_ALBUM"];
+                      else cartAlbums["AUTO_4R_ALBUM"] = maxAllowedAlbum;
+                  }
+              }
+          }
+      }
+
+      function toggleSel(cb, fname, fid) {
+        // ---- JIKA KLIEN BATAL CENTANG (UNCHECK) ----
+        if(!cb.checked) { 
+            if (currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+                globalSelections["Edit Utama"] = (globalSelections["Edit Utama"]||[]).filter(function(item) { return item.id !== fid; });
+                globalSelections["Edit Tambahan"] = (globalSelections["Edit Tambahan"]||[]).filter(function(item) { return item.id !== fid; });
+            } else {
+                globalSelections[currentMode] = (globalSelections[currentMode]||[]).filter(function(item) { return item.id !== fid; });
+            }
+            
+            // PANGGIL MESIN AUTO-SLIDING SAAT FOTO DIHAPUS
+            applyAutoSliding(); 
+            renderGallery();
+            return;
+        }
+        
+        // ---- JIKA KLIEN MENAMBAH CENTANG (CHECK) ----
+        if (currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+            var lim = parsedLimits["EDIT"] || {max: 0};
+            var totalEdit = (globalSelections["Edit Utama"]||[]).length + (globalSelections["Edit Tambahan"]||[]).length;
+            var hargaPerFoto = catPrices.extraEdit || 0;
+
+            if (lim.max === 0) {
+               if (totalEdit === 0 && hargaPerFoto > 0) {
+                  cb.checked = false;
+                  showModal("Seluruh edit foto dikenakan biaya sebesar Rp " + hargaPerFoto.toLocaleString('id') + " per foto. Lanjutkan?", function() {
+                      globalSelections["Edit Tambahan"] = globalSelections["Edit Tambahan"] || [];
+                      globalSelections["Edit Tambahan"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Tambahan", isExtra:true, price: hargaPerFoto}); 
+                      renderGallery();
+                  }); 
+                  return;
+               }
+               globalSelections["Edit Tambahan"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Tambahan", isExtra:true, price: hargaPerFoto});
+            } else {
+               if (totalEdit < lim.max) {
+                   globalSelections["Edit Utama"] = globalSelections["Edit Utama"] || [];
+                   globalSelections["Edit Utama"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Utama", isExtra:false});
+               } else if (totalEdit === lim.max && hargaPerFoto > 0) {
+                   cb.checked = false;
+                   showModal("Kuota Edit Utama Gratis penuh (" + lim.max + " foto)!\n\nFoto berikutnya akan dialihkan ke menu Edit Tambahan dengan biaya sebesar Rp " + hargaPerFoto.toLocaleString('id') + " per foto. Lanjutkan?", function() {
+                       globalSelections["Edit Tambahan"] = globalSelections["Edit Tambahan"] || [];
+                       globalSelections["Edit Tambahan"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Tambahan", isExtra:true, price: hargaPerFoto}); 
+                       renderGallery();
+                   });
+                   return;
+               } else if (totalEdit >= lim.max) {
+                   if (hargaPerFoto === 0) { 
+                       cb.checked = false;
+                       showModal("Kuota Edit Utama Gratis penuh (" + lim.max + " foto)!\nStudio tidak menetapkan harga edit tambahan."); 
+                       return;
+                   }
+                   globalSelections["Edit Tambahan"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Tambahan", isExtra:true, price: hargaPerFoto});
+               }
+            }
+        } 
+        else if (currentMode.indexOf("ADDON_") === 0) {
+           var sizeKey = currentMode.replace("ADDON_PRINT_", "");
+           var pCetak = catPrices.prints[sizeKey] || 0;
+           var pFrame = (catPrices.frames && catPrices.frames[sizeKey]) ? catPrices.frames[sizeKey] : 0;
+           
+           if (pFrame > 0 && sizeKey !== "4R") {
+              pendingAddon = { file:fname, id:fid, size:sizeKey, mode:currentMode };
+              var html = '<div class="addon-row"><input type="checkbox" id="chkCetak" checked><label>Cetak Tambahan</label><span class="price">+Rp ' + pCetak.toLocaleString('id') + '</span></div>';
+              html += '<div class="addon-row"><input type="checkbox" id="chkFrame"><label>Tambah Bingkai Mewah</label><span class="price">+Rp ' + pFrame.toLocaleString('id') + '</span></div>';
+              document.getElementById('addonOptions').innerHTML = html; 
+              document.getElementById('addonModalOverlay').style.display='flex';
+           } else {
+              if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+              globalSelections[currentMode].push({
+                  folder: currentFolderName, file: fname, id: fid, note: "", mode: currentMode, 
+                  isExtra: true, priceCetak: pCetak, priceFrame: 0
+              });
+              renderGallery();
+           }
+        }
+        else if (currentMode.indexOf("MAGAZINE_") === 0) {
+           var keyStr = currentMode.replace("MAGAZINE_","");
+           var lim = parsedLimits[currentMode] || {max: 0};
+           var totalCount = (globalSelections[currentMode]||[]).length;
+           
+           if (lim.max > 0 && totalCount >= lim.max) {
+               if (totalCount % lim.max === 0) {
+                   var pMag = (catPrices.magazines && catPrices.magazines[keyStr]) ? catPrices.magazines[keyStr] : 0;
+                   if (pMag === 0) { 
+                       cb.checked = false;
+                       showModal("Kuota cetak " + keyStr + " sudah penuh!\nStudio tidak melayani penambahan album ekstra."); 
+                       return;
+                   }
+                   cb.checked = false;
+                   var nextCap = totalCount + lim.max; 
+                   showModal("Batas " + totalCount + " foto terpenuhi!\n\nTambahkan 1 Album Magazine " + keyStr + " baru seharga Rp " + pMag.toLocaleString('id') + " agar kamu bisa memilih hingga " + nextCap + " foto?", function() {
+                       if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+                       globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false}); 
+                       renderGallery();
+                   });
+                   return;
+               }
+           }
+           
+           if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+           globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false});
+        }
+        else {
+           var lim = parsedLimits[currentMode] || {max: 0}; 
+           var totalCount = (globalSelections[currentMode]||[]).length;
+           var keyStr = currentMode.replace("MAGNETIC_","").replace("PEMBESARAN_","");
+           var pCetak = (catPrices.prints && catPrices.prints[keyStr]) ? catPrices.prints[keyStr] : 0;
+           var pFrame = (catPrices.frames && catPrices.frames[keyStr]) ? catPrices.frames[keyStr] : 0;
+           
+           if (keyStr === "4R" && lim.max > 0 && totalCount >= lim.max) {
+               var E_next = (totalCount + 1) - lim.max;
+               var targetAlbum = 0;
+               var prevAlbum = 0;
+               
+               if (E_next === 1) targetAlbum = 40;
+               else if (E_next === 41) { targetAlbum = 80; prevAlbum = 40; }
+               else if (E_next === 81) { targetAlbum = 120; prevAlbum = 80; }
+               else if (E_next === 121) { targetAlbum = 180; prevAlbum = 120; }
+               else if (E_next === 181) { targetAlbum = 240; prevAlbum = 180; }
+
+               if (targetAlbum > 0) {
+                   var hargaAlbum = (catPrices.albums && catPrices.albums[targetAlbum.toString()]) ? catPrices.albums[targetAlbum.toString()] : 0;
+                   if (hargaAlbum > 0 || pCetak > 0) {
+                       cb.checked = false;
+                       var msg = "Kamu telah mencapai batas <b>" + totalCount + " foto</b>.<br><br>";
+                       if (hargaAlbum > 0) {
+                           msg += "Foto selanjutnya dikenakan biaya cetak (Rp " + pCetak.toLocaleString('id') + "/lbr) ";
+                           msg += "serta penambahan <b>Album Eksklusif (Isi " + targetAlbum + ")</b> seharga Rp " + hargaAlbum.toLocaleString('id') + ".<br><br>";
+                           if (prevAlbum > 0) { 
+                               msg += "<span style='font-size:12px; color:var(--text-muted);'>*Album " + targetAlbum + " ini akan otomatis MENGGANTIKAN tambahan album " + prevAlbum + " sebelumnya.</span><br><br>";
+                           }
+                       } else { 
+                           msg += "Foto selanjutnya akan dikenakan biaya cetak tambahan sebesar Rp " + pCetak.toLocaleString('id') + " per lembar.<br><br>";
+                       }
+                       showModal4R(msg, 
+                          function() { 
+                              if (hargaAlbum > 0) { cartAlbums["AUTO_4R_ALBUM"] = targetAlbum; }
+                              globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0}); 
+                              renderGallery();
+                          },
+                          function() { 
+                              globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0}); 
+                              renderGallery();
+                          }
+                       );
+                       return; 
+                   }
+               }
+               
+               if (pCetak === 0 && Object.keys(catPrices.albums).length === 0) { 
+                   cb.checked = false;
+                   showModal("Kuota cetak 4R sudah penuh!\nStudio tidak melayani extra pembelian."); 
+                   return;
+               }
+               
+               if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+               globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0}); 
+               renderGallery();
+               return;
+           }
+           
+           if (lim.max > 0 && totalCount >= lim.max) {
+              if (pCetak === 0 && pFrame === 0) { 
+                  cb.checked=false;
+                  showModal("Kuota cetak " + keyStr + " sudah penuh!\nStudio tidak melayani extra pembelian ukuran ini."); 
+                  return;
+              }
+              if (keyStr === "4R") {
+                  if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+                  globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0});
+              } else {
+                  pendingAddon = { file:fname, id:fid, size:keyStr, mode:currentMode };
+                  var html = '<div class="addon-row"><input type="checkbox" id="chkCetak" checked><label>Cetak Tambahan</label><span class="price">+Rp ' + pCetak.toLocaleString('id') + '</span></div>';
+                  if (pFrame > 0 && keyStr!=="4R") html += '<div class="addon-row"><input type="checkbox" id="chkFrame"><label>Tambah Bingkai Mewah</label><span class="price">+Rp ' + pFrame.toLocaleString('id') + '</span></div>';
+                  document.getElementById('addonOptions').innerHTML = html; 
+                  document.getElementById('addonModalOverlay').style.display='flex';
+              }
+           } else {
+              if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+              globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false});
+           }
+        }
+        renderGallery();
+      }
+
+      function closeAddonModal(save) {
+        document.getElementById('addonModalOverlay').style.display='none';
+        if(save && pendingAddon) {
+          var chkC = document.getElementById('chkCetak');
+          var chkF = document.getElementById('chkFrame');
+          var pCetak = (catPrices.prints && catPrices.prints[pendingAddon.size]) ? catPrices.prints[pendingAddon.size] : 0;
+          var pFrame = (catPrices.frames && catPrices.frames[pendingAddon.size]) ? catPrices.frames[pendingAddon.size] : 0;
+          
+          if ((!chkC || !chkC.checked) && (!chkF || !chkF.checked)) { renderGallery(); return; }
+          
+          globalSelections[pendingAddon.mode].push({ 
+              folder: currentFolderName, file: pendingAddon.file, id: pendingAddon.id, note: "", mode: pendingAddon.mode, 
+              isExtra: true, priceCetak: (chkC && chkC.checked ? pCetak : 0), priceFrame: (chkF && chkF.checked ? pFrame : 0) 
+          });
+        } 
+        pendingAddon = null; renderGallery();
+      }
+
+      function saveNote(el, fid) { 
+          var it = null;
+          var arrs = ["Edit Utama", "Edit Tambahan"];
+          for(var x=0; x<arrs.length; x++) { 
+              if(globalSelections[arrs[x]]) { 
+                  for(var j=0; j<globalSelections[arrs[x]].length; j++) { 
+                      if(globalSelections[arrs[x]][j].id === fid) { it = globalSelections[arrs[x]][j]; break; } 
+                  } 
+              } 
+              if(it) break;
+          }
+          if(it) { it.note=el.value; } 
+      }
+
+      function saveAndBack() {
+          if (!MASTER_FOLDER_ID) {
+              hideAllViews();
+              isReviewMode=false; document.getElementById('reviewToggleCheck').checked=false; 
+              if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") { document.getElementById('mainNavView').style.display='flex'; } else { openCetakSubMenu(); } return;
+          }
+          var overlay = document.getElementById('saveOverlay');
+          overlay.style.display = 'flex';
+          
+          var timestamp = new Date().getTime(); 
+          var payloadObj = { selections: globalSelections, cart: cartAlbums, lastModified: timestamp };
+          var payload = JSON.stringify(payloadObj);
+          try { localStorage.setItem('fc_draft_' + MASTER_FOLDER_ID, payload); } catch(e) {}
+          
+          google.script.run.withSuccessHandler(function(res) {
+              setTimeout(function() { 
+                  overlay.style.display = 'none'; hideAllViews(); isReviewMode=false; document.getElementById('reviewToggleCheck').checked=false; 
+                  if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") { document.getElementById('mainNavView').style.display='flex'; } else { openCetakSubMenu(); } 
+              }, 800);
+          }).withFailureHandler(function(err) {
+              overlay.style.display = 'none'; 
+              showModal("⚠️ GAGAL MENYIMPAN!<br>Koneksi internet kakak sepertinya terputus atau tidak stabil.<br>Mohon cari sinyal yang bagus, lalu coba klik SIMPAN lagi.");
+          }).saveDraftPusat(MASTER_FOLDER_ID, payload);
+      }
+
+      function openCartView() {
+        hideAllViews(); document.getElementById('cartView').style.display='block';
+        var html = '';
+        var albumOptions = ["40", "80", "120", "180", "240"];
+        for(var i=0; i<albumOptions.length; i++) {
+           var size = albumOptions[i];
+           var price = (catPrices.albums && catPrices.albums[size]) ? catPrices.albums[size] : 0;
+           if(price > 0) {
+              var c = cartAlbums["ALBUM_" + size] || 0;
+              html += '<div class="cart-item"><div><div style="font-weight:800; font-size:15px;">Album Eksklusif Isi ' + size + '</div><div style="color:#34C759;font-size:13px; font-weight:600;">Rp ' + price.toLocaleString('id') + '</div></div><div style="display:flex;gap:8px;align-items:center;"><button class="qty-btn" onclick="updCart(\'ALBUM_' + size + '\',-1)">-</button><span style="font-weight:800;width:25px;text-align:center;">' + c + '</span><button class="qty-btn" onclick="updCart(\'ALBUM_' + size + '\',1)">+</button></div></div>';
+           }
+        }
+        if(catPrices.magazines) {
+            for(var m in catPrices.magazines) {
+               var p = catPrices.magazines[m] || 0;
+               if(p > 0) {
+                  var c = cartAlbums["MAG_" + m] || 0;
+                  html += '<div class="cart-item"><div><div style="font-weight:800; font-size:15px;">Album Magazine ' + m + '</div><div style="color:#34C759;font-size:13px; font-weight:600;">Rp ' + p.toLocaleString('id') + '</div></div><div style="display:flex;gap:8px;align-items:center;"><button class="qty-btn" onclick="updCart(\'MAG_' + m + '\',-1)">-</button><span style="font-weight:800;width:25px;text-align:center;">' + c + '</span><button class="qty-btn" onclick="updCart(\'MAG_' + m + '\',1)">+</button></div></div>';
+               }
+            }
+        }
+        var fdOptions = ["64GB", "128GB", "256GB"];
+        for(var i=0; i<fdOptions.length; i++) {
+           var size = fdOptions[i];
+           var price = (catPrices.flashdisk && catPrices.flashdisk[size]) ? catPrices.flashdisk[size] : 0;
+           if(price > 0) {
+              var c = cartAlbums["FD_" + size] || 0;
+              html += '<div class="cart-item"><div><div style="font-weight:800; font-size:15px;">FlashDisk Premium ' + size + '</div><div style="color:#34C759;font-size:13px; font-weight:600;">Rp ' + price.toLocaleString('id') + '</div></div><div style="display:flex;gap:8px;align-items:center;"><button class="qty-btn" onclick="updCart(\'FD_' + size + '\',-1)">-</button><span style="font-weight:800;width:25px;text-align:center;">' + c + '</span><button class="qty-btn" onclick="updCart(\'FD_' + size + '\',1)">+</button></div></div>';
+           }
+        }
+        var pCopy = catPrices.copyOriginal || 0;
+        if(pCopy > 0) {
+           var isChecked = cartAlbums["COPY_ORIGINAL"] ? "checked" : "";
+           html += '<div class="cart-item"><div><div style="font-weight:800; font-size:15px;">Copy Semua Data (Original)</div><div style="color:#34C759;font-size:13px; font-weight:600;">Rp ' + pCopy.toLocaleString('id') + '</div></div><input type="checkbox" style="transform:scale(1.5); accent-color:var(--primary-color);" onchange="toggleCopyOriginalAddon(this)" ' + isChecked + '></div>';
+        }
+        document.getElementById('accessoriesListArea').innerHTML = html || '<p style="text-align:center;color:var(--text-muted);padding:20px; font-weight:500;">Studio tidak melayani aksesoris tambahan.</p>';
+      }
+
+      function toggleCopyOriginalAddon(cb) { cartAlbums["COPY_ORIGINAL"] = cb.checked ? 1 : 0; updateCartCount(); }
+      function updCart(key, v) { cartAlbums[key] = (cartAlbums[key]||0)+v; if(cartAlbums[key]<0) cartAlbums[key]=0; updateCartCount(); openCartView(); }
+      
+      function updateCartCount() { 
+          var t = 0;
+          for(var k in cartAlbums) { 
+              if(k.indexOf("AUTO_") !== 0) t += cartAlbums[k];
+          } 
+          document.getElementById('cartCount').innerText = t;
+      }
+
+      function saveFromCart() {
+          if (!MASTER_FOLDER_ID) { hideAllViews(); document.getElementById('mainNavView').style.display='flex'; return; }
+          var overlay = document.getElementById('saveOverlay'); overlay.style.display = 'flex';
+          var payload = JSON.stringify({ selections: globalSelections, cart: cartAlbums, lastModified: new Date().getTime() });
+          try { localStorage.setItem('fc_draft_' + MASTER_FOLDER_ID, payload); } catch(e) {}
+          google.script.run.withSuccessHandler(function(res) { setTimeout(function() { overlay.style.display = 'none'; hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }, 800); }).withFailureHandler(function(err){ overlay.style.display = 'none'; showModal("⚠️ GAGAL MENYIMPAN!<br>Koneksi internet kakak terputus.<br>Mohon periksa sinyal lalu coba klik SIMPAN lagi."); }).saveDraftPusat(MASTER_FOLDER_ID, payload);
+      }
+
+      function openVisualPreview() {
+        hideAllViews(); document.getElementById('visualPreviewView').style.display = 'block';
+        var grid = document.getElementById('visualPreviewGrid'); 
+        var htmlArray = []; 
+        var isEmpty = true;
+        for (var key in globalSelections) {
+          var items = globalSelections[key];
+          if (items && items.length > 0) {
+            isEmpty = false;
+            var displayTitle = "";
+            if (key === "Edit Utama" || key === "Edit Tambahan") { displayTitle = "✨ FOTO REVISI EDIT"; } 
+            else if (key.indexOf("ADDON_") === 0) { displayTitle = "🛍️ TAMBAHAN " + key.replace("ADDON_PRINT_",""); } 
+            else { displayTitle = "📸 UKURAN " + key.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_",""); }
+            
+            htmlArray.push('<div style="color:var(--text-main); font-weight:800; font-size:15px; margin-top:25px; border-bottom:2px solid var(--border-color); padding-bottom:8px;">' + displayTitle + '</div>');
+            htmlArray.push('<div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:15px; margin-bottom:15px;">');
+            
+            for(var j=0; j<items.length; j++) {
+              var item = items[j];
+              var gridItemHtml = '<div style="text-align:center; background:rgba(255,255,255,0.7); padding:8px; border-radius:12px; border:1px solid rgba(255,255,255,0.5);">';
+              gridItemHtml += '<img src="https://drive.google.com/thumbnail?id=' + item.id + '&sz=w200" loading="lazy" style="width:85px; height:85px; object-fit:cover; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">';
+              if (item.isExtra) {
+                  var badgeTxt = item.mode === "Edit Tambahan" ? "Rp " + (item.price||0).toLocaleString('id') : "Add-on";
+                  gridItemHtml += '<div style="font-size:9px; color:#fff; font-weight:bold; margin-top:8px; background:#FF3B30; padding:3px; border-radius:4px;">💎 ' + badgeTxt + '</div>';
+              }
+              gridItemHtml += '</div>'; htmlArray.push(gridItemHtml);
+            } 
+            htmlArray.push('</div>');
+          }
+        }
+        grid.innerHTML = isEmpty ? '<div style="text-align:center; color:var(--text-muted); padding:40px; font-weight:500;">Galeri kosong.</div>' : htmlArray.join(''); window.scrollTo(0, 0);
+      }
+
+      // ==========================================
+      // OTAK BARU 2: NOTA AGREGATOR UI
+      // ==========================================
+      function showPreview() {
+        hideAllViews(); document.getElementById('previewView').style.display='block';
+        var txt = "✅ RINCIAN PILIHAN UTAMA GRATIS\n"; 
+        var addTxt = "🛒 RINCIAN BIAYA ADD-ON (TAMBAHAN)\n\n";
+        var totalBelanja = 0;
+        var hasAddon = false;
+        
+        for (var key in globalSelections) {
+          if (key === "Edit Utama" || key === "Edit Tambahan") continue;
+          
+          if (key.indexOf("ADDON_") === 0) {
+             var labelMenuD = key.replace("ADDON_PRINT_","");
+             var extArrD = globalSelections[key] || [];
+             if(extArrD.length > 0) {
+                 hasAddon = true;
+                 
+                 // SISTEM AKUMULASI (AGREGATOR)
+                 var subCetak = 0;
+                 var countCetak = 0;
+                 for(var d=0; d<extArrD.length; d++) {
+                     var pC_D = extArrD[d].priceCetak || 0;
+                     if(pC_D > 0) { 
+                         countCetak++;
+                         subCetak += pC_D;
+                     }
+                 }
+                 if(countCetak > 0) {
+                     addTxt += "- Cetak Ekstra " + labelMenuD + " (" + countCetak + " Lbr) = Rp " + subCetak.toLocaleString('id') + "\n";
+                     totalBelanja += subCetak; 
+                 }
+             }
+             continue;
+          }
+          
+          var label = key.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+          var freeC = 0; 
+          var extArr = [];
+          
+          for(var j=0; j<globalSelections[key].length; j++) { 
+              if(globalSelections[key][j].isExtra) extArr.push(globalSelections[key][j]);
+              else freeC++; 
+          }
+          
+          if(freeC > 0) txt += "- Cetak " + label + " : " + freeC + " Foto\n";
+          
+          if(extArr.length > 0) {
+             hasAddon = true;
+             
+             // SISTEM AKUMULASI (AGREGATOR)
+             var subCetak = 0, countCetak = 0;
+             var subFrame = 0, countFrame = 0;
+             for(var e=0; e<extArr.length; e++) {
+                 var pC = extArr[e].priceCetak || 0; 
+                 var pF = extArr[e].priceFrame || 0;
+                 if(pC > 0) { countCetak++; subCetak += pC; }
+                 if(pF > 0) { countFrame++; subFrame += pF; }
+             }
+             
+             if(countCetak > 0) {
+                 addTxt += "- Cetak Ekstra " + label + " (" + countCetak + " Lbr) = Rp " + subCetak.toLocaleString('id') + "\n";
+                 totalBelanja += subCetak;
+             }
+             if(countFrame > 0) {
+                 addTxt += "- Bingkai Ekstra " + label + " (" + countFrame + " Pcs) = Rp " + subFrame.toLocaleString('id') + "\n";
+                 totalBelanja += subFrame;
+             }
+          }
+        }
+        
+        var eUtama = (globalSelections["Edit Utama"]||[]).length;
+        if(eUtama > 0) txt += "- Kuota Edit Utama : " + eUtama + " Foto\n";
+        
+        var eTambahan = (globalSelections["Edit Tambahan"]||[]).length;
+        if(eTambahan > 0) {
+           hasAddon = true;
+           var subTotalEdit = eTambahan * (catPrices.extraEdit || 0);
+           addTxt += "- Edit Foto Tambahan (" + eTambahan + " Lbr) = Rp " + subTotalEdit.toLocaleString('id') + "\n";
+           totalBelanja += subTotalEdit;
+        }
+        
+        // REKAP ALBUM FISIK (MANUAL + AUTO 4R)
+        var auto4RAlbum = cartAlbums["AUTO_4R_ALBUM"] || 0;
+        var albumOptions = ["40", "80", "120", "180", "240"];
+        for(var i=0; i<albumOptions.length; i++) {
+           var tierStr = albumOptions[i];
+           var qtyManual = cartAlbums["ALBUM_" + tierStr] || 0;
+           var qtyAuto = (auto4RAlbum.toString() === tierStr) ? 1 : 0;
+           var qty = qtyManual + qtyAuto;
+           
+           if(qty > 0) {
+              hasAddon = true;
+              var hargaAlbumBase = (catPrices.albums && catPrices.albums[tierStr]) ? catPrices.albums[tierStr] : 0;
+              var subAlbum = qty * hargaAlbumBase;
+              addTxt += "- Album Eksklusif Isi " + tierStr + " (" + qty + " Pcs) = Rp " + subAlbum.toLocaleString('id') + "\n";
+              totalBelanja += subAlbum;
+           }
+        }
+
+        // REKAP MAGAZINE (MANUAL + AUTO KELIPATAN)
+        var magOptions = ["M1", "M2"];
+        for(var i=0; i<magOptions.length; i++) {
+           var mKey = magOptions[i];
+           var lim = parsedLimits["MAGAZINE_" + mKey];
+           var selCount = (globalSelections["MAGAZINE_" + mKey] || []).length;
+           
+           var qtyAutoMag = 0;
+           if(lim && lim.max > 0 && selCount > lim.max) { 
+               qtyAutoMag = Math.ceil((selCount - lim.max) / lim.max);
+           }
+           var manualQty = cartAlbums["MAG_" + mKey] || 0; 
+           var totalMagQty = manualQty + qtyAutoMag; 
+           
+           if(totalMagQty > 0) {
+              hasAddon = true;
+              var subMag = totalMagQty * ((catPrices.magazines && catPrices.magazines[mKey]) ? catPrices.magazines[mKey] : 0);
+              addTxt += "- Album Magazine " + mKey + " (" + totalMagQty + " Pcs) = Rp " + subMag.toLocaleString('id') + "\n";
+              totalBelanja += subMag;
+           }
+        }
+
+        var fdOptions = ["64GB", "128GB", "256GB"];
+        for(var i=0; i<fdOptions.length; i++) {
+           var qty = cartAlbums["FD_" + fdOptions[i]] || 0;
+           if(qty > 0) {
+              hasAddon = true;
+              var subFd = qty * ((catPrices.flashdisk && catPrices.flashdisk[fdOptions[i]]) ? catPrices.flashdisk[fdOptions[i]] : 0);
+              addTxt += "- FlashDisk " + fdOptions[i] + " (" + qty + " Pcs) = Rp " + subFd.toLocaleString('id') + "\n";
+              totalBelanja += subFd;
+           }
+        }
+        
+        if(cartAlbums["COPY_ORIGINAL"] === 1) {
+           hasAddon = true;
+           var pCopy = catPrices.copyOriginal || 0;
+           addTxt += "- Copy Semua Data Original = Rp " + pCopy.toLocaleString('id') + "\n";
+           totalBelanja += pCopy;
+        }
+        
+        if(hasAddon) txt += "\n--------------------------------------\n" + addTxt + "💰 ESTIMASI TOTAL TAGIHAN: Rp " + totalBelanja.toLocaleString('id') + "\n--------------------------------------\n";
+        document.getElementById('previewContent').innerText = txt;
+        
+        var payArea = document.getElementById('clientPaymentRenderArea'); payArea.innerHTML = "";
+        if(totalBelanja > 0 && (activeVendor.qrisUrl || catPrices.rekening)) {
+           var payHtml = '<div style="background:rgba(255,255,255,0.7); border:1px dashed var(--primary-color); padding:15px; border-radius:16px; margin-top:15px;">';
+           payHtml += '<h3 style="font-size:14px; margin-bottom:10px; color:var(--primary-color);">💳 INFO PEMBAYARAN STUDIO:</h3>';
+           if(activeVendor.qrisUrl) payHtml += '<div style="text-align:center; margin-bottom:10px;"><p style="font-size:11px; font-weight:700;">Scan QRIS Resmi:</p><img src="' + activeVendor.qrisUrl + '" style="width:160px; border-radius:8px; margin-top:5px;"></div>';
+           if(catPrices.rekening) payHtml += '<p style="font-size:12px; font-weight:600; text-align:center; background:rgba(255,255,255,0.8); padding:10px; border-radius:8px; margin:0; border:1px solid #ccc;">📋 NO. REKENING:<br>' + catPrices.rekening + '</p>';
+           payHtml += '</div>'; payArea.innerHTML = payHtml;
+        }
+        window.scrollTo(0,0);
+      }
+
+      function eksekusiOpsiBWhatsApp() {
+        var btn = document.getElementById('btnKirimWa');
+        if (btn.getAttribute('data-processing') === 'true') return;
+        
+        var allItems = [];
+        for(var k in globalSelections) {
+          if(globalSelections[k]) { for(var j=0; j<globalSelections[k].length; j++) allItems.push(globalSelections[k][j]); }
+        }
+        
+        var adaAlbum = false;
+        for(var a in cartAlbums) { if(cartAlbums[a]>0) adaAlbum=true; }
+        
+        var qtyAutoMag1 = 0, qtyAutoMag2 = 0;
+        if (parsedLimits["MAGAZINE_M1"]) qtyAutoMag1 = Math.ceil(((globalSelections["MAGAZINE_M1"]||[]).length - parsedLimits["MAGAZINE_M1"].max) / parsedLimits["MAGAZINE_M1"].max);
+        if (parsedLimits["MAGAZINE_M2"]) qtyAutoMag2 = Math.ceil(((globalSelections["MAGAZINE_M2"]||[]).length - parsedLimits["MAGAZINE_M2"].max) / parsedLimits["MAGAZINE_M2"].max);
+        if (qtyAutoMag1 > 0 || qtyAutoMag2 > 0) adaAlbum = true;
+        if (allItems.length===0 && !adaAlbum) return showModal("Mohon pilih setidaknya 1 foto atau aksesoris terlebih dahulu!");
+        
+        btn.setAttribute('data-processing', 'true');
+        var ori = btn.innerText;
+        btn.innerText = "⏳ MEMBUAT REKAP V2..."; btn.style.pointerEvents = "none";
+
+        var overlay = document.getElementById('saveOverlay');
+        document.getElementById('saveTitle').innerText = "Memproses Ratusan File...";
+        document.getElementById('saveDesc').innerHTML = "Sedang menyusun folder di server Google.<br><br><b>JANGAN TUTUP LAYAR INI!</b><br>Tunggu hingga WhatsApp terbuka.";
+        overlay.style.display = 'flex';
+        
+        var waWindow = window.open('', '_blank');
+        if (waWindow) {
+            waWindow.document.write(`
+                <html>
+                <body style="font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f2f2f7; text-align: center; padding: 20px;">
+                    <h2 style="color: #333; font-size: 32px; margin-bottom: 10px;">⏳ Sedang menyiapkan WhatsApp...</h2>
+                    <p style="color: #666; font-size: 24px; line-height: 1.5;">Mohon tunggu sebentar, halaman akan mengalihkan ke WhatsApp otomatis.</p>
+                </body>
+                </html>
+            `);
+        }
+        var timestamp = new Date().getTime();
+        var payload = JSON.stringify({ selections: globalSelections, cart: cartAlbums, lastModified: timestamp });
+        
+        google.script.run.withSuccessHandler(function() {
+            google.script.run.withSuccessHandler(function(res) {
+                btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
+                overlay.style.display = 'none'; resetSaveOverlayText();
+
+                if(!res.success) { 
+                    btn.innerText = ori; if(waWindow) waWindow.close(); return showModal(res.message); 
+                }
+                
+                google.script.run.copyFilesBackground(res.folderId, JSON.stringify({
+                    items: allItems, vendor: activeVendor.namaVendor, nota: document.getElementById('previewContent').innerText
+                }));
+           
+                var msg = activeVendor.waText + "\n\n" + document.getElementById('previewContent').innerText + "\n";
+                var gen = document.getElementById('generalInstruction').value.trim();
+                if(gen) msg += "💡 INSTRUKSI TAMBAHAN:\n_" + gen + "_\n\n";
+                msg += "📁 FOLDER REKAP UTAMA:\n" + res.folderUrl;
+                var vendorWa = activeVendor.nomorWa.toString().replace(/\D/g, ''); 
+                if (vendorWa.startsWith('0')) { vendorWa = '62' + vendorWa.substring(1); } 
+                else if (!vendorWa.startsWith('62')) { vendorWa = '62' + vendorWa; }
+                
+                var targetLink = "https://api.whatsapp.com/send?phone=" + vendorWa + "&text=" + encodeURIComponent(msg);
+                if(waWindow) { waWindow.location.href = targetLink; } else { window.open(targetLink, '_blank'); }
+                
+                btn.innerText = "✅ REKAP SELESAI TERKIRIM";
+                btn.style.background = "#34C759"; btn.style.color = "#fff";
+                btn.onclick = function() { window.open(targetLink, '_blank'); };
+            }).withFailureHandler(function(err){
+                btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
+                overlay.style.display = 'none'; resetSaveOverlayText(); if(waWindow) waWindow.close();
+                showModal("Koneksi gagal saat membuat folder rekap. Silakan coba klik sekali lagi.");
+            }).createCangkangFolder(MASTER_FOLDER_ID, activeVendor.namaVendor);
+        }).withFailureHandler(function(){
+            btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
+            overlay.style.display = 'none'; resetSaveOverlayText(); if(waWindow) waWindow.close();
+            showModal("Koneksi internet terputus! Gagal menyimpan draf terakhir. Coba klik tombol kirim lagi.");
+        }).saveDraftPusat(MASTER_FOLDER_ID, payload);
+      }
+      // --- MODUL VENDOR PORTAL ---
+
+function openVendorPortal() {
+    // Sembunyikan halaman dashboard aslimu (Pastikan ID-nya sesuai dengan div dashboard kamu, misal 'dashboardView' atau 'mainDash')
+    document.getElementById('dashboardView').style.display = 'none'; 
+    var portal = document.getElementById('vendorPortalView');
+    portal.style.display = 'block';
+    
+    // Tampilkan loading 
+    document.getElementById('portalLoading').style.display = 'block';
+    document.getElementById('vendorTableBody').innerHTML = '';
+    
+    // Panggil fungsi di Code.gs untuk mengambil data
+    google.script.run
+        .withSuccessHandler(renderVendorTable)
+        .withFailureHandler(function(err){
+            document.getElementById('portalLoading').innerHTML = '❌ Gagal memuat data: ' + err.message;
+        })
+        .getVendorProgressData(activeVendor.namaVendor); 
+}
+
+function closeVendorPortal() {
+    document.getElementById('vendorPortalView').style.display = 'none';
+    document.getElementById('dashboardView').style.display = 'block'; // Kembali ke dashboard
+}
+
+function renderVendorTable(dataList) {
+    document.getElementById('portalLoading').style.display = 'none';
+    var tbody = document.getElementById('vendorTableBody');
+    
+    if(!dataList || dataList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="padding:20px; text-align:center; color:#888;">Belum ada data klien yang tersimpan.</td></tr>';
+        return;
+    }
+
+    var html = '';
+    for(var i=0; i<dataList.length; i++) {
+        var row = dataList[i];
+        
+        // Logika Status
+        var statusBadge = row.isFinal 
+            ? '<span style="background:#e8f5e9; color:#2e7d32; padding:4px 8px; border-radius:6px; font-weight:bold;">Selesai (Aktif)</span>'
+            : '<span style="background:#fff3e0; color:#ef6c00; padding:4px 8px; border-radius:6px; font-weight:bold;">Sedang Memilih</span>';
+        
+        html += '<tr style="border-bottom:1px solid #eee;">';
+        html += '<td style="padding:12px;"><strong>' + row.clientName + '</strong><br><span style="color:#888; font-size:11px;">' + row.totalPhotos + ' Foto</span></td>';
+        html += '<td style="padding:12px;">' + statusBadge + '</td>';
+        html += '<td style="padding:12px;">';
+        
+        if(row.isFinal) {
+            html += '<button style="background:var(--primary-color); color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:11px; margin-right:5px; margin-bottom:5px;" onclick="window.open(\'' + row.folderLink + '\', \'_blank\')">Lihat Folder</button>';
+            html += '<button style="background:#1c1c1e; color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:11px;" onclick="regenerateClientData(\'' + row.draftId + '\')">Generate Ulang 🔄</button>';
+        } else {
+            html += '<span style="color:#888; font-size:11px;">Menunggu klien selesai...</span>';
+        }
+        
+        html += '</td></tr>';
+    }
+    tbody.innerHTML = html;
+}
+
+function regenerateClientData(draftId) {
+    var konfirmasi = confirm("Apakah kamu yakin ingin membangun ulang folder rekap untuk klien ini?");
+    if(!konfirmasi) return;
+    
+    // Gunakan fungsi loading modal bawaan kamu
+    if(typeof showModal === "function") {
+        showModal("⏳ Sedang membangun ulang folder rekap. Mohon tunggu beberapa saat...");
+    }
+    
+    // Panggil fungsi eksekusi di Code.gs
+    google.script.run
+        .withSuccessHandler(function(linkBaru) {
+            if(typeof closeModal === "function") closeModal();
+            alert("✅ Berhasil! Folder dan PDF telah direkap ulang.");
+            openVendorPortal(); // Refresh data di tabel otomatis
+        })
+        .withFailureHandler(function(err) {
+            if(typeof closeModal === "function") closeModal();
+            alert("❌ Gagal: " + err.message);
+        })
+        .regenerateRekapFromDraft(draftId);
+}
+// ==========================================
+// SENSOR AUTO-LOGOUT 10 MENIT (REAL-TIME)
+// ==========================================
+var idleTimer;
+var WAKTU_IDLE = 10 * 60 * 1000; // 10 Menit (dalam milidetik)
+
+function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    localStorage.setItem('fc_last_active', new Date().getTime().toString()); 
+    
+    idleTimer = setTimeout(function() {
+        if (localStorage.getItem('avSession')) {
+            showModal("Sesi kamu telah berakhir otomatis karena tidak ada aktivitas selama 10 menit. Silakan login kembali.", function() {
+                // PERBAIKAN: Gunakan prosesLogout() agar token di Spreadsheet ikut dihapus
+                prosesLogout(); 
+            });
+        }
+    }, WAKTU_IDLE);
+}
+
+window.addEventListener('load', resetIdleTimer);
+document.addEventListener('mousemove', resetIdleTimer);
+document.addEventListener('keypress', resetIdleTimer);
+document.addEventListener('click', resetIdleTimer);
+document.addEventListener('scroll', resetIdleTimer);
+document.addEventListener('touchstart', resetIdleTimer);
+    </script>
+    <div id="vendorPortalView" style="display:none; padding:20px; max-width:800px; margin:auto; background:var(--bg-color); border-radius:20px; min-height:80vh; margin-top:20px;">
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2 style="margin:0; font-size:18px; color:var(--text-main);">📊 Pantau Progress Klien</h2>
+        <button style="background:#FF3B30; color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="closeVendorPortal()">
+            Keluar 🚪
+        </button>
+    </div>
+    
+    <div id="portalLoading" style="text-align:center; padding:30px; display:none; font-weight:600;">
+        ⏳ Mengambil data dari server...
+    </div>
+
+    <div style="overflow-x:auto; background:white; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+        <table style="width:100%; border-collapse: collapse; font-size:13px; text-align:left;">
+            <thead style="background:var(--primary-color); color:white;">
+                <tr>
+                    <th style="padding:12px; border-bottom:2px solid #eee;">Nama Klien</th>
+                    <th style="padding:12px; border-bottom:2px solid #eee;">Status</th>
+                    <th style="padding:12px; border-bottom:2px solid #eee;">Aksi Pemulihan</th>
+                </tr>
+            </thead>
+            <tbody id="vendorTableBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+  </body>
+</html>
