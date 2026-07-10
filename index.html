@@ -2070,44 +2070,29 @@ function prosesLogin() {
         btn.innerText = "⏳ MENYIAPKAN DATA..."; btn.style.pointerEvents = "none";
 
         var overlay = document.getElementById('saveOverlay');
-        document.getElementById('saveTitle').innerText = "Menyiapkan WhatsApp...";
+        document.getElementById('saveTitle').innerText = "Membuka WhatsApp...";
         document.getElementById('saveDesc').innerHTML = "Sedang menghubungi server...<br><br><b>Tunggu sebentar...</b>";
         overlay.style.display = 'flex';
         
-        // Membuka tab kosong di awal agar tidak diblokir oleh sistem HP
-        var waWindow = window.open('', '_blank');
-        if (waWindow) {
-            waWindow.document.write(`
-                <html>
-                <body style="font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #fce7f3; text-align: center; padding: 20px;">
-                    <div style="width: 40px; height: 40px; border: 4px solid #d4af37; border-top: 4px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
-                    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-                    <h2 style="color: #1c1c1e; font-size: 24px; margin-bottom: 10px;">Mengalihkan ke WhatsApp...</h2>
-                </body>
-                </html>
-            `);
-        }
-
         var timestamp = new Date().getTime();
         var payload = JSON.stringify({ selections: globalSelections, cart: cartAlbums, lastModified: timestamp });
         
         // 1. Simpan Draf Pilihan Dulu
         google.script.run.withSuccessHandler(function() {
-            // 2. Buat Cangkang Folder Utama (Proses ini sangat cepat)
+            // 2. Buat Cangkang Folder Utama
             google.script.run.withSuccessHandler(function(res) {
                 if(!res.success) { 
                     btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
                     overlay.style.display = 'none'; resetSaveOverlayText();
-                    btn.innerText = ori; if(waWindow) waWindow.close(); return showModal(res.message); 
+                    btn.innerText = ori; return showModal(res.message); 
                 }
                 
                 // 3. LEMPAR PERINTAH COPY FILE & PDF KE SERVER GOOGLE (FIRE AND FORGET)
-                // Kita abaikan responsenya, biarkan Google bekerja mandiri di awan
                 google.script.run.copyFilesBackground(res.folderId, JSON.stringify({
                     items: allItems, vendor: activeVendor.namaVendor, nota: document.getElementById('previewContent').innerText
                 }));
            
-                // 4. LANGSUNG BUKA WHATSAPP SEKARANG (Tanpa tunggu langkah 3 selesai!)
+                // 4. BUKA WHATSAPP LANGSUNG DI TAB YANG SAMA
                 btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
                 overlay.style.display = 'none'; resetSaveOverlayText();
 
@@ -2122,22 +2107,22 @@ function prosesLogin() {
                 
                 var targetLink = "https://api.whatsapp.com/send?phone=" + vendorWa + "&text=" + encodeURIComponent(msg);
                 
-                // Eksekusi pengalihan layar WhatsApp
-                if(waWindow) { waWindow.location.href = targetLink; } else { window.open(targetLink, '_blank'); }
+                // Eksekusi pengalihan layar WhatsApp langsung tanpa tab baru
+                window.location.href = targetLink;
                 
                 // Ubah Tampilan Tombol Aplikasi menjadi "Selesai"
                 btn.innerText = "✅ REKAP SELESAI TERKIRIM";
                 btn.style.background = "#34C759"; btn.style.color = "#fff";
-                btn.onclick = function() { window.open(targetLink, '_blank'); };
+                btn.onclick = function() { window.location.href = targetLink; };
 
             }).withFailureHandler(function(err){
                 btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
-                overlay.style.display = 'none'; resetSaveOverlayText(); if(waWindow) waWindow.close();
+                overlay.style.display = 'none'; resetSaveOverlayText();
                 showModal("Koneksi gagal saat membuat folder rekap. Silakan coba klik sekali lagi.");
             }).createCangkangFolder(MASTER_FOLDER_ID, activeVendor.namaVendor);
         }).withFailureHandler(function(){
             btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
-            overlay.style.display = 'none'; resetSaveOverlayText(); if(waWindow) waWindow.close();
+            overlay.style.display = 'none'; resetSaveOverlayText();
             showModal("Koneksi internet terputus! Gagal menyimpan draf terakhir. Coba klik tombol kirim lagi.");
         }).saveDraftPusat(MASTER_FOLDER_ID, payload);
       }
