@@ -2090,31 +2090,45 @@ function prosesLogin() {
         
         google.script.run.withSuccessHandler(function() {
             google.script.run.withSuccessHandler(function(res) {
-                btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
-                overlay.style.display = 'none'; resetSaveOverlayText();
-
                 if(!res.success) { 
+                    btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
+                    overlay.style.display = 'none'; resetSaveOverlayText();
                     btn.innerText = ori; if(waWindow) waWindow.close(); return showModal(res.message); 
                 }
                 
-                google.script.run.copyFilesBackground(res.folderId, JSON.stringify({
+                // Ubah status loading agar klien tahu ini sedang membuat PDF
+                document.getElementById('saveTitle').innerText = "Menyusun Nota PDF...";
+                document.getElementById('saveDesc').innerHTML = "Sedang merapikan file dan mencetak nota.<br><br><b>JANGAN TUTUP LAYAR INI!</b><br>Tunggu hingga WhatsApp terbuka.";
+
+                // JALANKAN copyFilesBackground DENGAN SUCCESS HANDLER (MENUNGGU SAMPAI SELESAI)
+                google.script.run.withSuccessHandler(function(copyRes) {
+                    btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
+                    overlay.style.display = 'none'; resetSaveOverlayText();
+
+                    var msg = activeVendor.waText + "\n\n" + document.getElementById('previewContent').innerText + "\n";
+                    var gen = document.getElementById('generalInstruction').value.trim();
+                    if(gen) msg += "💡 INSTRUKSI TAMBAHAN:\n_" + gen + "_\n\n";
+                    msg += "📁 FOLDER REKAP UTAMA:\n" + res.folderUrl;
+                    
+                    var vendorWa = activeVendor.nomorWa.toString().replace(/\D/g, ''); 
+                    if (vendorWa.startsWith('0')) { vendorWa = '62' + vendorWa.substring(1); } 
+                    else if (!vendorWa.startsWith('62')) { vendorWa = '62' + vendorWa; }
+                    
+                    var targetLink = "https://api.whatsapp.com/send?phone=" + vendorWa + "&text=" + encodeURIComponent(msg);
+                    if(waWindow) { waWindow.location.href = targetLink; } else { window.open(targetLink, '_blank'); }
+                    
+                    btn.innerText = "✅ REKAP SELESAI TERKIRIM";
+                    btn.style.background = "#34C759"; btn.style.color = "#fff";
+                    btn.onclick = function() { window.open(targetLink, '_blank'); };
+
+                }).withFailureHandler(function(err) {
+                    btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
+                    overlay.style.display = 'none'; resetSaveOverlayText(); if(waWindow) waWindow.close();
+                    showModal("Gagal menyusun PDF: " + err.message);
+                }).copyFilesBackground(res.folderId, JSON.stringify({
                     items: allItems, vendor: activeVendor.namaVendor, nota: document.getElementById('previewContent').innerText
                 }));
            
-                var msg = activeVendor.waText + "\n\n" + document.getElementById('previewContent').innerText + "\n";
-                var gen = document.getElementById('generalInstruction').value.trim();
-                if(gen) msg += "💡 INSTRUKSI TAMBAHAN:\n_" + gen + "_\n\n";
-                msg += "📁 FOLDER REKAP UTAMA:\n" + res.folderUrl;
-                var vendorWa = activeVendor.nomorWa.toString().replace(/\D/g, ''); 
-                if (vendorWa.startsWith('0')) { vendorWa = '62' + vendorWa.substring(1); } 
-                else if (!vendorWa.startsWith('62')) { vendorWa = '62' + vendorWa; }
-                
-                var targetLink = "https://api.whatsapp.com/send?phone=" + vendorWa + "&text=" + encodeURIComponent(msg);
-                if(waWindow) { waWindow.location.href = targetLink; } else { window.open(targetLink, '_blank'); }
-                
-                btn.innerText = "✅ REKAP SELESAI TERKIRIM";
-                btn.style.background = "#34C759"; btn.style.color = "#fff";
-                btn.onclick = function() { window.open(targetLink, '_blank'); };
             }).withFailureHandler(function(err){
                 btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
                 overlay.style.display = 'none'; resetSaveOverlayText(); if(waWindow) waWindow.close();
