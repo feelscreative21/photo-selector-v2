@@ -437,8 +437,12 @@
           <div id="currentFolderName" style="color:var(--primary-color); font-weight:800; font-size:16px;">Folder</div>
         </div>
         
-        <div style="background:var(--card-bg); backdrop-filter:blur(10px); border:1px solid var(--border-color); border-radius:10px; padding:8px 14px; display:inline-flex; align-items:center; gap:8px; font-size:12px; cursor:pointer; margin-top:10px;" onclick="toggleReviewMode()">
-          <input type="checkbox" id="reviewToggleCheck" style="pointer-events:none;"> Tampilkan Pilihan Saya
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+          <button class="btn-action" style="width: auto; padding: 8px 16px; margin: 0; background: var(--card-bg); color: var(--text-main); font-size: 12px; border: 1px solid var(--border-color); border-radius: 10px; backdrop-filter: blur(10px);" onclick="saveAndBack()">⬅ Kembali</button>
+          
+          <div style="background:var(--card-bg); backdrop-filter:blur(10px); border:1px solid var(--border-color); border-radius:10px; padding:8px 14px; display:inline-flex; align-items:center; gap:8px; font-size:12px; cursor:pointer;" onclick="toggleReviewMode()">
+            <input type="checkbox" id="reviewToggleCheck" style="pointer-events:none;"> Tampilkan Pilihan Saya
+          </div>
         </div>
         
       </div>
