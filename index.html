@@ -154,6 +154,22 @@
       .brand-logo-img { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display: none; margin-bottom: 15px; border: 2px solid #fff; }
       
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      /* --- ANIMASI TRANSISI HALAMAN BARU --- */
+      .page-animate {
+          animation: pageTransition 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          opacity: 0;
+      }
+
+      @keyframes pageTransition {
+          from {
+              opacity: 0;
+              transform: translateY(15px);
+          }
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
     </style>
   </head>
   <body>
@@ -561,6 +577,8 @@
           var views = document.querySelectorAll('.view-section, .panel-section');
           for(var i=0; i<views.length; i++) {
               views[i].style.display = 'none';
+              // Hapus kelas animasi lama agar bisa dipicu ulang saat halaman dibuka lagi
+              views[i].classList.remove('page-animate'); 
           }
       }
 
@@ -664,9 +682,24 @@
       function showLogin() { hideAllViews(); document.getElementById('loginView').style.display='flex'; }
       function showRegister() { hideAllViews(); document.getElementById('registerView').style.display='flex'; }
       function showForgotPassword() { hideAllViews(); document.getElementById('forgotPasswordView').style.display='flex'; }
-      function handleMulaiMemilih() { hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }
-      function backToMainMenuOrWelcome() { hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }
-      function backToMenuFromPreview() { hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }
+      function handleMulaiMemilih() { 
+          hideAllViews(); 
+          var el = document.getElementById('mainNavView');
+          el.style.display = 'flex'; 
+          el.classList.add('page-animate');
+      }
+      function backToMainMenuOrWelcome() { 
+          hideAllViews(); 
+          var el = document.getElementById('mainNavView');
+          el.style.display = 'flex'; 
+          el.classList.add('page-animate');
+      }
+      function backToMenuFromPreview() { 
+          hideAllViews(); 
+          var el = document.getElementById('mainNavView');
+          el.style.display = 'flex'; 
+          el.classList.add('page-animate');
+      }
       function closeVisualPreview() { hideAllViews(); document.getElementById('previewView').style.display='block'; }
       
       function prosesLogout() { 
@@ -1292,9 +1325,11 @@ function prosesLogin() {
       }
       
       function openCetakSubMenu() {
-        hideAllViews();
-        document.getElementById('homeView').style.display='flex';
-        var hMag='', hMgz='', hPem='';
+    hideAllViews();
+    var elHome = document.getElementById('homeView');
+    elHome.style.display = 'flex';
+    elHome.classList.add('page-animate');
+    var hMag='', hMgz='', hPem='';
         
         for (var i=0; i<ALL_KUOTA_KEYS.length; i++) {
           var k = ALL_KUOTA_KEYS[i];
@@ -1346,7 +1381,9 @@ function prosesLogin() {
       function openGallery(m, l) { 
           currentMode=m;
           hideAllViews(); 
-          document.getElementById('galleryView').style.display='block'; 
+          var elGal = document.getElementById('galleryView');
+          elGal.style.display = 'block'; 
+          elGal.classList.add('page-animate');
           updateGalleryCounter(); 
           loadFolder(URL_FID, false); 
       }
@@ -1898,7 +1935,10 @@ function prosesLogin() {
       // OTAK BARU 2: NOTA AGREGATOR UI
       // ==========================================
       function showPreview() {
-        hideAllViews(); document.getElementById('previewView').style.display='block';
+        hideAllViews(); 
+        var elPrev = document.getElementById('previewView');
+        elPrev.style.display = 'block';
+        elPrev.classList.add('page-animate');
         var txt = "✅ RINCIAN PILIHAN UTAMA GRATIS\n"; 
         var addTxt = "🛒 RINCIAN BIAYA ADD-ON (TAMBAHAN)\n\n";
         var totalBelanja = 0;
