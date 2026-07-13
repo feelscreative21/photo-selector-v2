@@ -2257,26 +2257,40 @@ function regenerateClientData(draftId) {
 var idleTimer;
 var WAKTU_IDLE = 10 * 60 * 1000; // 10 Menit (dalam milidetik)
 
-function resetIdleTimer() {
-    clearTimeout(idleTimer);
-    localStorage.setItem('fc_last_active', new Date().getTime().toString()); 
-    
-    idleTimer = setTimeout(function() {
-        if (localStorage.getItem('avSession')) {
-            showModal("Sesi kamu telah berakhir otomatis karena tidak ada aktivitas selama 10 menit. Silakan login kembali.", function() {
-                // PERBAIKAN: Gunakan prosesLogout() agar token di Spreadsheet ikut dihapus
-                prosesLogout(); 
-            });
-        }
-    }, WAKTU_IDLE);
-}
+// 2. PROSES LOGOUT (MENUNGGU RESPON GOOGLE)
+              var sess = localStorage.getItem('avSession');
+              var savedToken = localStorage.getItem('fc_device_token');
 
-window.addEventListener('load', resetIdleTimer);
-document.addEventListener('mousemove', resetIdleTimer);
-document.addEventListener('keypress', resetIdleTimer);
-document.addEventListener('click', resetIdleTimer);
-document.addEventListener('scroll', resetIdleTimer);
-document.addEventListener('touchstart', resetIdleTimer);
+              if (sess) {
+                  var parsed = JSON.parse(sess);
+                  
+                  if (parsed.username && savedToken) {
+                      // A. Kirim perintah ke Google dan TUNGGU
+                      google.script.run.withSuccessHandler(function() {
+                          // B. JIKA GOOGLE SUDAH OKE, BARU HAPUS MEMORI LOKAL
+                          localStorage.removeItem('avSession');
+                          localStorage.removeItem('fc_device_token');
+                          localStorage.removeItem('fc_last_active');
+                          
+                          // C. Tampilkan peringatan dan pindah halaman
+                          showModal("Sesi telah berakhir karena tidak ada aktivitas selama 10 menit. Silakan login kembali.", function() {
+                              window.top.location.reload(); 
+                          });
+                      }).withFailureHandler(function(err) {
+                          // JIKA INTERNET PUTUS, TETAP PAKSA HAPUS MEMORI LOKAL
+                          localStorage.removeItem('avSession');
+                          localStorage.removeItem('fc_device_token');
+                          localStorage.removeItem('fc_last_active');
+                          window.top.location.reload();
+                      }).logoutVendor(parsed.username, savedToken);
+                  } else {
+                      // Hapus paksa jika data tidak lengkap
+                      localStorage.removeItem('avSession');
+                      localStorage.removeItem('fc_device_token');
+                      localStorage.removeItem('fc_last_active');
+                      window.top.location.reload();
+                  }
+              }
     </script>
     <div id="vendorPortalView" style="display:none; padding:20px; max-width:800px; margin:auto; background:var(--bg-color); border-radius:20px; min-height:80vh; margin-top:20px;">
     
