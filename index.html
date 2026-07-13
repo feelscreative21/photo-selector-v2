@@ -171,38 +171,25 @@
           }
       }
       /* =========================================================
-         🌟 MODE DESKTOP & TABLET (BENTO GRID & WIDE GALLERY - SUPER ENFORCED) 
+         🌟 MODE DESKTOP & TABLET (PERBAIKAN BENTO GRID) 
          ========================================================= */
       @media (min-width: 768px) {
-          /* 1. Paksa semua container utama melar di layar lebar */
+          /* 1. Jarak aman untuk background laptop */
           body { 
               padding: 40px 0 !important; 
               background-color: #f2f2f7 !important; 
           }
           
-          /* Cari nama kelas container utama kamu di bawah ini, kita paksa jadi 900px */
-          .container, .app-container, .main-container, .panel-section, 
-          #homeView, #galleryView, #previewView {
+          /* 2. Lebarkan wadah utama TANPA mengganggu sistem hide/show Javascript */
+          .panel-section, #homeView, #galleryView, #previewView {
               max-width: 900px !important; 
-              width: 900px !important;
               margin: 0 auto !important;
               border-radius: 24px !important;
               box-shadow: 0 20px 60px rgba(0,0,0,0.1) !important;
-              overflow: hidden !important;
-              background-color: #fff !important; /* Memberi warna dasar putih agar terlihat melayang */
           }
 
-          /* 2. BENTO BOX GRID untuk Halaman Menu Utama */
-          /* Mengubah susunan elemen di dalam homeView menjadi Grid menyamping */
-          #homeView {
-              display: flex !important;
-              flex-direction: column !important;
-          }
-
-          /* Cari pembungkus kartu kategori, kita tembak secara umum & spesifik */
-          #homeView > div:nth-of-type(2), 
-          #homeView .menu-container,
-          #homeView .category-container { 
+          /* 3. BENTO BOX GRID - Menargetkan isi di dalam homeView (Bukan pembungkus luarnya) */
+          #homeView > div:nth-of-type(2) { 
               display: grid !important;
               grid-template-columns: repeat(2, 1fr) !important; 
               gap: 20px !important;
@@ -210,19 +197,18 @@
               padding: 20px !important;
           }
           
-          .category-card, .menu-card { 
+          /* Hilangkan jarak bawah bawaan HP agar rata di dalam Grid Desktop */
+          #homeView .category-card { 
               margin-bottom: 0 !important; 
               height: 100% !important; 
           }
 
-          /* 3. GALERI FOTO LEBIH LUAS (4-6 Kolom) */
+          /* 4. GALERI FOTO LEBIH LUAS (4-6 Kolom) */
           .gallery {
               display: grid !important;
               grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
               gap: 20px !important;
               padding: 20px !important;
-              width: 100% !important;
-              max-width: 100% !important;
           }
       }
     </style>
