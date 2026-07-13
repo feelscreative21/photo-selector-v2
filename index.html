@@ -170,6 +170,40 @@
               transform: translateY(0);
           }
       }
+      /* =========================================================
+         🌟 MODE DESKTOP & TABLET (BENTO GRID & WIDE GALLERY) 
+         ========================================================= */
+      @media (min-width: 768px) {
+          /* 1. Bebaskan Kuncian Lebar Aplikasi (Biar Lega) */
+          body { padding: 40px 0; background-color: #f2f2f7; } /* Kasih jarak atas bawah di laptop */
+          .panel-section, #homeView, #galleryView, #previewView {
+              max-width: 900px !important; /* Lebar optimal untuk mata */
+              margin: 0 auto;
+              border-radius: 24px;
+              box-shadow: 0 20px 60px rgba(0,0,0,0.1); /* Efek melayang elegan */
+              overflow: hidden;
+          }
+
+          /* 2. BENTO BOX GRID untuk Halaman Menu Utama */
+          /* Menargetkan kotak pembungkus Kategori A, B, C, D dll */
+          #homeView > div:nth-of-type(2) { 
+              display: grid;
+              grid-template-columns: repeat(2, 1fr); /* Pecah jadi 2 kolom menyamping */
+              gap: 20px;
+              align-items: start;
+              padding: 20px;
+          }
+          
+          /* Hilangkan bayangan berlebih pada kartu individu karena bento sudah punya jarak */
+          #homeView .category-card { margin-bottom: 0; height: 100%; }
+
+          /* 3. GALERI FOTO LEBIH LUAS (4-6 Kolom) */
+          .gallery {
+              grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+              gap: 20px !important;
+              padding: 20px !important;
+          }
+      }
     </style>
   </head>
   <body>
@@ -200,10 +234,17 @@
     </div>
 
     <div id="imageModal">
-      <span onclick="closeModal()" style="color:#fff; font-size:40px; position:absolute; top:20px; right:30px; cursor:pointer; font-weight:bold;">×</span>
+      <span onclick="closeModal()" style="color:#fff; font-size:40px; position:absolute; top:20px; right:30px; cursor:pointer; font-weight:bold; z-index: 1001;">×</span>
+      
       <div style="position:relative; max-width:95%; max-height:85%;">
         <img id="fullImage" src="" style="max-width:100%; max-height:100%; border-radius: 16px;">
       </div>
+
+      <div id="zoomActionBar" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.85); padding: 14px 28px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 12px; z-index: 1000; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.5); transition: all 0.3s ease;">
+          <input type="checkbox" id="zoomCheckbox" style="transform: scale(1.6); accent-color: #34C759; cursor: pointer; margin: 0;">
+          <label for="zoomCheckbox" style="font-weight: 800; font-size: 15px; cursor: pointer; color: #1c1c1e; user-select: none;">Pilih Foto Ini</label>
+      </div>
+      
     </div>
 
     <div id="customModalOverlay" class="custom-modal-overlay">
@@ -677,7 +718,36 @@
       }
 
       function closeModal() { document.getElementById('imageModal').style.display='none'; }
-      function openModal(src) { document.getElementById('imageModal').style.display='flex'; document.getElementById('fullImage').src=src; }
+      // Variabel global untuk mengingat ID foto yang sedang di-zoom
+      var currentZoomedCheckboxId = "";
+
+      function openModal(src, idCheckboxAsli) {
+        document.getElementById('fullImage').src = src;
+        document.getElementById('imageModal').style.display = 'flex';
+        
+        // Simpan ID checkbox yang asli ke memori
+        currentZoomedCheckboxId = idCheckboxAsli;
+        
+        // Cek status centang asli di galeri, lalu samakan dengan centang di panel melayang
+        var checkboxAsli = document.getElementById(idCheckboxAsli);
+        if (checkboxAsli) {
+            document.getElementById('zoomCheckbox').checked = checkboxAsli.checked;
+        }
+      }
+
+      // Ini adalah Sinyal Remote Control-nya! (Biarkan ditaruh di luar fungsi)
+      document.getElementById('zoomCheckbox').addEventListener('change', function(e) {
+          if (currentZoomedCheckboxId) {
+              var checkboxAsli = document.getElementById(currentZoomedCheckboxId);
+              if (checkboxAsli) {
+                  // Kalau panel kaca dicentang, kita paksa klik checkbox aslinya secara gaib!
+                  checkboxAsli.click(); 
+                  
+                  // Kalau butuh render ulang styling galeri di latar belakang:
+                  updateGalleryCounter();
+              }
+          }
+      });
       
       function showLogin() { hideAllViews(); document.getElementById('loginView').style.display='flex'; }
       function showRegister() { hideAllViews(); document.getElementById('registerView').style.display='flex'; }
@@ -1450,48 +1520,47 @@ function prosesLogin() {
       }
 
       function renderGallery() {
-        var g = document.getElementById('gallery');
-        var htmlBuilder = []; 
-        var sel = [];
-        
-        if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-           sel = (globalSelections["Edit Utama"]||[]).concat(globalSelections["Edit Tambahan"]||[]);
-        } else {
-           sel = globalSelections[currentMode]||[];
-        }
+    var g = document.getElementById('gallery');
+    var htmlBuilder = []; 
+    var sel = [];
+    
+    if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+        sel = (globalSelections["Edit Utama"]||[]).concat(globalSelections["Edit Tambahan"]||[]);
+    } else {
+        sel = globalSelections[currentMode]||[];
+    }
 
-        if (isReviewMode) {
-            // MODE TAMPILKAN PILIHAN SAYA (Global, Menampilkan dari Semua Folder)
-            for(var k = 0; k < sel.length; k++) {
-                var f = sel[k];
-                var cardClass = "gallery-card selected";
-                var addTag = "";
-                if (f.isExtra) {
-                    var badgeTxt = f.mode === "Edit Tambahan" ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
-                    addTag = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
-                }
-                
-                var escapedName = f.file.replace(/'/g, "\\'");
-                
-                // UI Tambahan: Label kecil agar klien tahu foto ini asalnya dari folder mana
-                var folderBadge = '<div style="font-size:9px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-align:left;">📁 ' + f.folder + '</div>';
-
-                var htmlStr = '<div class="' + cardClass + '">' + folderBadge + '<img loading="lazy" src="https://drive.google.com/thumbnail?id=' + f.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + f.id + '&sz=w1200\')"><label class="file-label"><input type="checkbox" onchange="toggleSel(this, \'' + escapedName + '\', \'' + f.id + '\')" checked>' + f.file + '</label><br>' + addTag;
-                
-                if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-                    var noteVal = f.note || '';
-                    htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:block" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + f.id + '\')">';
-                }
-                htmlBuilder.push(htmlStr + '</div>');
+    if (isReviewMode) {
+        // MODE TAMPILKAN PILIHAN SAYA
+        for(var k = 0; k < sel.length; k++) {
+            var f = sel[k];
+            var cardClass = "gallery-card selected";
+            var addTag = "";
+            if (f.isExtra) {
+                var badgeTxt = f.mode === "Edit Tambahan" ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
+                addTag = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
             }
-        } else {
-            // MODE NORMAL (Hanya menampilkan isi folder yang sedang dibuka)
-            for(var k = 0; k < currentItems.length; k++) {
-              var i = currentItems[k];
-              if(i.type === 'folder') { 
-                  htmlBuilder.push('<div class="gallery-card" onclick="loadFolder(\'' + i.id + '\', false)"><div style="font-size:45px;cursor:pointer; padding:15px 0;">📁</div><div style="font-size:13px;color:var(--text-main);font-weight:700;">' + i.name + '</div></div>');
-              }
-              else if(i.type === 'file') {
+            
+            var escapedName = f.file.replace(/'/g, "\\'");
+            var folderBadge = '<div style="font-size:9px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-align:left;">📁 ' + f.folder + '</div>';
+
+            // PERUBAHAN DI SINI: Menambahkan id="chk_..." dan mengirimkan id ke openModal
+            var htmlStr = '<div class="' + cardClass + '">' + folderBadge + '<img loading="lazy" src="https://drive.google.com/thumbnail?id=' + f.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + f.id + '&sz=w1200\', \'chk_' + f.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + f.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + f.id + '\')" checked>' + f.file + '</label><br>' + addTag;
+            
+            if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+                var noteVal = f.note || '';
+                htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:block" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + f.id + '\')">';
+            }
+            htmlBuilder.push(htmlStr + '</div>');
+        }
+    } else {
+        // MODE NORMAL 
+        for(var k = 0; k < currentItems.length; k++) {
+            var i = currentItems[k];
+            if(i.type === 'folder') { 
+                htmlBuilder.push('<div class="gallery-card" onclick="loadFolder(\'' + i.id + '\', false)"><div style="font-size:45px;cursor:pointer; padding:15px 0;">📁</div><div style="font-size:13px;color:var(--text-main);font-weight:700;">' + i.name + '</div></div>');
+            }
+            else if(i.type === 'file') {
                 var f = null;
                 for(var j=0; j<sel.length; j++) { if(sel[j].id === i.id) { f = sel[j]; break; } }
                 
@@ -1503,24 +1572,26 @@ function prosesLogin() {
                 }
                 
                 var escapedName = i.name.replace(/'/g, "\\'");
-                var htmlStr = '<div class="' + cardClass + '"><img loading="lazy" src="https://drive.google.com/thumbnail?id=' + i.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + i.id + '&sz=w1200\')"><label class="file-label"><input type="checkbox" onchange="toggleSel(this, \'' + escapedName + '\', \'' + i.id + '\')" ' + (f?'checked':'') + '>' + i.name + '</label><br>' + addTag;
+                
+                // PERUBAHAN DI SINI: Menambahkan id="chk_..." dan mengirimkan id ke openModal
+                var htmlStr = '<div class="' + cardClass + '"><img loading="lazy" src="https://drive.google.com/thumbnail?id=' + i.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + i.id + '&sz=w1200\', \'chk_' + i.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + i.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + i.id + '\')" ' + (f?'checked':'') + '>' + i.name + '</label><br>' + addTag;
                 
                 if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
                     var noteVal = f ? f.note : '';
                     htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:' + (f?'block':'none') + '" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + i.id + '\')">';
                 }
                 htmlBuilder.push(htmlStr + '</div>');
-              }
             }
         }
-        
-        if(isReviewMode && htmlBuilder.length === 0) {
-            g.innerHTML = '<div style="color:var(--text-main);text-align:center;grid-column:1/-1;padding:60px; font-weight:600;">Belum ada foto yang dicentang.</div>';
-        } else {
-            g.innerHTML = htmlBuilder.join('');
-        }
-        updateGalleryCounter(); 
-      }
+    }
+    
+    if(isReviewMode && htmlBuilder.length === 0) {
+        g.innerHTML = '<div style="color:var(--text-main);text-align:center;grid-column:1/-1;padding:60px; font-weight:600;">Belum ada foto yang dicentang.</div>';
+    } else {
+        g.innerHTML = htmlBuilder.join('');
+    }
+    updateGalleryCounter(); 
+}
 
       function getRequiredAlbumSizeForExtra(E) {
           if (E <= 0) return 0;
