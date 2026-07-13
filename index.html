@@ -1761,6 +1761,47 @@ function prosesLogin() {
               }
           }
       }
+      // ==========================================
+      // FUNGSI BARU: PENYELARAS LABEL BERBAYAR (ANTI KEDIP)
+      // ==========================================
+      function syncAllCardsVisual() {
+          var sel = [];
+          if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
+              sel = (globalSelections["Edit Utama"]||[]).concat(globalSelections["Edit Tambahan"]||[]);
+          } else {
+              sel = globalSelections[currentMode]||[];
+          }
+
+          var cards = document.querySelectorAll('.gallery-card');
+          for(var i=0; i<cards.length; i++) {
+              var card = cards[i];
+              var cb = card.querySelector('input[type="checkbox"]');
+              if(!cb) continue;
+
+              var fid = cb.id.replace('chk_', '');
+              
+              // Cek apakah foto ini masih tercentang di memori
+              var f = null;
+              for(var j=0; j<sel.length; j++) {
+                  if(sel[j].id === fid) { f = sel[j]; break; }
+              }
+
+              // 1. Sapu bersih semua label "💎" lama di kotak ini secara instan
+              var divs = card.querySelectorAll('div');
+              for(var d=0; d<divs.length; d++) {
+                  if(divs[d].innerText.indexOf('💎') !== -1) {
+                      divs[d].remove();
+                  }
+              }
+
+              // 2. Jika foto ini ternyata masih tercentang dan masuk kuota berbayar (isExtra), pasang labelnya lagi!
+              if(f && f.isExtra) {
+                  var badgeTxt = f.mode === "Edit Tambahan" ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
+                  var badgeHtml = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
+                  card.insertAdjacentHTML('beforeend', badgeHtml);
+              }
+          }
+      }
 
       function toggleSel(cb, fname, fid) {
         // ---- JIKA KLIEN BATAL CENTANG (UNCHECK) ----
@@ -1772,8 +1813,21 @@ function prosesLogin() {
                 globalSelections[currentMode] = (globalSelections[currentMode]||[]).filter(function(item) { return item.id !== fid; });
             }
             
-            applyAutoSliding();
-            renderGallery(); // Uncheck tetap butuh render penuh karena bisa mengubah status foto lain jadi gratis
+            // Sistem akan menghitung ulang mana yang gratis dan berbayar
+            applyAutoSliding(); 
+            
+            // 🔥 PERBAIKAN UNCHECK ANTI-KEDIP
+            if (isReviewMode) {
+                // HANYA jika sedang di menu "Pilihan Saya", kita wajib render ulang karena fotonya harus disembunyikan/hilang dari layar
+                renderGallery(); 
+            } else {
+                // Di menu Galeri Normal, matikan lampu fotonya...
+                updateCardVisualOnly(fid, false);
+                // ...lalu rapikan label berbayar pada foto lainnya tanpa berkedip!
+                syncAllCardsVisual();
+            }
+            
+            updateGalleryCounter(); 
             return;
         }
         
