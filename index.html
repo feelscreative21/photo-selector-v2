@@ -1620,7 +1620,7 @@ function prosesLogin() {
             var folderBadge = '<div style="font-size:9px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-align:left;">📁 ' + f.folder + '</div>';
 
             // PERUBAHAN DI SINI: Menambahkan id="chk_..." dan mengirimkan id ke openModal
-            var htmlStr = '<div class="' + cardClass + '">' + folderBadge + '<img loading="lazy" src="https://drive.google.com/thumbnail?id=' + f.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + f.id + '&sz=w1200\', \'chk_' + f.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + f.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + f.id + '\')" checked>' + f.file + '</label><br>' + addTag;
+            var htmlStr = '<div class="' + cardClass + '">' + folderBadge + '<img src="https://drive.google.com/thumbnail?id=' + f.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + f.id + '&sz=w1200\', \'chk_' + f.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + f.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + f.id + '\')" checked>' + f.file + '</label><br>' + addTag;
             
             if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
                 var noteVal = f.note || '';
@@ -1649,7 +1649,7 @@ function prosesLogin() {
                 var escapedName = i.name.replace(/'/g, "\\'");
                 
                 // PERUBAHAN DI SINI: Menambahkan id="chk_..." dan mengirimkan id ke openModal
-                var htmlStr = '<div class="' + cardClass + '"><img loading="lazy" src="https://drive.google.com/thumbnail?id=' + i.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + i.id + '&sz=w1200\', \'chk_' + i.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + i.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + i.id + '\')" ' + (f?'checked':'') + '>' + i.name + '</label><br>' + addTag;
+                var htmlStr = '<div class="' + cardClass + '"><img src="https://drive.google.com/thumbnail?id=' + i.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + i.id + '&sz=w1200\', \'chk_' + i.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + i.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + i.id + '\')" ' + (f?'checked':'') + '>' + i.name + '</label><br>' + addTag;
                 
                 if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
                     var noteVal = f ? f.note : '';
@@ -1744,6 +1744,23 @@ function prosesLogin() {
               }
           }
       }
+      // ==========================================
+      // FUNGSI BARU: RENDER INSTAN (ANTI JEDUG-JEDUG)
+      // ==========================================
+      function updateCardVisualOnly(fid, isChecked) {
+          var chk = document.getElementById('chk_' + fid);
+          if (chk) {
+              chk.checked = isChecked;
+              var card = chk.closest('.gallery-card');
+              if (card) {
+                  if (isChecked) {
+                      card.classList.add('selected');
+                  } else {
+                      card.classList.remove('selected');
+                  }
+              }
+          }
+      }
 
       function toggleSel(cb, fname, fid) {
         // ---- JIKA KLIEN BATAL CENTANG (UNCHECK) ----
@@ -1755,9 +1772,8 @@ function prosesLogin() {
                 globalSelections[currentMode] = (globalSelections[currentMode]||[]).filter(function(item) { return item.id !== fid; });
             }
             
-            // PANGGIL MESIN AUTO-SLIDING SAAT FOTO DIHAPUS
-            applyAutoSliding(); 
-            renderGallery();
+            applyAutoSliding();
+            renderGallery(); // Uncheck tetap butuh render penuh karena bisa mengubah status foto lain jadi gratis
             return;
         }
         
@@ -1782,6 +1798,12 @@ function prosesLogin() {
                if (totalEdit < lim.max) {
                    globalSelections["Edit Utama"] = globalSelections["Edit Utama"] || [];
                    globalSelections["Edit Utama"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Utama", isExtra:false});
+                   
+                   // 🔥 FIX: Render Instan untuk Edit Gratis!
+                   updateCardVisualOnly(fid, true);
+                   updateGalleryCounter();
+                   return;
+
                } else if (totalEdit === lim.max && hargaPerFoto > 0) {
                    cb.checked = false;
                    showModal("Kuota Edit Utama Gratis penuh (" + lim.max + " foto)!\n\nFoto berikutnya akan dialihkan ke menu Edit Tambahan dengan biaya sebesar Rp " + hargaPerFoto.toLocaleString('id') + " per foto. Lanjutkan?", function() {
@@ -1811,13 +1833,13 @@ function prosesLogin() {
               html += '<div class="addon-row"><input type="checkbox" id="chkFrame"><label>Tambah Bingkai Mewah</label><span class="price">+Rp ' + pFrame.toLocaleString('id') + '</span></div>';
               document.getElementById('addonOptions').innerHTML = html; 
               document.getElementById('addonModalOverlay').style.display='flex';
+              return;
            } else {
               if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
               globalSelections[currentMode].push({
                   folder: currentFolderName, file: fname, id: fid, note: "", mode: currentMode, 
                   isExtra: true, priceCetak: pCetak, priceFrame: 0
               });
-              renderGallery();
            }
         }
         else if (currentMode.indexOf("MAGAZINE_") === 0) {
@@ -1846,6 +1868,11 @@ function prosesLogin() {
            
            if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
            globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false});
+           
+           // 🔥 FIX: Render Instan untuk Magazine Gratis!
+           updateCardVisualOnly(fid, true);
+           updateGalleryCounter();
+           return;
         }
         else {
            var lim = parsedLimits[currentMode] || {max: 0}; 
@@ -1921,15 +1948,22 @@ function prosesLogin() {
                   if (pFrame > 0 && keyStr!=="4R") html += '<div class="addon-row"><input type="checkbox" id="chkFrame"><label>Tambah Bingkai Mewah</label><span class="price">+Rp ' + pFrame.toLocaleString('id') + '</span></div>';
                   document.getElementById('addonOptions').innerHTML = html; 
                   document.getElementById('addonModalOverlay').style.display='flex';
+                  return;
               }
            } else {
               if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
               globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false});
+              
+              // 🔥 FIX: Render Instan untuk Cetak Normal Gratis!
+              updateCardVisualOnly(fid, true);
+              updateGalleryCounter();
+              return;
            }
         }
+        
+        // Render penuh HANYA JIKA kode mencapai titik ini (misal kena add-on berbayar)
         renderGallery();
       }
-
       function closeAddonModal(save) {
         document.getElementById('addonModalOverlay').style.display='none';
         if(save && pendingAddon) {
