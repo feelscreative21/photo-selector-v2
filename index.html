@@ -171,37 +171,58 @@
           }
       }
       /* =========================================================
-         🌟 MODE DESKTOP & TABLET (BENTO GRID & WIDE GALLERY) 
+         🌟 MODE DESKTOP & TABLET (BENTO GRID & WIDE GALLERY - SUPER ENFORCED) 
          ========================================================= */
       @media (min-width: 768px) {
-          /* 1. Bebaskan Kuncian Lebar Aplikasi (Biar Lega) */
-          body { padding: 40px 0; background-color: #f2f2f7; } /* Kasih jarak atas bawah di laptop */
-          .panel-section, #homeView, #galleryView, #previewView {
-              max-width: 900px !important; /* Lebar optimal untuk mata */
-              margin: 0 auto;
-              border-radius: 24px;
-              box-shadow: 0 20px 60px rgba(0,0,0,0.1); /* Efek melayang elegan */
-              overflow: hidden;
+          /* 1. Paksa semua container utama melar di layar lebar */
+          body { 
+              padding: 40px 0 !important; 
+              background-color: #f2f2f7 !important; 
+          }
+          
+          /* Cari nama kelas container utama kamu di bawah ini, kita paksa jadi 900px */
+          .container, .app-container, .main-container, .panel-section, 
+          #homeView, #galleryView, #previewView {
+              max-width: 900px !important; 
+              width: 900px !important;
+              margin: 0 auto !important;
+              border-radius: 24px !important;
+              box-shadow: 0 20px 60px rgba(0,0,0,0.1) !important;
+              overflow: hidden !important;
+              background-color: #fff !important; /* Memberi warna dasar putih agar terlihat melayang */
           }
 
           /* 2. BENTO BOX GRID untuk Halaman Menu Utama */
-          /* Menargetkan kotak pembungkus Kategori A, B, C, D dll */
-          #homeView > div:nth-of-type(2) { 
-              display: grid;
-              grid-template-columns: repeat(2, 1fr); /* Pecah jadi 2 kolom menyamping */
-              gap: 20px;
-              align-items: start;
-              padding: 20px;
+          /* Mengubah susunan elemen di dalam homeView menjadi Grid menyamping */
+          #homeView {
+              display: flex !important;
+              flex-direction: column !important;
+          }
+
+          /* Cari pembungkus kartu kategori, kita tembak secara umum & spesifik */
+          #homeView > div:nth-of-type(2), 
+          #homeView .menu-container,
+          #homeView .category-container { 
+              display: grid !important;
+              grid-template-columns: repeat(2, 1fr) !important; 
+              gap: 20px !important;
+              align-items: start !important;
+              padding: 20px !important;
           }
           
-          /* Hilangkan bayangan berlebih pada kartu individu karena bento sudah punya jarak */
-          #homeView .category-card { margin-bottom: 0; height: 100%; }
+          .category-card, .menu-card { 
+              margin-bottom: 0 !important; 
+              height: 100% !important; 
+          }
 
           /* 3. GALERI FOTO LEBIH LUAS (4-6 Kolom) */
           .gallery {
-              grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+              display: grid !important;
+              grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
               gap: 20px !important;
               padding: 20px !important;
+              width: 100% !important;
+              max-width: 100% !important;
           }
       }
     </style>
