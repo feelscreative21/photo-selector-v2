@@ -2355,12 +2355,18 @@ function prosesLogin() {
         btn.innerText = "⏳ MENYIAPKAN DATA..."; btn.style.pointerEvents = "none";
 
         var overlay = document.getElementById('saveOverlay');
-        document.getElementById('saveTitle').innerText = "Membuka WhatsApp...";
+        document.getElementById('saveTitle').innerText = "Memproses Pilihan...";
         document.getElementById('saveDesc').innerHTML = "Sedang menghubungi server...<br><br><b>Tunggu sebentar...</b>";
         overlay.style.display = 'flex';
         
         var timestamp = new Date().getTime();
-        var payload = JSON.stringify({ selections: globalSelections, cart: cartAlbums, lastModified: timestamp });
+        
+        // SOLUSI MASALAH 2: Menambahkan sinyal isFinal: true
+        var payloadObj = { selections: globalSelections, cart: cartAlbums, lastModified: timestamp, isFinal: true };
+        var payload = JSON.stringify(payloadObj);
+        
+        // Update Local Storage
+        try { localStorage.setItem('fc_draft_' + MASTER_FOLDER_ID, payload); } catch(e) {}
         
         // 1. Simpan Draf Pilihan Dulu
         google.script.run.withSuccessHandler(function() {
@@ -2372,15 +2378,7 @@ function prosesLogin() {
                     btn.innerText = ori; return showModal(res.message); 
                 }
                 
-                // 3. LEMPAR PERINTAH COPY FILE & PDF KE SERVER GOOGLE (FIRE AND FORGET)
-                google.script.run.copyFilesBackground(res.folderId, JSON.stringify({
-                    items: allItems, vendor: activeVendor.namaVendor, nota: document.getElementById('previewContent').innerText
-                }));
-           
-                // 4. BUKA WHATSAPP LANGSUNG DI TAB YANG SAMA
-                btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
-                overlay.style.display = 'none'; resetSaveOverlayText();
-
+                // Siapkan Pesan WA terlebih dahulu
                 var msg = activeVendor.waText + "\n\n" + document.getElementById('previewContent').innerText + "\n";
                 var gen = document.getElementById('generalInstruction').value.trim();
                 if(gen) msg += "💡 INSTRUKSI TAMBAHAN:\n_" + gen + "_\n\n";
@@ -2392,13 +2390,29 @@ function prosesLogin() {
                 
                 var targetLink = "https://api.whatsapp.com/send?phone=" + vendorWa + "&text=" + encodeURIComponent(msg);
                 
-                // Eksekusi pengalihan layar WhatsApp langsung tanpa tab baru
-                window.location.href = targetLink;
-                
-                // Ubah Tampilan Tombol Aplikasi menjadi "Selesai"
-                btn.innerText = "✅ REKAP SELESAI TERKIRIM";
-                btn.style.background = "#34C759"; btn.style.color = "#fff";
-                btn.onclick = function() { window.location.href = targetLink; };
+                document.getElementById('saveDesc').innerHTML = "Sedang menyalin foto ke folder rekap...<br><br><b>Tolong jangan tutup aplikasi ini sampai WhatsApp terbuka otomatis!</b>";
+
+                // 3. SOLUSI MASALAH 1: Panggil fungsi Copy dan TUNGGU konfirmasi sukses dari Google
+                google.script.run.withSuccessHandler(function(copyRes) {
+                    // 4. BUKA WHATSAPP HANYA SETELAH SERVER GOOGLE BERHASIL MENERIMA PERINTAH
+                    btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
+                    overlay.style.display = 'none'; resetSaveOverlayText();
+
+                    // Eksekusi pengalihan layar WhatsApp langsung
+                    window.location.href = targetLink;
+                    
+                    // Ubah Tampilan Tombol Aplikasi menjadi "Selesai"
+                    btn.innerText = "✅ REKAP SELESAI TERKIRIM";
+                    btn.style.background = "#34C759"; btn.style.color = "#fff";
+                    btn.onclick = function() { window.location.href = targetLink; };
+
+                }).withFailureHandler(function(err) {
+                    btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
+                    overlay.style.display = 'none'; resetSaveOverlayText();
+                    showModal("Gagal menyalin foto. Koneksi tidak stabil, silakan coba tekan tombol kirim lagi.");
+                }).copyFilesBackground(res.folderId, JSON.stringify({
+                    items: allItems, vendor: activeVendor.namaVendor, nota: document.getElementById('previewContent').innerText
+                }));
 
             }).withFailureHandler(function(err){
                 btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
