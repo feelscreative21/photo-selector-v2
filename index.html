@@ -1391,18 +1391,17 @@ function prosesLogin() {
         reader.readAsDataURL(file);
       }
 
-      function generateLinkKlien(mode) {
+     function generateLinkKlien(mode) {
         var rawId = document.getElementById('setClientFolderId').value.trim();
         if (!rawId) return showModal("Mohon masukkan Link / ID Folder GDrive klien terlebih dahulu!");
         var idMatch = rawId.match(/[-\w]{25,}/);
-        if(!idMatch) return showModal("Link / ID Folder GDrive tidak valid!"); 
-        var id = idMatch[0];
-        
+        if(!idMatch) return showModal("Link / ID Folder GDrive tidak valid!"); var id = idMatch[0];
         var dl = document.getElementById('setDeadlineDate').value || "";
-        if(!activeVendor || !activeVendor.username) {
-            showModal("Sesi kamu habis. Silahkan refresh/login ulang.");
-            return;
-        }
+        if(!activeVendor || !activeVendor.username) { showModal("Sesi kamu habis. Silahkan refresh/login ulang."); return; }
+
+        // Ambil tombol Kirim WA Master yang ada di dashboard
+        var btnMaster = document.getElementById('btnKirimWaMaster');
+        var oriText = btnMaster ? btnMaster.innerText : "🚀 Kirim Via WhatsApp";
 
         var configObj = { limits: getLimitsStr(), deadline: dl, vendor: activeVendor.namaVendor };
         var lnk = 'https://' + MASTER_URL + '?f=' + id + '&v=' + encodeURIComponent(activeVendor.username);
@@ -1411,30 +1410,38 @@ function prosesLogin() {
         
         var deadlineText = "";
         if (dl !== "") {
-            var parts = dl.split("-");
-            var dObj = new Date(parts[0], parts[1] - 1, parts[2]);
+            var parts = dl.split("-"); var dObj = new Date(parts[0], parts[1] - 1, parts[2]);
             var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             var formattedDate = dObj.getDate() + " " + months[dObj.getMonth()] + " " + dObj.getFullYear();
             deadlineText = "\n\n⏳ *BATAS WAKTU PEMILIHAN: " + formattedDate + "*\n_(Mohon segera dipilih sebelum tanggal tersebut karena akses link akan otomatis tertutup oleh sistem)_";
         }
 
         var warningText = "\n\n*_PENTING: Perlu diingat bahwa file foto kakak yang ada di Google Drive kami hanya akan tersimpan selama 3 BULAN. Mohon segera didownload dan di-backup ke HP atau Flashdisk/Laptop pribadi ya kak._*";
-        var msg = "Halo kak! 👋\nFoto-foto momen spesialmu sudah siap! ✨\n\n📁 Ini link Google Drive untuk melihat semua fotonya (Kualitas HD):\n" + gdriveLink + "\n\n📸 Dan silakan masuk ke aplikasi website di bawah ini untuk mulai proses seleksi foto cetak & edit:\n\n" + cleanLink + "\n\n*(Mohon klik link di atas perlahan sampai terbuka)*" + deadlineText + warningText + "\n\nTerima kasih! 🙏🏻\n\n" + activeVendor.namaVendor;
+        var msg = "Halo kak! 👋\nFoto-foto momen spesialmu sudah siap! ✨\n\n📁 Ini link Google Drive untuk melihat semua fotonya (Kualitas HD):\n" + gdriveLink + "\n\n📸 Dan silakan masuk ke aplikasi website di bawah ini untuk mulai proses seleksi foto cetak & edit:\n\n" + cleanLink + "\n\n*(Mohon klik link di atas perlahan sampai terbuka)*" + deadlineText + warningText + "\n\nTerima kasih! 🙏\n\n" + activeVendor.namaVendor;
         
         if(mode === 'copy') { 
-            navigator.clipboard.writeText(msg).then(function() {
+            navigator.clipboard.writeText(msg).then(function() { 
                 showModal("Pesan lengkap beserta link berhasil disalin! Silakan paste ke chat klien."); 
-            }).catch(function() {
-                showModal("Gagal menyalin. Silakan coba lagi atau update browser.");
+            }).catch(function() { 
+                showModal("Gagal menyalin. Silakan coba lagi atau update browser."); 
             });
         } else { 
-            var waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(msg);
-            window.open(waLink, '_blank'); 
+            // Ubah teks tombol master menjadi loading saat memproses data ke server
+            if(btnMaster) { btnMaster.innerText = "⏳ Memproses..."; btnMaster.style.pointerEvents = "none"; }
+            
+            var waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(msg); 
+            
+            // JALANKAN SYNC CONFIG KE SERVER DULU, JIKA SUKSES BARU LEMPAR KE WA KLIEN
+            google.script.run.withSuccessHandler(function() {
+                if(btnMaster) { btnMaster.innerText = oriText; btnMaster.style.pointerEvents = "auto"; }
+                window.open(waLink, '_blank');
+            }).withFailureHandler(function() {
+                if(btnMaster) { btnMaster.innerText = oriText; btnMaster.style.pointerEvents = "auto"; }
+                showModal("Gagal sinkronisasi data ke server Google, tapi kamu tetap bisa mengirim pesan.");
+                window.open(waLink, '_blank');
+            }).simpanKonfigurasiKlien(id, configObj);
         }
-
-        google.script.run.simpanKonfigurasiKlien(id, configObj);
       }
-
       function previewAplikasi() {
         var rawInput = document.getElementById('setClientFolderId').value.trim();
         if(!rawInput) { showModal("Wajib isi Link/ID Folder GDrive klien terlebih dahulu."); return; } 
