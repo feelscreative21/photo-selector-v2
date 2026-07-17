@@ -3,7 +3,7 @@
   <head>
     <base target="_top">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Feels Creative | Platform V2</title>
+    <title>Feels Creative | Platform V3</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,19 +20,13 @@
       }
       
       body { 
-    font-family: 'Inter', sans-serif;
-    color: var(--text-main); 
-    margin: 0; 
-    
-    /* SOLUSI: Berikan padding-top sebesar 36px (sesuai tinggi tarikan iframe) */
-    padding-top: 36px; 
-    
-    /* Penting: Pastikan padding tidak membuat layar menjadi scroll panjang */
-    box-sizing: border-box; 
-    
-    -webkit-user-select: none; 
-    user-select: none;
-        /* Mesh Gradient Premium */
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main); 
+        margin: 0; 
+        padding-top: 36px;
+        box-sizing: border-box; 
+        -webkit-user-select: none; 
+        user-select: none;
         background-color: #fce7f3;
         background-image: 
           radial-gradient(at 80% 0%, hsla(280, 80%, 60%, 1) 0px, transparent 50%),
@@ -52,64 +46,61 @@
       
       /* Elemen Kaca (Glassmorphism) */
       .card-box { 
-          background: rgba(255, 255, 255, 0.7); 
+          background: rgba(255, 255, 255, 0.7);
           backdrop-filter: blur(16px); 
           -webkit-backdrop-filter: blur(16px); 
           padding: 30px; 
           border-radius: 24px; 
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); 
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
           border: 1px solid rgba(255, 255, 255, 0.4); 
           margin-bottom: 20px; 
       }
       
       .gallery-card { 
-          box-sizing: border-box; /* 🌟 Kunci ukuran agar border masuk ke dalam */
-          background: rgba(255, 255, 255, 0.7); 
+          box-sizing: border-box; /* 🌟 FIX Layout Jedug */
+          background: rgba(255, 255, 255, 0.7);
           backdrop-filter: blur(10px); 
           -webkit-backdrop-filter: blur(10px); 
           border-radius: 16px; 
           padding: 8px; 
           text-align: center; 
           box-shadow: 0 4px 16px rgba(0,0,0,0.05); 
-          border: 4px solid transparent; 
+          border: 4px solid transparent;
           transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; 
-          will-change: transform, box-shadow; /* Biar transisi scale di HP super mulus */
+          will-change: transform, box-shadow;
       }
       
       .gallery-card.selected { 
-          border-color: var(--primary-color); 
+          border-color: var(--primary-color);
           transform: scale(1.02);
-          /* Tambahan efek cahaya glowing premium */
-          box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 0 15px var(--primary-color) !important; 
+          box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 0 15px var(--primary-color) !important;
           background: rgba(255, 255, 255, 0.9);
       }
       
       .gallery-card img { 
-          display: block; /* Mencegah ada gap ghosting di bawah gambar */
-          width: 100%; 
+          display: block;
+          width: 100%;
           aspect-ratio: 1/1; 
           object-fit: cover; 
           border-radius: 12px; 
           cursor: pointer; 
           transition: transform 0.2s ease; 
-          background-color: rgba(0,0,0,0.05); /* 🌟 Pengganjal ruang saat gambar re-render biar gak kempis */
+          background-color: rgba(0,0,0,0.05);
       }
       
       .gallery-card img:active { transform: scale(0.95); }
       
-      /* Struktur Galeri Grid */
       .gallery { 
-          display: grid; 
+          display: grid;
           grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
           gap: 16px; 
           margin-top: 20px; 
-          align-items: start; /* Mencegah tinggi baris ditarik paksa oleh kartu yang membesar */
+          align-items: start;
       }
       
       .menu-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
       @media (min-width: 768px) { .menu-grid { grid-template-columns: 1fr 1fr; } }
       
-      /* Input & Buttons */
       .dash-input { width: 100%; background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.5); color: var(--text-main); padding: 14px 16px; border-radius: 12px; box-sizing: border-box; font-size: 15px; margin-top: 10px; font-family: inherit; }
       .dash-input:focus { border-color: var(--primary-color); outline: none; background: rgba(255,255,255,0.9); }
       .solid-input { background: #ffffff !important; border: 1px solid #d1d1d6 !important; color: #1c1c1e !important; }
@@ -119,60 +110,17 @@
       .btn-save { background: var(--primary-color); color: #fff; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
       .btn-share { background: #34C759; color: #fff; box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3); }
       .btn-dark { background: #1c1c1e; color: #fff; }
+      
+      .btn-action:hover { transform: translateY(-2px) scale(1.01); filter: brightness(1.08); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+      .btn-action:active { transform: translateY(2px) scale(0.96) !important; filter: brightness(0.9); box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important; }
+      
+      .size-btn:hover { background: rgba(255, 255, 255, 0.9); transform: translateY(-1px) scale(1.01); box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
+      .size-btn:active { transform: scale(0.97) !important; background: rgba(255, 255, 255, 0.5); }
+      .qty-btn { transition: all 0.15s ease; }
+      .qty-btn:active { transform: scale(0.85); background: #e5e5ea; }
 
-      /* --- EFEK ANIMASI TOMBOL (HOVER & CLICK) --- */
-      
-      /* 1. Efek saat disentuh mouse (Desktop) */
-      .btn-action:hover {
-          transform: translateY(-2px) scale(1.01);
-          filter: brightness(1.08);
-          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      }
-      
-      /* 2. Efek saat ditekan/di-tap (HP & Desktop) */
-      .btn-action:active {
-          transform: translateY(2px) scale(0.96) !important;
-          filter: brightness(0.9);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-      }
-      
-      /* 3. Efek membal untuk tombol kategori (Menu Cetak dll) */
-      .size-btn:hover {
-          background: rgba(255, 255, 255, 0.9);
-          transform: translateY(-1px) scale(1.01);
-          box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-      }
-      .size-btn:active {
-          transform: scale(0.97) !important;
-          background: rgba(255, 255, 255, 0.5);
-      }
-      
-      /* 4. Efek khusus tombol minus/plus di Keranjang */
-      .qty-btn {
-          transition: all 0.15s ease;
-      }
-      .qty-btn:active {
-          transform: scale(0.85);
-          background: #e5e5ea;
-      }
-      /* ------------------------------------------- */
-
-      /* --- ANIMASI FOTO MUNCUL HALUS --- */
-      .gallery-card {
-          animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0; /* Mulai dari transparan */
-      }
-      
-      @keyframes fadeUp {
-          from { 
-              opacity: 0; 
-              transform: translateY(20px); 
-          }
-          to { 
-              opacity: 1; 
-              transform: translateY(0); 
-          }
-      }
+      .gallery-card { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
       .size-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(255,255,255,0.6); color: var(--text-main); padding: 18px 20px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.5); border-radius: 16px; cursor: pointer; font-weight: 600; font-size: 16px; transition: 0.2s; }
       .size-btn span { background: var(--primary-color); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
@@ -196,72 +144,18 @@
       .brand-logo-img { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display: none; margin-bottom: 15px; border: 2px solid #fff; }
       
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-      /* --- ANIMASI TRANSISI HALAMAN BARU --- */
-      .page-animate {
-          animation: pageTransition 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
-      }
+      .page-animate { animation: pageTransition 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+      @keyframes pageTransition { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-      @keyframes pageTransition {
-          from {
-              opacity: 0;
-              transform: translateY(15px);
-          }
-          to {
-              opacity: 1;
-              transform: translateY(0);
-          }
-      }
-      /* =========================================================
-         🌟 STYLING BENTO BOX (MOBILE & DESKTOP) 
-         ========================================================= */
-      
-      /* Tampilan Dasar (Mobile): Kotak berbaris ke bawah */
-      .bento-grid-container {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-      }
-      
-      /* Desain Kartu Bento (Elegan seperti Glassmorphism Apple) */
-      .bento-card {
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          padding: 20px;
-          border-radius: 20px;
-          border: 1px solid rgba(255,255,255,0.9);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.04);
-      }
+      /* BENTO BOX (MOBILE & DESKTOP) */
+      .bento-grid-container { display: flex; flex-direction: column; gap: 16px; }
+      .bento-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.9); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
 
-      /* TAMPILAN DESKTOP & TABLET: Membelah jadi 2 Kolom */
       @media (min-width: 768px) {
-          body { 
-              padding: 40px 0 !important; 
-              background-color: #f2f2f7 !important; 
-          }
-          
-          /* Lebarkan wadah aplikasi untuk PC */
-          .panel-section, #homeView, #galleryView, #previewView {
-              max-width: 850px !important; 
-              margin: 0 auto !important;
-          }
-
-          /* Ini keajaibannya: Mengubah list ke bawah jadi Grid 2x2 */
-          .bento-grid-container {
-              display: grid !important;
-              grid-template-columns: repeat(2, 1fr) !important;
-              align-items: start;
-              gap: 20px;
-          }
-          
-          /* GALERI FOTO LEBIH LUAS DI PC */
-          .gallery {
-              display: grid !important;
-              grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
-              gap: 20px !important;
-              padding: 20px !important;
-          }
+          body { padding: 40px 0 !important; background-color: #f2f2f7 !important; }
+          .panel-section, #homeView, #homeEditView, #galleryView, #previewView { max-width: 850px !important; margin: 0 auto !important; }
+          .bento-grid-container { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; align-items: start; gap: 20px; }
+          .gallery { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important; gap: 20px !important; padding: 20px !important; }
       }
     </style>
   </head>
@@ -277,13 +171,13 @@
     <div id="loadingView" class="view-section" style="display: flex; flex-direction: column;">
       <div class="spinner" style="border: 4px solid rgba(0,0,0,0.1); width: 45px; height: 45px; border-radius: 50%; border-left-color: var(--primary-color); animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
       <h2 style="font-size: 20px;">Memuat Aplikasi...</h2>
-      <p id="loadingLog" style="color:var(--text-muted); font-size:13px;">Sinkronisasi V2 Development...</p>
+      <p id="loadingLog" style="color:var(--text-muted); font-size:13px;">Sinkronisasi V3 Development...</p>
     </div>
 
     <div id="addonModalOverlay">
       <div class="addon-box">
         <h3 style="margin-top:0; border-bottom:1px solid var(--border-color); padding-bottom:15px;">💎 Add-on Premium</h3>
-        <p style="font-size:13px; color:var(--text-main); line-height: 1.5; font-weight:500;">Kuota ukuran ini sudah penuh. Tambahkan sebagai pesanan tambahan?</p>
+        <p style="font-size:13px; color:var(--text-main); line-height: 1.5; font-weight:500;">Paket kuota ini sudah penuh. Tambahkan sebagai pesanan tambahan?</p>
         <div id="addonOptions" style="margin-top: 15px;"></div>
         <div style="display:flex; gap:12px; margin-top:25px;">
           <button class="btn-action btn-dark" style="margin:0;" onclick="closeAddonModal(false)">Batal</button>
@@ -294,15 +188,11 @@
 
     <div id="imageModal">
       <span onclick="closeModal()" style="color:#fff; font-size:40px; position:absolute; top:20px; right:30px; cursor:pointer; font-weight:bold; z-index: 1001;">×</span>
-      
       <div onclick="navigateGallery(-1)" style="position:absolute; left:20px; top:50%; transform:translateY(-50%); color:#fff; font-size:50px; cursor:pointer; user-select:none; font-weight:bold; z-index:1001; padding:20px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">❮</div>
-
       <div style="position:relative; max-width:85%; max-height:85%;">
         <img id="fullImage" src="" style="max-width:100%; max-height:100%; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
       </div>
-
       <div onclick="navigateGallery(1)" style="position:absolute; right:20px; top:50%; transform:translateY(-50%); color:#fff; font-size:50px; cursor:pointer; user-select:none; font-weight:bold; z-index:1001; padding:20px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">❯</div>
-
       <div id="zoomActionBar" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.85); padding: 14px 28px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 12px; z-index: 1000; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.5); transition: all 0.3s ease;">
           <input type="checkbox" id="zoomCheckbox" style="transform: scale(1.6); accent-color: #34C759; cursor: pointer; margin: 0;">
           <label for="zoomCheckbox" style="font-weight: 800; font-size: 15px; cursor: pointer; color: #1c1c1e; user-select: none;">Pilih Foto Ini</label>
@@ -334,7 +224,7 @@
 
     <div id="loginView" class="view-section">
       <div class="brand-box card-box" style="width:100%; max-width:400px;">
-        <h2>LOGIN VENDOR V2</h2>
+        <h2>LOGIN VENDOR V3</h2>
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Masuk menggunakan alamat email kamu.</p>
         <input type="email" id="username" class="dash-input solid-input" placeholder="Alamat Email">
         <input type="password" id="password" class="dash-input solid-input" placeholder="Password Akun">
@@ -391,7 +281,7 @@
 
     <div id="dashboardView" class="panel-section">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-        <h2 id="dashStudioName" style="font-size: 26px; margin:0;">Dashboard V2</h2>
+        <h2 id="dashStudioName" style="font-size: 26px; margin:0;">Dashboard V3</h2>
         <button class="btn-action btn-dark" style="width:auto; margin:0; padding:10px 20px;" onclick="toggleSettingsDrawer()">⚙️ Pengaturan</button>
       </div>
 
@@ -400,28 +290,19 @@
       </div>
 
       <div class="card-box">
-        <h3 style="color:var(--primary-color); font-size:16px; border-bottom:1px solid rgba(255,255,255,0.5); padding-bottom:10px;">📋 PENGATURAN KUOTA KLIEN (GRATIS)</h3>
+        <h3 style="color:var(--primary-color); font-size:16px; border-bottom:1px solid rgba(255,255,255,0.5); padding-bottom:10px;">📋 PENGATURAN PAKET KUOTA KLIEN</h3>
         <div style="margin-top:15px;">
-          <label style="font-weight:700; font-size:13px;">1. Pilih Kategori Kuota Cetak:</label>
+          <label style="font-weight:700; font-size:13px;">Pilih Kategori Layanan:</label>
           <select id="kuotaCategoryDropdown" class="dash-input solid-input" onchange="renderDynamicKuotaFields()">
             <option value="MAGNETIC">Cetak Album Magnetic (4R)</option>
             <option value="MAGAZINE">Cetak Album Magazine (M1 & M2)</option>
             <option value="PEMBESARAN">Cetak Pembesaran (10RS - 24RS)</option>
+            <option value="EDIT_MAGNETIC">EDIT Magnetic (4R)</option>
+            <option value="EDIT_MAGAZINE">EDIT Magazine (M1 & M2)</option>
+            <option value="EDIT_PEMBESARAN">EDIT Pembesaran (10RS - 24RS)</option>
           </select>
         </div>
-        
         <div id="dynamicKuotaInputsContainer" style="margin-top:15px;"></div>
-        
-        <div style="margin-top:20px; border-top:1px dashed rgba(255,255,255,0.5); padding-top:15px;">
-          <label style="font-weight:700; font-size:13px; color:#34C759;">✨ Batas Edit Utama (Gratis):</label>
-          <div style="display:flex; align-items:center; gap:12px; margin-top:8px;" class="glass-container">
-            <span style="font-size:13px; font-weight:700;">Kuota Khusus Edit</span>
-            <div style="display:flex; align-items:center; gap:12px; margin-left:auto;">
-               <input type="number" id="L_EDIT" value="0" class="dash-input solid-input" style="margin:0; width:70px; text-align:center; padding:8px;" onchange="updateParsedLimit('EDIT', this.value, null)">
-               <label style="font-size:12px; font-weight:700; display:flex; align-items:center; cursor:pointer;"><input type="checkbox" id="S_EDIT" style="transform:scale(1.2); margin-right:6px;" checked onchange="updateParsedLimit('EDIT', null, this.checked)"> Aktif</label>
-            </div>
-          </div>
-        </div>
 
         <div style="margin-top:25px;">
           <label style="font-weight:700; font-size:13px; color:#FF3B30;">📅 Batas Waktu Akses (Deadline):</label>
@@ -442,10 +323,9 @@
         </div>
         <button class="btn-action btn-dark" style="margin-top:15px;" onclick="previewAplikasi()">📱 Lihat Preview Halaman Klien</button>
         <button style="background:var(--text-main); color:#fff; border:none; padding:12px 20px; border-radius:12px; cursor:pointer; font-weight:800; font-size:14px; width:100%; margin-top:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);" onclick="openVendorPortal()">
-  📊 DATA & PROGRESS SELEKSI KLIEN
+          📊 DATA & PROGRESS SELEKSI KLIEN
+        </button>
       </div>
-      
-</button>
     </div>
 
     <div id="settingsDrawer" class="drawer">
@@ -487,7 +367,7 @@
           <option value="CETAK">Cetak & Bingkai Tambahan</option>
           <option value="ALBUM">Album Eksklusif Fisik</option>
           <option value="MAGAZINE_ADDON">Album Magazine Fisik</option>
-          <option value="LAINNYA">FlashDisk, Copy Asli & Edit</option>
+          <option value="LAINNYA">FlashDisk, Copy Asli & Edit Tambahan</option>
         </select>
         <div id="dynamicAddonInputsContainer" style="margin-top:15px;"></div>
       </div>
@@ -502,7 +382,7 @@
             <img id="clientDisplayLogo" class="brand-logo-img" src="" style="display:none;">
             <h1 id="clientDisplayName" class="elVendorName" style="font-size: 26px;">Studio</h1>
         </div>
-        <div style="color:var(--primary-color); margin-bottom:20px; letter-spacing:3px; font-size:11px; font-weight:bold;">PHOTO SELECTION PORTAL V2</div>
+        <div style="color:var(--primary-color); margin-bottom:20px; letter-spacing:3px; font-size:11px; font-weight:bold;">PHOTO SELECTION PORTAL V3</div>
         <p id="clientWelcomeText" style="color:var(--text-main); font-size:14px; line-height:1.6; margin-bottom:20px; font-weight:500;"></p>
         
         <div id="clientDeadlineWarning" style="display:none; background:rgba(255,59,48,0.1); border:1px solid rgba(255,59,48,0.3); color:#FF3B30; padding:15px; border-radius:16px; margin-bottom:25px; font-size:13px; line-height:1.5; font-weight:500;"></div>
@@ -516,7 +396,7 @@
         <h2 style="font-size: 26px; margin-bottom:25px;">Kategori Pilihan</h2>
         <div class="menu-grid">
             <button class="btn-action btn-dark" style="padding:22px 10px; font-size:14px; background:rgba(255,255,255,0.7); color:var(--text-main); border:1px solid var(--border-color);" onclick="openCetakSubMenu()">📸 Menu Cetak Foto</button>
-            <button class="btn-action btn-dark" style="padding:22px 10px; font-size:14px; background:rgba(255,255,255,0.7); color:var(--text-main); border:1px solid var(--primary-color);" onclick="goToEditMenu()">✨ Edit Foto Khusus</button>
+            <button class="btn-action btn-dark" style="padding:22px 10px; font-size:14px; background:rgba(255,255,255,0.7); color:var(--text-main); border:1px solid var(--primary-color);" onclick="openEditSubMenu()">✨ Edit Foto Khusus</button>
         </div>
         <button class="btn-action" style="padding:15px; background:#f59e0b; color:#fff; margin-top:15px;" onclick="openCartView()">🛒 Aksesoris & FlashDisk (<span id="cartCount">0</span>)</button>
         <button class="btn-action btn-dark" style="margin-top:20px;" onclick="showPreview()">📋 Lihat Nota Rekap & Checkout</button>
@@ -525,41 +405,51 @@
 
     <div id="homeView" class="view-section">
       <div style="text-align: left;">
-        
         <div class="bento-grid-container">
-          
           <div class="bento-card">
             <h2 style="font-size:15px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-bottom:12px; margin-top:0;">A. Cetak Magnetic (4R)</h2>
             <div id="menuMagneticArea"></div>
           </div>
-          
           <div class="bento-card">
             <h2 style="font-size:15px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-bottom:12px; margin-top:0;">B. Cetak Magazine (M1 & M2)</h2>
             <div id="menuMagazineArea"></div>
           </div>
-          
           <div class="bento-card">
             <h2 style="font-size:15px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-bottom:12px; margin-top:0;">C. Cetak Pembesaran (10RS - 24RS)</h2>
             <div id="menuPembesaranArea"></div>
           </div>
-          
           <div class="bento-card">
             <h2 style="font-size:15px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-bottom:12px; margin-top:0;">D. Cetak Tambahan (Berbayar)</h2>
             <div id="menuAddonArea"></div>
           </div>
-
         </div>
-        
+        <button class="btn-action" style="margin-top:20px; background:rgba(255,255,255,0.85); border:1px solid rgba(0,0,0,0.1); color:#1c1c1e; font-weight:800; border-radius:14px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" onclick="backToMainMenuOrWelcome()">⬅ KEMBALI</button>
+      </div>
+    </div>
+
+    <div id="homeEditView" class="view-section">
+      <div style="text-align: left;">
+        <div class="bento-grid-container">
+          <div class="bento-card">
+            <h2 style="font-size:15px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-bottom:12px; margin-top:0;">✨ A. Edit Magnetic (4R)</h2>
+            <div id="menuEditMagneticArea"></div>
+          </div>
+          <div class="bento-card">
+            <h2 style="font-size:15px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-bottom:12px; margin-top:0;">✨ B. Edit Magazine (M1 & M2)</h2>
+            <div id="menuEditMagazineArea"></div>
+          </div>
+          <div class="bento-card">
+            <h2 style="font-size:15px; border-bottom:2px solid var(--primary-color); padding-bottom:8px; margin-bottom:12px; margin-top:0;">✨ C. Edit Pembesaran (10RS - 24RS)</h2>
+            <div id="menuEditPembesaranArea"></div>
+          </div>
+        </div>
         <button class="btn-action" style="margin-top:20px; background:rgba(255,255,255,0.85); border:1px solid rgba(0,0,0,0.1); color:#1c1c1e; font-weight:800; border-radius:14px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" onclick="backToMainMenuOrWelcome()">⬅ KEMBALI</button>
       </div>
     </div>
     
     <div id="galleryView" class="panel-section" style="padding-top: 0;">
-      
       <div style="position: sticky; top: 0; z-index: 100; background: rgba(252, 231, 243, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); margin: 0 -20px; padding: 15px 20px 10px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.4);">
-        
         <div style="background: rgba(255,255,255,0.9); padding: 12px 15px; border-radius: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid rgba(255,255,255,0.8);">
-          
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; gap: 6px;">
               <button class="btn-action" style="width: auto; padding: 6px 12px; margin: 0; background: #1c1c1e; color: #fff; font-size: 11px; border-radius: 8px; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" onclick="saveAndBack()">⬅ Kembali</button>
@@ -573,18 +463,19 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; flex-direction: column; gap: 5px;">
               <span id="activeModeText" style="font-size: 13px; font-weight: 800; color: var(--text-main); letter-spacing: -0.3px;">Memuat...</span>
-              
-              <div style="background: #f2f2f7; padding: 4px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; font-weight: 700; color: var(--text-muted);" onclick="toggleReviewMode()">
-                <input type="checkbox" id="reviewToggleCheck" style="pointer-events: none; margin: 0; transform: scale(0.9); accent-color: var(--primary-color);"> Pilihan Saya
+              <div style="display: flex; gap: 8px; align-items: center;">
+                  <div style="background: #f2f2f7; padding: 4px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer; font-weight: 700; color: var(--text-muted);" onclick="toggleReviewMode()">
+                    <input type="checkbox" id="reviewToggleCheck" style="pointer-events: none; margin: 0; transform: scale(0.9); accent-color: var(--primary-color);"> Pilihan Saya
+                  </div>
+                  <div id="btnClearAll" onclick="clearAllSelections()" style="display: none; background: #ffe5e5; color: #FF3B30; padding: 4px 8px; border-radius: 6px; align-items: center; gap: 4px; font-size: 10px; cursor: pointer; font-weight: 700; box-shadow: 0 2px 5px rgba(255,59,48,0.1);">
+                    🗑️ Hapus Semua
+                  </div>
               </div>
             </div>
-            
             <button style="background: #34C759; color: #fff; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 800; font-size: 12px; box-shadow: 0 4px 12px rgba(52, 199, 89, 0.25);" onclick="saveAndBack()">💾 SIMPAN</button>
           </div>
-
         </div>
       </div>
-      
       <div class="gallery" id="gallery" style="margin-top: 15px;"></div>
     </div>
 
@@ -598,7 +489,7 @@
           <div id="clientPaymentRenderArea" style="margin-bottom:20px;"></div>
           
           <label style="font-size:13px; font-weight:700;">Catatan Instuksi Khusus Editor:</label>
-          <textarea id="generalInstruction" class="dash-input solid-input" placeholder="Ketik arahan edit tambahan..." style="height:60px; resize:none; margin-top:5px; margin-bottom:20px;"></textarea>
+          <textarea id="generalInstruction" class="dash-input solid-input" placeholder="Ketik arahan edit tambahan secara global di sini..." style="height:60px; resize:none; margin-top:5px; margin-bottom:20px;"></textarea>
           
           <button id="btnKirimWa" class="btn-action btn-share" style="padding:16px;" onclick="eksekusiOpsiBWhatsApp()">🚀 KIRIM REKAP FINAL KE WHATSAPP</button>
           <button class="btn-action" style="background:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.5); color:var(--text-main);" onclick="backToMenuFromPreview()">🔙 Batal & Edit Lagi</button>
@@ -612,56 +503,63 @@
           <button class="btn-action btn-dark" onclick="closeVisualPreview()">⬅ Kembali Ke Nota</button>
       </div>
     </div>
+
     <div id="cartView" class="panel-section">
       <div class="card-box">
         <h2 style="text-align:center; font-size:22px; margin-bottom:20px;">🛒 Aksesoris & Tambahan</h2>
-        
         <div id="accessoriesListArea" style="margin-bottom: 25px;"></div>
-        
         <button class="btn-action btn-save" onclick="saveFromCart()">💾 SIMPAN & KEMBALI</button>
       </div>
+    </div>
+
+    <div id="vendorPortalView" style="display:none; padding:20px; max-width:800px; margin:auto; background:var(--bg-color); border-radius:20px; min-height:80vh; margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="margin:0; font-size:18px; color:var(--text-main);">📊 Pantau Progress Klien</h2>
+            <button style="background:#FF3B30; color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="closeVendorPortal()">Keluar 🚪</button>
+        </div>
+        <div id="portalLoading" style="text-align:center; padding:30px; display:none; font-weight:600;">⏳ Mengambil data dari server...</div>
+        <div style="overflow-x:auto; background:white; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+            <table style="width:100%; border-collapse: collapse; font-size:13px; text-align:left;">
+                <thead style="background:var(--primary-color); color:white;">
+                    <tr>
+                        <th style="padding:12px; border-bottom:2px solid #eee;">Nama Klien</th>
+                        <th style="padding:12px; border-bottom:2px solid #eee;">Status</th>
+                        <th style="padding:12px; border-bottom:2px solid #eee;">Aksi Pemulihan</th>
+                    </tr>
+                </thead>
+                <tbody id="vendorTableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <div class="footer-watermark">⚡ Powered by Feels Creative</div>
 
     <script>
-      // 1. Ambil parameter dari URL saat aplikasi dibuka di Vercel
       var urlParams = new URLSearchParams(window.location.search);
-      
       var MASTER_URL = 'photo-selector-steel.vercel.app'; 
       var MASTER_FOLDER_ID = urlParams.get('f') || ''; 
       var URL_FID = urlParams.get('f') || ''; 
       var URL_VUSER = urlParams.get('v') || ''; 
       
-      // 2. Hologram penawar google.script.run
-      var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx83HDvB_fhPy9G21YYpW3zLHUjmhGFmLEnGiZ_ZfX-DVxWwHSQoIEfY22YxoNeU6ch/exec"; // <-- JANGAN LUPA GANTI INI DENGAN URL WEB APP DARI LANGKAH SEBELUMNYA
+      var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwMuiQEV1Seg-JFXj3sYbTa_8id6LibWxloG7vvynfVWYmalNXid709KYiOU7L3ZLsL/exec";
 
       window.google = {
         script: {
           run: new Proxy({}, {
             get: function(target, propKey) {
               if (propKey === 'withSuccessHandler') {
-                return function(callback) {
-                  target._success = callback;
-                  return window.google.script.run;
-                };
+                return function(callback) { target._success = callback; return window.google.script.run; };
               }
               if (propKey === 'withFailureHandler') {
-                return function(callback) {
-                  target._failure = callback;
-                  return window.google.script.run;
-                };
+                return function(callback) { target._failure = callback; return window.google.script.run; };
               }
               return function(...args) {
                 var onSuccess = target._success;
                 var onFailure = target._failure;
-                target._success = null;
-                target._failure = null;
+                target._success = null; target._failure = null;
 
                 fetch(WEB_APP_URL, {
-                  method: 'POST',
-                  body: JSON.stringify({ action: propKey, args: args }),
-                  headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                  method: 'POST', body: JSON.stringify({ action: propKey, args: args }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                 })
                 .then(res => res.json())
                 .then(resData => {
@@ -672,19 +570,17 @@
                   }
                 })
                 .catch(err => {
-                  if (onFailure) onFailure(err);
-                  else console.error("Network Error:", err);
+                  if (onFailure) onFailure(err); else console.error("Network Error:", err);
                 });
               };
             }
           })
         }
-      }; 
-      
+      };
+
       var activeVendor = {};
       var globalSelections = {};
-      var cartAlbums = {}; // Ini keranjang manual (klien klik di menu)
- 
+      var cartAlbums = {};
       var currentMode = "";
       var currentFolderName = "";
       var folderHistory = [];
@@ -702,8 +598,7 @@
           var views = document.querySelectorAll('.view-section, .panel-section');
           for(var i=0; i<views.length; i++) {
               views[i].style.display = 'none';
-              // Hapus kelas animasi lama agar bisa dipicu ulang saat halaman dibuka lagi
-              views[i].classList.remove('page-animate'); 
+              views[i].classList.remove('page-animate');
           }
       }
 
@@ -738,10 +633,13 @@
              var val = parsedLimits[k] ? parsedLimits[k].max : 0;
              var stat = parsedLimits[k] ? (parsedLimits[k].status?1:0) : 1;
              sList.push(k + ":" + val + ":" + stat);
+             
+             // Tambahan loop untuk limit EDIT V3
+             var eKey = "EDIT_" + k;
+             var eVal = parsedLimits[eKey] ? parsedLimits[eKey].max : 0;
+             var eStat = parsedLimits[eKey] ? (parsedLimits[eKey].status?1:0) : 1;
+             sList.push(eKey + ":" + eVal + ":" + eStat);
           }
-          var eVal = parsedLimits["EDIT"] ? parsedLimits["EDIT"].max : 0;
-          var eStat = parsedLimits["EDIT"] ? (parsedLimits["EDIT"].status?1:0) : 1;
-          sList.push("EDIT:" + eVal + ":" + eStat);
           return sList.join(',');
       }
 
@@ -754,22 +652,17 @@
       function showModal(msg, cb) { 
         document.getElementById('customModalMessage').innerHTML = msg;
         document.getElementById('btnModalCancel').style.display = cb ? 'block' : 'none'; 
-        
         var btnOk = document.getElementById('btnModalOk');
         var newBtnOk = btnOk.cloneNode(true);
         btnOk.parentNode.replaceChild(newBtnOk, btnOk);
-        
         newBtnOk.onclick = function() { 
             document.getElementById('customModalOverlay').style.display = 'none';
             if(cb) cb(); 
         }; 
-
         var btnCancel = document.getElementById('btnModalCancel');
         var newBtnCancel = btnCancel.cloneNode(true);
         btnCancel.parentNode.replaceChild(newBtnCancel, btnCancel);
-        newBtnCancel.onclick = function() { 
-            document.getElementById('customModalOverlay').style.display = 'none'; 
-        };
+        newBtnCancel.onclick = function() { document.getElementById('customModalOverlay').style.display = 'none'; };
         document.getElementById('customModalOverlay').style.display = 'flex'; 
       }
 
@@ -778,56 +671,33 @@
         var btnBeli = document.getElementById('btn4RAlbum');
         var newBtnBeli = btnBeli.cloneNode(true);
         btnBeli.parentNode.replaceChild(newBtnBeli, btnBeli);
-        newBtnBeli.onclick = function() { 
-            document.getElementById('modal4ROverlay').style.display = 'none';
-            if(cbBeli) cbBeli(); 
-        }
-
+        newBtnBeli.onclick = function() { document.getElementById('modal4ROverlay').style.display = 'none'; if(cbBeli) cbBeli(); }
         var btnSatuan = document.getElementById('btn4RSatuan');
         var newBtnSatuan = btnSatuan.cloneNode(true);
         btnSatuan.parentNode.replaceChild(newBtnSatuan, btnSatuan);
-        newBtnSatuan.onclick = function() { 
-            document.getElementById('modal4ROverlay').style.display = 'none';
-            if(cbSatuan) cbSatuan(); 
-        }
-
+        newBtnSatuan.onclick = function() { document.getElementById('modal4ROverlay').style.display = 'none'; if(cbSatuan) cbSatuan(); }
         var btnBatal = document.getElementById('btn4RBatal');
         var newBtnBatal = btnBatal.cloneNode(true);
         btnBatal.parentNode.replaceChild(newBtnBatal, btnBatal);
-        newBtnBatal.onclick = function() { 
-            document.getElementById('modal4ROverlay').style.display = 'none';
-        }
-
+        newBtnBatal.onclick = function() { document.getElementById('modal4ROverlay').style.display = 'none'; }
         document.getElementById('modal4ROverlay').style.display = 'flex';
       }
 
       function closeModal() { document.getElementById('imageModal').style.display='none'; }
-      // Variabel global untuk mengingat ID foto yang sedang di-zoom
       var currentZoomedCheckboxId = "";
-
       function openModal(src, idCheckboxAsli) {
         document.getElementById('fullImage').src = src;
         document.getElementById('imageModal').style.display = 'flex';
-        
-        // Simpan ID checkbox yang asli ke memori
         currentZoomedCheckboxId = idCheckboxAsli;
-        
-        // Cek status centang asli di galeri, lalu samakan dengan centang di panel melayang
         var checkboxAsli = document.getElementById(idCheckboxAsli);
-        if (checkboxAsli) {
-            document.getElementById('zoomCheckbox').checked = checkboxAsli.checked;
-        }
+        if (checkboxAsli) { document.getElementById('zoomCheckbox').checked = checkboxAsli.checked; }
       }
 
-      // Ini adalah Sinyal Remote Control-nya! (Biarkan ditaruh di luar fungsi)
       document.getElementById('zoomCheckbox').addEventListener('change', function(e) {
           if (currentZoomedCheckboxId) {
               var checkboxAsli = document.getElementById(currentZoomedCheckboxId);
               if (checkboxAsli) {
-                  // Kalau panel kaca dicentang, kita paksa klik checkbox aslinya secara gaib!
                   checkboxAsli.click(); 
-                  
-                  // Kalau butuh render ulang styling galeri di latar belakang:
                   updateGalleryCounter();
               }
           }
@@ -836,70 +706,30 @@
       function showLogin() { hideAllViews(); document.getElementById('loginView').style.display='flex'; }
       function showRegister() { hideAllViews(); document.getElementById('registerView').style.display='flex'; }
       function showForgotPassword() { hideAllViews(); document.getElementById('forgotPasswordView').style.display='flex'; }
-      function handleMulaiMemilih() { 
-          hideAllViews(); 
-          var el = document.getElementById('mainNavView');
-          el.style.display = 'flex'; 
-          el.classList.add('page-animate');
-      }
-      function backToMainMenuOrWelcome() { 
-          hideAllViews(); 
-          var el = document.getElementById('mainNavView');
-          el.style.display = 'flex'; 
-          el.classList.add('page-animate');
-      }
-      function backToMenuFromPreview() { 
-          hideAllViews(); 
-          var el = document.getElementById('mainNavView');
-          el.style.display = 'flex'; 
-          el.classList.add('page-animate');
-      }
+      function handleMulaiMemilih() { hideAllViews(); var el = document.getElementById('mainNavView'); el.style.display = 'flex'; el.classList.add('page-animate'); }
+      function backToMainMenuOrWelcome() { hideAllViews(); var el = document.getElementById('mainNavView'); el.style.display = 'flex'; el.classList.add('page-animate'); }
+      function backToMenuFromPreview() { hideAllViews(); var el = document.getElementById('mainNavView'); el.style.display = 'flex'; el.classList.add('page-animate'); }
       function closeVisualPreview() { hideAllViews(); document.getElementById('previewView').style.display='block'; }
       
       function prosesLogout() { 
           var uEmail = activeVendor ? activeVendor.username : "";
           var savedToken = localStorage.getItem('fc_device_token') || "";
-          
           var overlay = document.getElementById('saveOverlay');
-          if(overlay) {
-              document.getElementById('saveTitle').innerText = "Keluar Akun...";
-              document.getElementById('saveDesc').innerText = "Menghapus sesi perangkat...";
-              overlay.style.display = 'flex';
-          }
-          
+          if(overlay) { document.getElementById('saveTitle').innerText = "Keluar Akun..."; document.getElementById('saveDesc').innerText = "Menghapus sesi perangkat..."; overlay.style.display = 'flex'; }
           if (uEmail !== "" && savedToken !== "") {
-              google.script.run.withSuccessHandler(function() {
-                  completeLogout();
-              }).withFailureHandler(function() {
-                  completeLogout();
-              }).logoutVendor(uEmail, savedToken);
-          } else {
-              completeLogout();
-          }
+              google.script.run.withSuccessHandler(function() { completeLogout(); }).withFailureHandler(function() { completeLogout(); }).logoutVendor(uEmail, savedToken);
+          } else { completeLogout(); }
       }
 
       function completeLogout() {
-  var overlay = document.getElementById('saveOverlay'); 
-  if(overlay) overlay.style.display = 'none';
-  
-  // Bersihkan semua memori sesi dan stopwatch
-  localStorage.removeItem('avSession'); 
-  localStorage.removeItem('fc_device_token'); 
-  localStorage.removeItem('fc_last_active');
-  
-  document.getElementById('settingsDrawer').style.display = 'none'; 
-  resetSaveOverlayText();
-  
-  // Arahkan (redirect) paksa browser ke web cangkang Vercel kamu
-  window.top.location.href = 'https://photoselectorpremium.vercel.app/';
-}
-
-      function logLoading(msg) { 
-          var el = document.getElementById('loadingLog');
-          if(el) el.innerText = msg; 
+          var overlay = document.getElementById('saveOverlay');
+          if(overlay) overlay.style.display = 'none';
+          localStorage.removeItem('avSession'); localStorage.removeItem('fc_device_token'); localStorage.removeItem('fc_last_active');
+          document.getElementById('settingsDrawer').style.display = 'none'; resetSaveOverlayText();
+          window.top.location.href = 'https://photoselectorpremium.vercel.app/';
       }
 
-      // ANTI PHANTOM RESET
+      function logLoading(msg) { var el = document.getElementById('loadingLog'); if(el) el.innerText = msg; }
       function syncInputsToParsedLimits() {} 
 
       window.onload = function() {
@@ -910,7 +740,6 @@
               if(!v) { hideAllViews(); document.getElementById('loginView').style.display='flex'; return; }
               activeVendor = v; 
               document.documentElement.style.setProperty('--primary-color', v.themeColor);
-              
               var els = document.querySelectorAll('.elVendorName');
               for(var i=0; i<els.length; i++) { els[i].innerText = v.namaVendor; }
               if(document.getElementById('clientWelcomeText')) document.getElementById('clientWelcomeText').innerText = v.welcomeText;
@@ -929,7 +758,6 @@
               google.script.run.withSuccessHandler(function(configStr) {
                   var clientLimitsStr = v.limits;
                   var clientDeadline = "";
-                  
                   if (configStr) {
                       try {
                           var configData = JSON.parse(configStr);
@@ -943,9 +771,7 @@
                       var parts = clientDeadline.split("-");
                       var dlDate = new Date(parts[0], parts[1] - 1, parts[2], 23, 59, 59);
                       if (today.getTime() > dlDate.getTime()) { 
-                          hideAllViews();
-                          showModal("Batas waktu pemilihan foto untuk sesi ini telah berakhir.");
-                          return;
+                          hideAllViews(); showModal("Batas waktu pemilihan foto untuk sesi ini telah berakhir."); return;
                       } else {
                           var diffTime = dlDate.getTime() - today.getTime();
                           var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -972,105 +798,62 @@
                           var tServer = (p && p.lastModified) ? p.lastModified : 0;
                           var tLocal = (pLocal && pLocal.lastModified) ? pLocal.lastModified : 0;
                           var toUse = (tLocal > tServer) ? pLocal : p;
-                          if(toUse && toUse.selections) { 
-                              globalSelections = toUse.selections; 
-                              cartAlbums = toUse.cart || {}; 
-                          }
+                          if(toUse && toUse.selections) { globalSelections = toUse.selections; cartAlbums = toUse.cart || {}; }
                       } catch(e){}
-                      
-                      isDataLoaded = true;
-                      updateCartCount();
-                      hideAllViews();
+                      isDataLoaded = true; updateCartCount(); hideAllViews();
                       document.getElementById('welcomeView').style.display='flex';
                   }).loadDraftPusat(MASTER_FOLDER_ID);
-
               }).ambilKonfigurasiKlien(MASTER_FOLDER_ID);
-
             }).withFailureHandler(function(err){
-                hideAllViews();
-                showModal("Error Data: " + err.toString()); 
+                hideAllViews(); showModal("Error Data: " + err.toString()); 
             }).getVendorData(URL_VUSER);
-          } else {
-            hideAllViews();
-            cekLoginSession();
-          }
+          } else { hideAllViews(); cekLoginSession(); }
         } catch (err) { console.error(err); }
       };
 
       function cekLoginSession() { 
-  try { 
-      var sess = localStorage.getItem('avSession');
-      var lastActive = localStorage.getItem('fc_last_active');
-      var savedToken = localStorage.getItem('fc_device_token');
-      var now = new Date().getTime();
-      
-      // UBAH: Disamakan menjadi 10 menit (600.000 milidetik) agar seragam dengan sensor gerak
-      var batasWaktu = 10 * 60 * 1000; 
-      
-      if (sess) { 
-          var parsed = JSON.parse(sess);
-          
-          // Cek apakah waktu idle saat tab tertutup sudah melewati batas
-          if (lastActive && (now - parseInt(lastActive)) > batasWaktu) {
-              
-              // UBAH: Bersihkan token yang nyangkut di Spreadsheet!
-              if (parsed && parsed.username && savedToken) {
-                  google.script.run.logoutVendor(parsed.username, savedToken);
-              }
+        try { 
+            var sess = localStorage.getItem('avSession');
+            var lastActive = localStorage.getItem('fc_last_active');
+            var savedToken = localStorage.getItem('fc_device_token');
+            var now = new Date().getTime();
+            var batasWaktu = 10 * 60 * 1000;
+            if (sess) { 
+                var parsed = JSON.parse(sess);
+                if (lastActive && (now - parseInt(lastActive)) > batasWaktu) {
+                    if (parsed && parsed.username && savedToken) { google.script.run.logoutVendor(parsed.username, savedToken); }
+                    localStorage.removeItem('avSession'); localStorage.removeItem('fc_device_token'); localStorage.removeItem('fc_last_active');
+                    showModal("Sesi login kamu sudah berakhir karena tidak membuka aplikasi selama 10 menit. Silakan login kembali demi keamanan.", function() { window.top.location.href = 'https://photoselectorpremium.vercel.app/'; });
+                    return;
+                }
+                localStorage.setItem('fc_last_active', now.toString());
+                if (parsed && parsed.username) { openDashboard(parsed); return; } 
+            } 
+            document.getElementById('loginView').style.display='flex';
+        } catch(e) { document.getElementById('loginView').style.display='flex'; } 
+      }
 
-              // Bersihkan sisa memori lokal
-              localStorage.removeItem('avSession');
-              localStorage.removeItem('fc_device_token');
-              localStorage.removeItem('fc_last_active');
-              
-              // Munculkan Pop-up peringatan, lalu lempar ke layar awal
-              showModal("Sesi login kamu sudah berakhir karena tidak membuka aplikasi selama 10 menit. Silakan login kembali demi keamanan.", function() {
-                  window.top.location.href = 'https://photoselectorpremium.vercel.app/';
-              });
-              return;
-          }
-          
-          // Jika belum lewat 10 menit (misal tak sengaja refresh/tutup tab lalu langsung buka lagi), perbarui stopwatch
-          localStorage.setItem('fc_last_active', now.toString());
-          
-          if (parsed && parsed.username) { 
-              openDashboard(parsed); 
-              return; 
-          } 
-      } 
-      document.getElementById('loginView').style.display='flex'; 
-  } catch(e) { 
-      document.getElementById('loginView').style.display='flex'; 
-  } 
-}
-
-function prosesLogin() {
-  var u = document.getElementById('username').value;
-  var p = document.getElementById('password').value;
-  if(!u || !p) return showModal("Mohon isi email dan password!");
-  
-  var btn = document.querySelector('#loginView .btn-save'); 
-  var ori = btn ? btn.innerText : "MASUK PORTAL"; 
-  if(btn) { btn.innerText = "⏳ MASUK..."; btn.style.pointerEvents = "none"; }
-  
-  var savedToken = localStorage.getItem('fc_device_token') || "";
-  
-  google.script.run.withSuccessHandler(function(r){
-    if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; }
-    if(r.success){ 
-      localStorage.setItem('fc_device_token', r.token); 
-      localStorage.setItem('avSession', JSON.stringify(r.data)); 
-      
-      // Mulai stopwatch saat berhasil login
-      localStorage.setItem('fc_last_active', new Date().getTime().toString()); 
-      
-      openDashboard(r.data); 
-    } else { showModal(r.message); }
-  }).withFailureHandler(function(){
-    if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; } 
-    showModal("Gagal koneksi ke server.");
-  }).loginVendor(u, p, savedToken);
-}
+      function prosesLogin() {
+        var u = document.getElementById('username').value;
+        var p = document.getElementById('password').value;
+        if(!u || !p) return showModal("Mohon isi email dan password!");
+        var btn = document.querySelector('#loginView .btn-save');
+        var ori = btn ? btn.innerText : "MASUK PORTAL"; 
+        if(btn) { btn.innerText = "⏳ MASUK..."; btn.style.pointerEvents = "none"; }
+        var savedToken = localStorage.getItem('fc_device_token') || "";
+        google.script.run.withSuccessHandler(function(r){
+          if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; }
+          if(r.success){ 
+            localStorage.setItem('fc_device_token', r.token); 
+            localStorage.setItem('avSession', JSON.stringify(r.data)); 
+            localStorage.setItem('fc_last_active', new Date().getTime().toString()); 
+            openDashboard(r.data); 
+          } else { showModal(r.message); }
+        }).withFailureHandler(function(){
+          if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; } 
+          showModal("Gagal koneksi ke server.");
+        }).loginVendor(u, p, savedToken);
+      }
 
       function prosesRegister() {
         var u = document.getElementById('regUser').value;
@@ -1080,7 +863,6 @@ function prosesLogin() {
         var w = document.getElementById('regWa').value;
         if(!u || !p || !pConfirm || !n || !w) return showModal("Lengkapi semua kolom pendaftaran!");
         if(p !== pConfirm) return showModal("Password yang kamu ulangi tidak cocok! Silakan cek kembali.");
-        
         var btn = document.querySelector('#registerView .btn-share');
         var oriText = btn ? btn.innerText : "DAFTAR SEKARANG";
         if(btn) { btn.innerText = "⏳ MENGIRIM OTP..."; btn.style.pointerEvents = "none"; }
@@ -1088,10 +870,7 @@ function prosesLogin() {
         google.script.run.withSuccessHandler(function(res) {
             if(btn) { btn.innerText = oriText; btn.style.pointerEvents = "auto"; }
             if(res.success) {
-              tempEmailDaftar = u; 
-              hideAllViews();
-              document.getElementById('otpView').style.display='flex';
-              showModal("OTP Terkirim! Cek kotak masuk atau spam di email kamu.");
+              tempEmailDaftar = u; hideAllViews(); document.getElementById('otpView').style.display='flex'; showModal("OTP Terkirim! Cek kotak masuk atau spam di email kamu.");
             } else { showModal(res.message); }
         }).registerVendor({ username: u, password: p, namaVendor: n, nomorWa: w });
       }
@@ -1099,36 +878,22 @@ function prosesLogin() {
       function prosesVerifikasiOTP() {
         var otp = document.getElementById('otpCode').value;
         if(otp.length < 6) return showModal("Masukkan 6 digit OTP!");
-        
-        var btn = document.querySelector('#otpView .btn-save');
-        var ori = btn.innerText;
-        btn.innerText = "⏳ MEMERIKSA..."; btn.style.pointerEvents = "none";
+        var btn = document.querySelector('#otpView .btn-save'); var ori = btn.innerText; btn.innerText = "⏳ MEMERIKSA..."; btn.style.pointerEvents = "none";
         
         google.script.run.withSuccessHandler(function(res) {
             btn.innerText = ori; btn.style.pointerEvents = "auto";
-            if(res.success) {
-                showModal("Berhasil! Akun studio sudah aktif. Silakan login.", function(){
-                    showLogin();
-                });
-            } else { showModal(res.message); }
+            if(res.success) { showModal("Berhasil! Akun studio sudah aktif. Silakan login.", function(){ showLogin(); }); } else { showModal(res.message); }
         }).verifikasiOTP(tempEmailDaftar, otp);
       }
 
       function prosesMintaReset() {
         var e = document.getElementById('forgotEmail').value;
         if(!e) return showModal("Ketik email kamu!");
-        
-        var btn = document.querySelector('#forgotPasswordView .btn-share');
-        var ori = btn.innerText; btn.innerText = "⏳ MENGIRIM..."; btn.style.pointerEvents = "none";
+        var btn = document.querySelector('#forgotPasswordView .btn-share'); var ori = btn.innerText; btn.innerText = "⏳ MENGIRIM..."; btn.style.pointerEvents = "none";
         
         google.script.run.withSuccessHandler(function(res) {
             btn.innerText = ori; btn.style.pointerEvents = "auto";
-            if(res.success) {
-                tempEmailReset = e;
-                hideAllViews();
-                document.getElementById('resetPasswordView').style.display='flex';
-                showModal("Email terkirim! Masukkan kode OTP dan buat password barumu.");
-            } else { showModal(res.message); }
+            if(res.success) { tempEmailReset = e; hideAllViews(); document.getElementById('resetPasswordView').style.display='flex'; showModal("Email terkirim! Masukkan kode OTP dan buat password barumu."); } else { showModal(res.message); }
         }).mintaResetPassword(e);
       }
 
@@ -1136,26 +901,18 @@ function prosesLogin() {
         var otp = document.getElementById('resetOtpCode').value;
         var pBaru = document.getElementById('newPassword').value;
         var pConfirm = document.getElementById('newPasswordConfirm').value;
-        
         if(otp.length < 6 || !pBaru || !pConfirm) return showModal("Lengkapi OTP dan Password Baru!");
         if(pBaru !== pConfirm) return showModal("Password yang kamu ulangi tidak cocok! Coba lagi.");
         
-        var btn = document.querySelector('#resetPasswordView .btn-save');
-        var ori = btn.innerText; btn.innerText = "⏳ MENYIMPAN..."; btn.style.pointerEvents = "none";
-        
+        var btn = document.querySelector('#resetPasswordView .btn-save'); var ori = btn.innerText; btn.innerText = "⏳ MENYIMPAN..."; btn.style.pointerEvents = "none";
         google.script.run.withSuccessHandler(function(res) {
             btn.innerText = ori; btn.style.pointerEvents = "auto";
-            if(res.success) {
-                showModal("Password sukses diubah dan riwayat kunci perangkat telah dibersihkan! Silakan login kembali.", function(){
-                    showLogin();
-                });
-            } else { showModal(res.message); }
+            if(res.success) { showModal("Password sukses diubah dan riwayat kunci perangkat telah dibersihkan! Silakan login kembali.", function(){ showLogin(); }); } else { showModal(res.message); }
         }).eksekusiResetPassword(tempEmailReset, otp, pBaru);
       }
 
       function openDashboard(v) {
-        activeVendor = v;
-        hideAllViews();
+        activeVendor = v; hideAllViews();
         document.getElementById('dashboardView').style.display='block';
         document.getElementById('dashStudioName').innerText = v.namaVendor;
         
@@ -1165,14 +922,11 @@ function prosesLogin() {
         var elWel = document.getElementById('setWelcomeText'); if(elWel) elWel.value = v.welcomeText || '';
         var elWaT = document.getElementById('setWaText'); if(elWaT) elWaT.value = v.waText || '';
         if(v.logoUrl) {
-            document.getElementById('adminDisplayLogo').src = v.logoUrl;
-            document.getElementById('adminDisplayLogo').style.display = 'block';
-            document.getElementById('previewLogoAdminDrawer').src = v.logoUrl;
-            document.getElementById('previewLogoAdminDrawer').style.display = 'block';
+            document.getElementById('adminDisplayLogo').src = v.logoUrl; document.getElementById('adminDisplayLogo').style.display = 'block';
+            document.getElementById('previewLogoAdminDrawer').src = v.logoUrl; document.getElementById('previewLogoAdminDrawer').style.display = 'block';
         }
         if(v.qrisUrl) {
-            document.getElementById('previewQrisAdminDrawer').src = v.qrisUrl;
-            document.getElementById('previewQrisAdminDrawer').style.display = 'block';
+            document.getElementById('previewQrisAdminDrawer').src = v.qrisUrl; document.getElementById('previewQrisAdminDrawer').style.display = 'block';
         }
 
         parsedLimits = parseLimitsStr(v.limits || "");
@@ -1184,19 +938,12 @@ function prosesLogin() {
           renderDynamicAddonFields();
         } catch(e){}
         
-        var elLedit = document.getElementById('L_EDIT');
-        if(elLedit) elLedit.value = parsedLimits["EDIT"] ? parsedLimits["EDIT"].max : 0;
-        var elSedit = document.getElementById('S_EDIT');
-        if(elSedit) elSedit.checked = parsedLimits["EDIT"] ? parsedLimits["EDIT"].status : true;
         renderDynamicKuotaFields();
       }
 
       function updateParsedLimit(key, maxVal, statusVal) {
           if(!parsedLimits[key]) parsedLimits[key] = {max:0, status:true};
-          if(maxVal !== null) {
-              var v = parseInt(maxVal);
-              parsedLimits[key].max = isNaN(v) ? 0 : v;
-          }
+          if(maxVal !== null) { var v = parseInt(maxVal); parsedLimits[key].max = isNaN(v) ? 0 : v; }
           if(statusVal !== null) parsedLimits[key].status = statusVal;
       }
 
@@ -1208,14 +955,16 @@ function prosesLogin() {
          var filterKeys = [];
          if(cat === "MAGNETIC") filterKeys = ["MAGNETIC_4R"];
          else if(cat === "MAGAZINE") filterKeys = ["MAGAZINE_M1", "MAGAZINE_M2"];
-         else filterKeys = ["PEMBESARAN_10RS", "PEMBESARAN_12RS", "PEMBESARAN_16RS", "PEMBESARAN_20RS", "PEMBESARAN_24RS"];
+         else if(cat === "PEMBESARAN") filterKeys = ["PEMBESARAN_10RS", "PEMBESARAN_12RS", "PEMBESARAN_16RS", "PEMBESARAN_20RS", "PEMBESARAN_24RS"];
+         else if(cat === "EDIT_MAGNETIC") filterKeys = ["EDIT_MAGNETIC_4R"];
+         else if(cat === "EDIT_MAGAZINE") filterKeys = ["EDIT_MAGAZINE_M1", "EDIT_MAGAZINE_M2"];
+         else if(cat === "EDIT_PEMBESARAN") filterKeys = ["EDIT_PEMBESARAN_10RS", "EDIT_PEMBESARAN_12RS", "EDIT_PEMBESARAN_16RS", "EDIT_PEMBESARAN_20RS", "EDIT_PEMBESARAN_24RS"];
          
          for(var i=0; i<filterKeys.length; i++) {
             var k = filterKeys[i];
-            var label = k.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+            var label = k.replace("EDIT_","").replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
             var currentVal = parsedLimits[k] ? parsedLimits[k].max : 0;
             var currentStatus = parsedLimits[k] ? parsedLimits[k].status : true;
-            
             var html = '<div class="glass-container" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">';
             html += '<span style="font-size:13px; font-weight:700;">Ukuran ' + label + '</span>';
             html += '<div style="display:flex; align-items:center; gap:12px;">';
@@ -1242,7 +991,6 @@ function prosesLogin() {
                   html += '<input type="number" id="CP_PRINT_' + cetakSizes[i] + '" class="dash-input solid-input" style="width:100%; padding:10px; margin:0;" value="'+p+'" onchange="updateAddonPrice(\'prints\', \''+cetakSizes[i]+'\', this.value)"></div>';
               }
               html += '</div>';
-              
               var frameSizes = ["10RS", "12RS", "16RS", "20RS", "24RS"];
               html += '<label style="font-size:12px; font-weight:800;">Bingkai Tambahan (Rp/Pcs):</label>';
               html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">';
@@ -1289,11 +1037,10 @@ function prosesLogin() {
                   html += '<input type="number" id="CP_FD_' + fdSizes[i] + '" class="dash-input solid-input" style="width:120px; padding:10px; margin:0; text-align:right;" value="'+fd+'" onchange="updateAddonPrice(\'flashdisk\', \''+fdSizes[i]+'\', this.value)"></div>';
               }
               html += '</div>';
-              
               html += '<label style="font-size:12px; font-weight:800;">Biaya Copy Semua File Asli (Rp):</label>';
               html += '<input type="number" id="CP_COPY_ORIGINAL" class="dash-input solid-input" style="padding:12px; margin-top:6px; margin-bottom:20px;" value="'+(catPrices.copyOriginal||0)+'" onchange="updateAddonPrice(\'copyOriginal\', null, this.value)">';
 
-              html += '<label style="font-size:12px; font-weight:800;">Biaya Edit Tambahan / Foto (Rp):</label>';
+              html += '<label style="font-size:12px; font-weight:800;">Biaya Edit Tambahan Flat-rate (Rp/Foto):</label>';
               html += '<input type="number" id="CP_EDIT_TAMBAHAN" class="dash-input solid-input" style="padding:12px; margin-top:6px;" value="'+(catPrices.extraEdit||0)+'" onchange="updateAddonPrice(\'extraEdit\', null, this.value)">';
           }
           box.innerHTML = html;
@@ -1302,19 +1049,13 @@ function prosesLogin() {
       function updateAddonPrice(category, key, value) {
           var val = parseInt(value);
           if (isNaN(val)) val = 0; 
-          
-          if (key) {
-              if (!catPrices[category]) catPrices[category] = {};
-              catPrices[category][key] = val;
-          } else {
-              catPrices[category] = val;
-          }
+          if (key) { if (!catPrices[category]) catPrices[category] = {}; catPrices[category][key] = val; } 
+          else { catPrices[category] = val; }
       }
 
       function simpanSettinganPusat() {
         var elRekening = document.getElementById('setRekeningManual');
         if(elRekening) catPrices.rekening = elRekening.value;
-        
         var d = {
           namaVendor: document.getElementById('setVendorName').value,
           nomorWa: document.getElementById('setWaNumber').value,
@@ -1324,85 +1065,65 @@ function prosesLogin() {
           addonCatalog: JSON.stringify(catPrices),
           limits: getLimitsStr()
         };
-        var btn = document.querySelector('#settingsDrawer .btn-save'); 
-        var ori = btn ? btn.innerText : "SIMPAN"; 
+        var btn = document.querySelector('#settingsDrawer .btn-save'); var ori = btn ? btn.innerText : "SIMPAN"; 
         if(btn) { btn.innerText = "⏳ MENYIMPAN..."; btn.style.pointerEvents="none"; }
-        
         var uEmail = document.getElementById('username');
-        if(!uEmail || !uEmail.value) {
-           if(btn) { btn.innerText = ori; btn.style.pointerEvents="auto"; }
-           showModal("Sesi terputus. Silakan muat ulang halaman."); return;
-        }
+        if(!uEmail || !uEmail.value) { if(btn) { btn.innerText = ori; btn.style.pointerEvents="auto"; } showModal("Sesi terputus. Silakan muat ulang halaman."); return; }
 
         google.script.run.withSuccessHandler(function(r) {
             if(btn) { btn.innerText = ori; btn.style.pointerEvents="auto"; }
-            localStorage.setItem('avSession', JSON.stringify(r.data));
-            toggleSettingsDrawer(); 
-            showModal("Seluruh Konfigurasi Pengaturan V2 Berhasil Disimpan! ✅");
+            localStorage.setItem('avSession', JSON.stringify(r.data)); toggleSettingsDrawer(); showModal("Seluruh Konfigurasi Pengaturan V3 Berhasil Disimpan! ✅");
         }).withFailureHandler(function(){ 
-            if(btn) { btn.innerText = ori; btn.style.pointerEvents="auto"; }
-            showModal("Gagal Menyimpan. Periksa koneksi internet."); 
+            if(btn) { btn.innerText = ori; btn.style.pointerEvents="auto"; } showModal("Gagal Menyimpan. Periksa koneksi internet."); 
         }).saveVendorSettings(uEmail.value, d);
       }
 
       function prosesUploadLogo(event) {
           var fileInput = document.getElementById('uploadLogoInput');
           if(!fileInput.files.length) return showModal("Pilih gambar logo!");
-          var file = fileInput.files[0]; 
-          var reader = new FileReader(); 
-          var btn = event.target;
+          var file = fileInput.files[0]; var reader = new FileReader(); var btn = event.target;
           btn.innerText = "⏳..."; btn.style.pointerEvents = "none";
-          
           reader.onload = function(e) {
               google.script.run.withSuccessHandler(function(res){
                   btn.innerText = "Unggah"; btn.style.pointerEvents = "auto";
                   if(res.success) { 
                       localStorage.setItem('avSession', JSON.stringify(res.data)); 
-                      document.getElementById('previewLogoAdminDrawer').src = res.logoUrl; 
-                      document.getElementById('previewLogoAdminDrawer').style.display = 'block'; 
-                      document.getElementById('adminDisplayLogo').src = res.logoUrl; 
-                      document.getElementById('adminDisplayLogo').style.display = 'block'; 
+                      document.getElementById('previewLogoAdminDrawer').src = res.logoUrl; document.getElementById('previewLogoAdminDrawer').style.display = 'block'; 
+                      document.getElementById('adminDisplayLogo').src = res.logoUrl; document.getElementById('adminDisplayLogo').style.display = 'block'; 
                       showModal("Logo studio berhasil diperbarui!"); 
                   }
               }).uploadVendorLogo(document.getElementById('username').value, e.target.result, file.name);
-          }; 
-          reader.readAsDataURL(file);
+          }; reader.readAsDataURL(file);
       }
 
       function prosesUploadQris(event) {
         var fileInput = document.getElementById('uploadQrisInput');
         if(!fileInput.files.length) return showModal("Pilih gambar QRIS!");
-        var file = fileInput.files[0]; 
-        var reader = new FileReader(); 
-        var btn = event.target;
+        var file = fileInput.files[0]; var reader = new FileReader(); var btn = event.target;
         btn.innerText = "⏳..."; btn.style.pointerEvents = "none";
-        
         reader.onload = function(e) {
           google.script.run.withSuccessHandler(function(res){
             btn.innerText = "Unggah QRIS"; btn.style.pointerEvents = "auto";
             if(res.success) { 
                 localStorage.setItem('avSession', JSON.stringify(res.data)); 
-                document.getElementById('previewQrisAdminDrawer').src = res.qrisUrl; 
-                document.getElementById('previewQrisAdminDrawer').style.display = 'block'; 
+                document.getElementById('previewQrisAdminDrawer').src = res.qrisUrl; document.getElementById('previewQrisAdminDrawer').style.display = 'block'; 
                 showModal("Gambar QR Code Pembayaran Berhasil Diperbarui! ✅"); 
             }
           }).uploadVendorQris(document.getElementById('username').value, e.target.result, file.name);
-        }; 
-        reader.readAsDataURL(file);
+        }; reader.readAsDataURL(file);
       }
 
       function generateLinkKlien(mode) {
         var rawId = document.getElementById('setClientFolderId').value.trim();
         if (!rawId) return showModal("Mohon masukkan Link / ID Folder GDrive klien terlebih dahulu!");
         var idMatch = rawId.match(/[-\w]{25,}/);
-        if(!idMatch) return showModal("Link / ID Folder GDrive tidak valid!"); 
-        var id = idMatch[0];
-        
+        if(!idMatch) return showModal("Link / ID Folder GDrive tidak valid!"); var id = idMatch[0];
         var dl = document.getElementById('setDeadlineDate').value || "";
-        if(!activeVendor || !activeVendor.username) {
-            showModal("Sesi kamu habis. Silahkan refresh/login ulang.");
-            return;
-        }
+        if(!activeVendor || !activeVendor.username) { showModal("Sesi kamu habis. Silahkan refresh/login ulang."); return; }
+
+        // Ambil tombol Kirim WA Master yang ada di dashboard
+        var btnMaster = document.getElementById('btnKirimWaMaster');
+        var oriText = btnMaster ? btnMaster.innerText : "🚀 Kirim Via WhatsApp";
 
         var configObj = { limits: getLimitsStr(), deadline: dl, vendor: activeVendor.namaVendor };
         var lnk = 'https://' + MASTER_URL + '?f=' + id + '&v=' + encodeURIComponent(activeVendor.username);
@@ -1411,108 +1132,91 @@ function prosesLogin() {
         
         var deadlineText = "";
         if (dl !== "") {
-            var parts = dl.split("-");
-            var dObj = new Date(parts[0], parts[1] - 1, parts[2]);
+            var parts = dl.split("-"); var dObj = new Date(parts[0], parts[1] - 1, parts[2]);
             var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             var formattedDate = dObj.getDate() + " " + months[dObj.getMonth()] + " " + dObj.getFullYear();
             deadlineText = "\n\n⏳ *BATAS WAKTU PEMILIHAN: " + formattedDate + "*\n_(Mohon segera dipilih sebelum tanggal tersebut karena akses link akan otomatis tertutup oleh sistem)_";
         }
 
         var warningText = "\n\n*_PENTING: Perlu diingat bahwa file foto kakak yang ada di Google Drive kami hanya akan tersimpan selama 3 BULAN. Mohon segera didownload dan di-backup ke HP atau Flashdisk/Laptop pribadi ya kak._*";
-        var msg = "Halo kak! 👋\nFoto-foto momen spesialmu sudah siap! ✨\n\n📁 Ini link Google Drive untuk melihat semua fotonya (Kualitas HD):\n" + gdriveLink + "\n\n📸 Dan silakan masuk ke aplikasi website di bawah ini untuk mulai proses seleksi foto cetak & edit:\n\n" + cleanLink + "\n\n*(Mohon klik link di atas perlahan sampai terbuka)*" + deadlineText + warningText + "\n\nTerima kasih! 🙏🏻\n\n" + activeVendor.namaVendor;
+        var msg = "Halo kak! 👋\nFoto-foto momen spesialmu sudah siap! ✨\n\n📁 Ini link Google Drive untuk melihat semua fotonya (Kualitas HD):\n" + gdriveLink + "\n\n📸 Dan silakan masuk ke aplikasi website di bawah ini untuk mulai proses seleksi foto cetak & edit:\n\n" + cleanLink + "\n\n*(Mohon klik link di atas perlahan sampai terbuka)*" + deadlineText + warningText + "\n\nTerima kasih! 🙏\n\n" + activeVendor.namaVendor;
         
         if(mode === 'copy') { 
-            navigator.clipboard.writeText(msg).then(function() {
+            navigator.clipboard.writeText(msg).then(function() { 
                 showModal("Pesan lengkap beserta link berhasil disalin! Silakan paste ke chat klien."); 
-            }).catch(function() {
-                showModal("Gagal menyalin. Silakan coba lagi atau update browser.");
+            }).catch(function() { 
+                showModal("Gagal menyalin. Silakan coba lagi atau update browser."); 
             });
         } else { 
-            var waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(msg);
-            window.open(waLink, '_blank'); 
+            // Ubah teks tombol master menjadi loading saat memproses data ke server
+            if(btnMaster) { btnMaster.innerText = "⏳ Memproses..."; btnMaster.style.pointerEvents = "none"; }
+            
+            var waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(msg); 
+            
+            // JALANKAN SYNC CONFIG KE SERVER DULU, JIKA SUKSES BARU LEMPAR KE WA KLIEN
+            google.script.run.withSuccessHandler(function() {
+                if(btnMaster) { btnMaster.innerText = oriText; btnMaster.style.pointerEvents = "auto"; }
+                window.open(waLink, '_blank');
+            }).withFailureHandler(function() {
+                if(btnMaster) { btnMaster.innerText = oriText; btnMaster.style.pointerEvents = "auto"; }
+                showModal("Gagal sinkronisasi data ke server Google, tapi kamu tetap bisa mengirim pesan.");
+                window.open(waLink, '_blank');
+            }).simpanKonfigurasiKlien(id, configObj);
         }
-
-        google.script.run.simpanKonfigurasiKlien(id, configObj);
       }
 
       function previewAplikasi() {
         var rawInput = document.getElementById('setClientFolderId').value.trim();
         if(!rawInput) { showModal("Wajib isi Link/ID Folder GDrive klien terlebih dahulu."); return; } 
-        
         var idMatch = rawInput.match(/[-\w]{25,}/);
-        MASTER_FOLDER_ID = idMatch ? idMatch[0] : rawInput;
-        URL_FID = MASTER_FOLDER_ID; 
+        MASTER_FOLDER_ID = idMatch ? idMatch[0] : rawInput; URL_FID = MASTER_FOLDER_ID; 
         
         var dl = document.getElementById('setDeadlineDate').value || "";
         if (dl && dl !== "") {
-            var parts = dl.split("-");
-            var dlDate = new Date(parts[0], parts[1] - 1, parts[2], 23, 59, 59);
-            var today = new Date();
-            if (today.getTime() > dlDate.getTime()) { 
-                showModal("Batas waktu deadline yang kamu atur sudah lewat!");
-                return;
-            }
+            var parts = dl.split("-"); var dlDate = new Date(parts[0], parts[1] - 1, parts[2], 23, 59, 59); var today = new Date();
+            if (today.getTime() > dlDate.getTime()) { showModal("Batas waktu deadline yang kamu atur sudah lewat!"); return; }
         }
         
         if(activeVendor) {
-          hideAllViews();
-          document.getElementById('btnBackToDash').style.display='block'; 
+          hideAllViews(); document.getElementById('btnBackToDash').style.display='block'; 
           document.documentElement.style.setProperty('--primary-color', activeVendor.themeColor);
-          var els = document.querySelectorAll('.elVendorName');
-          for(var i=0; i<els.length; i++) els[i].innerText = activeVendor.namaVendor;
+          var els = document.querySelectorAll('.elVendorName'); for(var i=0; i<els.length; i++) els[i].innerText = activeVendor.namaVendor;
           if(document.getElementById('clientWelcomeText')) document.getElementById('clientWelcomeText').innerText = activeVendor.welcomeText;
           if(activeVendor.logoUrl && activeVendor.logoUrl !== "") { 
-              document.getElementById('clientDisplayLogo').src = activeVendor.logoUrl;
-              document.getElementById('clientDisplayLogo').style.display = 'block'; 
-              document.getElementById('clientDisplayName').style.display = 'none'; 
+              document.getElementById('clientDisplayLogo').src = activeVendor.logoUrl; document.getElementById('clientDisplayLogo').style.display = 'block'; document.getElementById('clientDisplayName').style.display = 'none'; 
           }
-          parsedLimits = parseLimitsStr(getLimitsStr());
-          document.getElementById('welcomeView').style.display='flex';
+          parsedLimits = parseLimitsStr(getLimitsStr()); document.getElementById('welcomeView').style.display='flex';
         }
       }
 
-      function exitPreview() { 
-        hideAllViews();
-        document.getElementById('btnBackToDash').style.display='none'; 
-        globalSelections={}; 
-        if (activeVendor) { openDashboard(activeVendor); } else { showLogin(); }
-      }
+      function exitPreview() { hideAllViews(); document.getElementById('btnBackToDash').style.display='none'; globalSelections={}; if (activeVendor) { openDashboard(activeVendor); } else { showLogin(); } }
       
       function openCetakSubMenu() {
-    hideAllViews();
-    var elHome = document.getElementById('homeView');
-    elHome.style.display = 'flex';
-    elHome.classList.add('page-animate');
-    var hMag='', hMgz='', hPem='';
-        
+        hideAllViews();
+        var elHome = document.getElementById('homeView');
+        elHome.style.display = 'flex';
+        elHome.classList.add('page-animate');
+        var hMag='', hMgz='', hPem='';
         for (var i=0; i<ALL_KUOTA_KEYS.length; i++) {
-          var k = ALL_KUOTA_KEYS[i];
-          var lim = parsedLimits[k] || {max:0, status:false};
-          var label = k.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
-          var c = (globalSelections[k]||[]).length;
-          
-          var effMax = lim.max;
-          if(k.indexOf("MAGAZINE_") === 0) {
-              var qtyDariAddonPaksa = 0;
-              if(lim.max > 0 && c > lim.max) {
-                 qtyDariAddonPaksa = Math.ceil((c - lim.max) / lim.max);
+              var k = ALL_KUOTA_KEYS[i];
+              var lim = parsedLimits[k] || {max:0, status:false};
+              var label = k.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+              var c = (globalSelections[k]||[]).length;
+              var effMax = lim.max;
+              if(k.indexOf("MAGAZINE_") === 0) {
+                  var qtyDariAddonPaksa = 0;
+                  if(lim.max > 0 && c > lim.max) { qtyDariAddonPaksa = Math.ceil((c - lim.max) / lim.max); }
+                  effMax += qtyDariAddonPaksa * lim.max;
               }
-              effMax += qtyDariAddonPaksa * lim.max;
-          }
-          
-          var btnHtml = '';
-          if(!lim.status || effMax === 0) {
-              btnHtml = '<button class="size-btn" style="background:rgba(255,255,255,0.4); color:#8e8e93; border-color:#d1d1d6; cursor:not-allowed;" disabled>Ukuran ' + label + ' <span style="background:#8e8e93;">🔒 Terkunci (Kuota 0)</span></button>';
-          } else {
-              var txt = effMax > 0 ? (c + '/' + effMax) : c + " Foto";
-              btnHtml = '<button class="size-btn" onclick="openGallery(\'' + k + '\', \'Cetak ' + label + '\')">Ukuran ' + label + ' <span>' + txt + '</span></button>';
-          }
-          
-          if(k.indexOf("MAGNETIC_") === 0) hMag += btnHtml;
-          else if(k.indexOf("MAGAZINE_") === 0) hMgz += btnHtml;
-          else hPem += btnHtml;
+              var btnHtml = '';
+              if(!lim.status || effMax === 0) {
+                  btnHtml = '<button class="size-btn" style="background:rgba(255,255,255,0.4); color:#8e8e93; border-color:#d1d1d6; cursor:not-allowed;" disabled>Ukuran ' + label + ' <span style="background:#8e8e93;">🔒 Terkunci (Kuota 0)</span></button>';
+              } else {
+                  var txt = effMax > 0 ? (c + '/' + effMax) : c + " Foto";
+                  btnHtml = '<button class="size-btn" onclick="openGallery(\'' + k + '\', \'Cetak ' + label + '\')">Ukuran ' + label + ' <span>' + txt + '</span></button>';
+              }
+              if(k.indexOf("MAGNETIC_") === 0) hMag += btnHtml; else if(k.indexOf("MAGAZINE_") === 0) hMgz += btnHtml; else hPem += btnHtml;
         }
-        
         document.getElementById('menuMagneticArea').innerHTML = hMag;
         document.getElementById('menuMagazineArea').innerHTML = hMgz;
         document.getElementById('menuPembesaranArea').innerHTML = hPem;
@@ -1520,229 +1224,240 @@ function prosesLogin() {
         var hAddon = '';
         for(var size in catPrices.prints) {
             var p = catPrices.prints[size] || 0;
-            if(p > 0) {
-                hAddon += '<button class="size-btn" onclick="openGallery(\'ADDON_PRINT_' + size + '\', \'Cetak ' + size + '\')">Cetak '+size+' <span>+Rp ' + p.toLocaleString('id') + '</span></button>';
-            }
+            if(p > 0) { hAddon += '<button class="size-btn" onclick="openGallery(\'ADDON_PRINT_' + size + '\', \'Cetak ' + size + '\')">Cetak '+size+' <span>+Rp ' + p.toLocaleString('id') + '</span></button>'; }
         }
         document.getElementById('menuAddonArea').innerHTML = hAddon || '<p style="font-size:12px;color:var(--text-muted);">Belum ada harga cetak tambahan diatur.</p>';
       }
 
-      function goToEditMenu() { 
-          currentMode = "Edit Utama";
-          openGallery("Edit Utama", "Pilihan File Khusus Edit"); 
+      function openEditSubMenu() {
+        hideAllViews();
+        var elHome = document.getElementById('homeEditView');
+        elHome.style.display = 'flex';
+        elHome.classList.add('page-animate');
+        var hMag='', hMgz='', hPem='';
+        for (var i=0; i<ALL_KUOTA_KEYS.length; i++) {
+              var baseKey = ALL_KUOTA_KEYS[i];
+              var editKey = "EDIT_" + baseKey;
+              var lim = parsedLimits[editKey] || {max:0, status:false};
+              var label = baseKey.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+              var c = (globalSelections[editKey]||[]).length;
+              var effMax = lim.max;
+              var btnHtml = '';
+              if(!lim.status || effMax === 0) {
+                  btnHtml = '<button class="size-btn" style="background:rgba(255,255,255,0.4); color:#8e8e93; border-color:#d1d1d6; cursor:not-allowed;" disabled>Edit ' + label + ' <span style="background:#8e8e93;">🔒 Terkunci (Kuota 0)</span></button>';
+              } else {
+                  var txt = effMax > 0 ? (c + '/' + effMax) : c + " Foto";
+                  btnHtml = '<button class="size-btn" onclick="openGallery(\'' + editKey + '\', \'Edit ' + label + '\')">Edit ' + label + ' <span>' + txt + '</span></button>';
+              }
+              if(baseKey.indexOf("MAGNETIC_") === 0) hMag += btnHtml; else if(baseKey.indexOf("MAGAZINE_") === 0) hMgz += btnHtml; else hPem += btnHtml;
+        }
+        document.getElementById('menuEditMagneticArea').innerHTML = hMag;
+        document.getElementById('menuEditMagazineArea').innerHTML = hMgz;
+        document.getElementById('menuEditPembesaranArea').innerHTML = hPem;
       }
       
-      function openGallery(m, l) { 
-          currentMode=m;
-          hideAllViews(); 
-          var elGal = document.getElementById('galleryView');
-          elGal.style.display = 'block'; 
-          elGal.classList.add('page-animate');
-          updateGalleryCounter(); 
-          loadFolder(URL_FID, false); 
-      }
+      function openGallery(m, l) { currentMode=m; hideAllViews(); var elGal = document.getElementById('galleryView'); elGal.style.display = 'block'; elGal.classList.add('page-animate'); updateGalleryCounter(); loadFolder(URL_FID, false); }
       
       function loadFolder(id, back) {
         document.getElementById('gallery').innerHTML='<div style="color:var(--text-main);text-align:center;padding:80px 0;grid-column:1/-1; font-weight:600; font-size:16px;">Mengambil foto dari awan... ⏳</div>';
-        if(!back && currentItems.length>0) {
-            folderHistory.push({id: URL_FID, name: currentFolderName});
-        }
+        if(!back && currentItems.length>0) { folderHistory.push({id: URL_FID, name: currentFolderName}); }
         URL_FID = id;
         google.script.run.withSuccessHandler(function(d) { 
             if(d.error) return showModal(d.error); 
-            currentFolderName = d.folderName; 
-            document.getElementById('currentFolderName').innerText = d.folderName; 
-            currentItems = d.items; 
-            document.getElementById('backBtn').style.display = folderHistory.length>0 ? 'block' : 'none'; 
-            renderGallery(); 
+            currentFolderName = d.folderName; document.getElementById('currentFolderName').innerText = d.folderName; currentItems = d.items; document.getElementById('backBtn').style.display = folderHistory.length>0 ? 'block' : 'none'; renderGallery(); 
         }).getFolderContents(id);
       }
       
-      function goBack() { 
-          if(folderHistory.length>0) loadFolder(folderHistory.pop().id, true);
-      }
-      
+      function goBack() { if(folderHistory.length>0) loadFolder(folderHistory.pop().id, true); }
       function toggleReviewMode() { 
-          isReviewMode = !isReviewMode;
+          isReviewMode = !isReviewMode; 
           document.getElementById('reviewToggleCheck').checked = isReviewMode; 
+          
+          updateGalleryCounter(); // Panggil ini untuk mengecek apakah tombol hapus berhak muncul
           renderGallery(); 
       }
 
-      function updateGalleryCounter() { 
-          var modeAlias = currentMode;
-          var count = 0;
-          var labelAdd = "";
+      function clearAllSelections() {
+          var count = (globalSelections[currentMode] || []).length;
           
-          if (currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-             var maxEdit = parsedLimits["EDIT"] ? parsedLimits["EDIT"].max : 0;
-             var combinedEdit = (globalSelections["Edit Utama"]||[]).length + (globalSelections["Edit Tambahan"]||[]).length;
-             labelAdd = maxEdit > 0 ? " (" + combinedEdit + "/" + maxEdit + " Gratis)" : " (" + combinedEdit + " Foto)";
-             modeAlias = "Edit Terpilih";
-          } else if (currentMode.indexOf("ADDON_") === 0) {
+          if (count === 0) {
+              showModal("Belum ada foto yang kamu pilih di kategori ini.");
+              return;
+          }
+
+          showModal("Yakin ingin membatalkan semua (" + count + " foto) pilihanmu di kategori ini?", function() {
+              // 1. Kosongkan memori di kategori yang sedang dibuka
+              globalSelections[currentMode] = [];
+              
+              // 2. Jika klien menghapus di menu 4R, pastikan tagihan otomatis album fisik juga ikut terhapus
+              var keyStr = currentMode.replace("EDIT_","").replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+              if (keyStr === "4R" && currentMode.indexOf("EDIT_") === -1) {
+                  delete cartAlbums["AUTO_4R_ALBUM"];
+                  updateCartCount();
+              }
+              
+              // 3. Render ulang dan rapikan kuota
+              applyAutoSliding();
+              renderGallery(); 
+              updateGalleryCounter(); // Tombol sampah otomatis lenyap di sini karena memori jadi 0
+          });
+      }
+
+      function updateGalleryCounter() { 
+          var modeAlias = currentMode; var count = 0; var labelAdd = "";
+          var isEdit = currentMode.indexOf("EDIT_") === 0;
+          
+          if (currentMode.indexOf("ADDON_") === 0) {
              count = (globalSelections[currentMode]||[]).length;
-             labelAdd = " (" + count + " Foto)";
-             modeAlias = currentMode.replace("ADDON_PRINT_","");
-          } else if (currentMode.indexOf("MAGAZINE_") === 0) {
+             labelAdd = " (" + count + " Foto)"; modeAlias = currentMode.replace("ADDON_PRINT_","");
+          } else if (currentMode.indexOf("MAGAZINE_") === 0 && !isEdit) {
              var lim = parsedLimits[currentMode] || {max: 0};
              count = (globalSelections[currentMode]||[]).length;
              var qtyDariAddonPaksa = 0;
-             if(lim.max > 0 && count > lim.max) {
-                 qtyDariAddonPaksa = Math.ceil((count - lim.max) / lim.max);
-             }
+             if(lim.max > 0 && count > lim.max) { qtyDariAddonPaksa = Math.ceil((count - lim.max) / lim.max); }
              var effMax = lim.max > 0 ? lim.max + (qtyDariAddonPaksa * lim.max) : 0;
              labelAdd = effMax > 0 ? " (" + count + "/" + effMax + ")" : " (" + count + " Foto)";
              modeAlias = currentMode.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
           } else {
-             var lim = parsedLimits[currentMode] || {max: 0};
-             count = (globalSelections[currentMode]||[]).length;
+             var lim = parsedLimits[currentMode] || {max: 0}; count = (globalSelections[currentMode]||[]).length;
              labelAdd = lim.max > 0 ? " (" + count + "/" + lim.max + ")" : " (" + count + " Foto)";
-             modeAlias = currentMode.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+             modeAlias = currentMode.replace("EDIT_","").replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+             if(isEdit) modeAlias = "Edit " + modeAlias;
           }
-          
-          var el = document.getElementById('activeModeText');
-          if(el) el.innerText = "Memilih " + modeAlias + labelAdd; 
+          var el = document.getElementById('activeModeText'); if(el) el.innerText = "Memilih " + modeAlias + labelAdd; 
+
+          // ==========================================
+          // SENSOR TOMBOL HAPUS SEMUA (PINTAR)
+          // ==========================================
+          var btnClear = document.getElementById('btnClearAll');
+          if (btnClear) {
+              // Tombol hanya muncul jika mode "Pilihan Saya" aktif DAN ada foto yang sudah dicentang
+              btnClear.style.display = (isReviewMode && count > 0) ? 'inline-flex' : 'none';
+          }
+      }
+
+      // ==========================================
+      // FUNGSI BARU: PENYELARAS LABEL BERBAYAR
+      // ==========================================
+      function syncAllCardsVisual() {
+          var sel = globalSelections[currentMode] || [];
+          var cards = document.querySelectorAll('.gallery-card');
+          for(var i=0; i<cards.length; i++) {
+              var card = cards[i];
+              var cb = card.querySelector('input[type="checkbox"]');
+              if(!cb) continue;
+              var fid = cb.id.replace('chk_', '');
+              var f = null;
+              for(var j=0; j<sel.length; j++) { if(sel[j].id === fid) { f = sel[j]; break; } }
+              var divs = card.querySelectorAll('div');
+              for(var d=0; d<divs.length; d++) { if(divs[d].innerText.indexOf('💎') !== -1) { divs[d].remove(); } }
+              if(f && f.isExtra) {
+                  var badgeTxt = f.mode.indexOf("EDIT_") === 0 ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
+                  var badgeHtml = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
+                  card.insertAdjacentHTML('beforeend', badgeHtml);
+              }
+          }
+      }
+
+      // ==========================================
+      // FUNGSI BARU: RENDER INSTAN (ANTI JEDUG)
+      // ==========================================
+      function updateCardVisualOnly(fid, isChecked) {
+          var chk = document.getElementById('chk_' + fid);
+          if (chk) {
+              chk.checked = isChecked;
+              var card = chk.closest('.gallery-card');
+              if (card) {
+                  if (isChecked) card.classList.add('selected'); else card.classList.remove('selected');
+                  var noteInput = card.querySelector('input[type="text"].dash-input');
+                  if (noteInput) {
+                      noteInput.style.display = isChecked ? 'block' : 'none';
+                      if(!isChecked) noteInput.value = ''; 
+                  }
+              }
+          }
       }
 
       function renderGallery() {
-    var g = document.getElementById('gallery');
-    var htmlBuilder = []; 
-    var sel = [];
-    
-    if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-        sel = (globalSelections["Edit Utama"]||[]).concat(globalSelections["Edit Tambahan"]||[]);
-    } else {
-        sel = globalSelections[currentMode]||[];
-    }
-
-    if (isReviewMode) {
-        // MODE TAMPILKAN PILIHAN SAYA
-        for(var k = 0; k < sel.length; k++) {
-            var f = sel[k];
-            var cardClass = "gallery-card selected";
-            var addTag = "";
-            if (f.isExtra) {
-                var badgeTxt = f.mode === "Edit Tambahan" ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
-                addTag = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
-            }
-            
-            var escapedName = f.file.replace(/'/g, "\\'");
-            var folderBadge = '<div style="font-size:9px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-align:left;">📁 ' + f.folder + '</div>';
-
-            // PERUBAHAN DI SINI: Menambahkan id="chk_..." dan mengirimkan id ke openModal
-            var htmlStr = '<div class="' + cardClass + '">' + folderBadge + '<img src="https://drive.google.com/thumbnail?id=' + f.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + f.id + '&sz=w1200\', \'chk_' + f.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + f.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + f.id + '\')" checked>' + f.file + '</label><br>' + addTag;
-            
-            if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-                var noteVal = f.note || '';
-                htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:block" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + f.id + '\')">';
-            }
-            htmlBuilder.push(htmlStr + '</div>');
-        }
-    } else {
-        // MODE NORMAL 
-        for(var k = 0; k < currentItems.length; k++) {
-            var i = currentItems[k];
-            if(i.type === 'folder') { 
-                htmlBuilder.push('<div class="gallery-card" onclick="loadFolder(\'' + i.id + '\', false)"><div style="font-size:45px;cursor:pointer; padding:15px 0;">📁</div><div style="font-size:13px;color:var(--text-main);font-weight:700;">' + i.name + '</div></div>');
-            }
-            else if(i.type === 'file') {
-                var f = null;
-                for(var j=0; j<sel.length; j++) { if(sel[j].id === i.id) { f = sel[j]; break; } }
-                
-                var cardClass = f ? "gallery-card selected" : "gallery-card";
-                var addTag = "";
-                if (f && f.isExtra) {
-                    var badgeTxt = f.mode === "Edit Tambahan" ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
+        var g = document.getElementById('gallery'); var htmlBuilder = []; var sel = globalSelections[currentMode]||[];
+        var isEditMode = currentMode.indexOf("EDIT_") === 0;
+        if (isReviewMode) {
+            for(var k = 0; k < sel.length; k++) {
+                var f = sel[k]; var cardClass = "gallery-card selected"; var addTag = "";
+                if (f.isExtra) {
+                    var badgeTxt = f.mode.indexOf("EDIT_") === 0 ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
                     addTag = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
                 }
-                
-                var escapedName = i.name.replace(/'/g, "\\'");
-                
-                // PERUBAHAN DI SINI: Menambahkan id="chk_..." dan mengirimkan id ke openModal
-                var htmlStr = '<div class="' + cardClass + '"><img src="https://drive.google.com/thumbnail?id=' + i.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + i.id + '&sz=w1200\', \'chk_' + i.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + i.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + i.id + '\')" ' + (f?'checked':'') + '>' + i.name + '</label><br>' + addTag;
-                
-                if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-                    var noteVal = f ? f.note : '';
-                    htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:' + (f?'block':'none') + '" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + i.id + '\')">';
+                var escapedName = f.file.replace(/'/g, "\\'");
+                var folderBadge = '<div style="font-size:9px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-align:left;">📁 ' + f.folder + '</div>';
+                var htmlStr = '<div class="' + cardClass + '">' + folderBadge + '<img src="https://drive.google.com/thumbnail?id=' + f.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + f.id + '&sz=w1200\', \'chk_' + f.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + f.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + f.id + '\')" checked>' + f.file + '</label><br>' + addTag;
+                if(isEditMode) {
+                    var noteVal = f.note || '';
+                    htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:block" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + f.id + '\')">';
                 }
                 htmlBuilder.push(htmlStr + '</div>');
             }
+        } else {
+            for(var k = 0; k < currentItems.length; k++) {
+                var i = currentItems[k];
+                if(i.type === 'folder') { 
+                    htmlBuilder.push('<div class="gallery-card" onclick="loadFolder(\'' + i.id + '\', false)"><div style="font-size:45px;cursor:pointer; padding:15px 0;">📁</div><div style="font-size:13px;color:var(--text-main);font-weight:700;">' + i.name + '</div></div>');
+                }
+                else if(i.type === 'file') {
+                    var f = null; for(var j=0; j<sel.length; j++) { if(sel[j].id === i.id) { f = sel[j]; break; } }
+                    var cardClass = f ? "gallery-card selected" : "gallery-card"; var addTag = "";
+                    if (f && f.isExtra) {
+                        var badgeTxt = f.mode.indexOf("EDIT_") === 0 ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
+                        addTag = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
+                    }
+                    var escapedName = i.name.replace(/'/g, "\\'");
+                    var htmlStr = '<div class="' + cardClass + '"><img src="https://drive.google.com/thumbnail?id=' + i.id + '&sz=w400" onclick="openModal(\'https://drive.google.com/thumbnail?id=' + i.id + '&sz=w1200\', \'chk_' + i.id + '\')"><label class="file-label"><input type="checkbox" id="chk_' + i.id + '" onchange="toggleSel(this, \'' + escapedName + '\', \'' + i.id + '\')" ' + (f?'checked':'') + '>' + i.name + '</label><br>' + addTag;
+                    if(isEditMode) {
+                        var noteVal = f ? f.note : '';
+                        htmlStr += '<input type="text" class="dash-input solid-input" style="padding:8px 12px;font-size:11px;margin-top:10px;display:' + (f?'block':'none') + '" placeholder="Ketik arahan edit..." value="' + noteVal + '" onchange="saveNote(this, \'' + i.id + '\')">';
+                    }
+                    htmlBuilder.push(htmlStr + '</div>');
+                }
+            }
         }
-    }
-    
-    if(isReviewMode && htmlBuilder.length === 0) {
-        g.innerHTML = '<div style="color:var(--text-main);text-align:center;grid-column:1/-1;padding:60px; font-weight:600;">Belum ada foto yang dicentang.</div>';
-    } else {
-        g.innerHTML = htmlBuilder.join('');
-    }
-    updateGalleryCounter(); 
-}
-
-      function getRequiredAlbumSizeForExtra(E) {
-          if (E <= 0) return 0;
-          if (E <= 40) return 40; 
-          if (E <= 80) return 80; 
-          if (E <= 120) return 120;
-          if (E <= 180) return 180;
-          return 240; 
+        
+        if(isReviewMode && htmlBuilder.length === 0) { g.innerHTML = '<div style="color:var(--text-main);text-align:center;grid-column:1/-1;padding:60px; font-weight:600;">Belum ada foto yang dicentang.</div>'; } 
+        else { g.innerHTML = htmlBuilder.join(''); }
+        updateGalleryCounter();
       }
 
-      // ==========================================
-      // OTAK BARU 1: AUTO-SLIDING ENGINE
-      // ==========================================
-      function applyAutoSliding() {
-          // 1. Geser otomatis kuota Edit
-          var utama = globalSelections["Edit Utama"] || [];
-          var tambahan = globalSelections["Edit Tambahan"] || [];
-          var limitEdit = parsedLimits["EDIT"] ? parsedLimits["EDIT"].max : 0;
-          var hargaEdit = catPrices.extraEdit || 0;
-          
-          if (limitEdit > 0) {
-              var allEdits = utama.concat(tambahan);
-              utama = [];
-              tambahan = [];
-              for(var i=0; i<allEdits.length; i++) {
-                  if (i < limitEdit) {
-                      allEdits[i].mode = "Edit Utama";
-                      allEdits[i].isExtra = false;
-                      allEdits[i].price = 0;
-                      utama.push(allEdits[i]);
-                  } else {
-                      allEdits[i].mode = "Edit Tambahan";
-                      allEdits[i].isExtra = true;
-                      allEdits[i].price = hargaEdit;
-                      tambahan.push(allEdits[i]);
-                  }
-              }
-              globalSelections["Edit Utama"] = utama;
-              globalSelections["Edit Tambahan"] = tambahan;
-          }
+      function getRequiredAlbumSizeForExtra(E) {
+          if (E <= 0) return 0; if (E <= 40) return 40; if (E <= 80) return 80; if (E <= 120) return 120; if (E <= 180) return 180; return 240; 
+      }
 
-          // 2. Geser otomatis kuota Cetak/Album
+      function applyAutoSliding() {
           for(var key in globalSelections) {
-              if(key === "Edit Utama" || key === "Edit Tambahan" || key.indexOf("ADDON_") === 0) continue;
-              
+              if(key.indexOf("ADDON_") === 0) continue;
               var arr = globalSelections[key];
               var lim = parsedLimits[key] ? parsedLimits[key].max : 0;
-              var keyStr = key.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
-              var basePriceCetak = (catPrices.prints && catPrices.prints[keyStr]) ? catPrices.prints[keyStr] : 0;
-
+              
+              var isEdit = key.indexOf("EDIT_") === 0;
+              var keyStr = key.replace("EDIT_","").replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+              
+              var basePrice = 0;
+              if (isEdit) { basePrice = catPrices.extraEdit || 0; } 
+              else { basePrice = (catPrices.prints && catPrices.prints[keyStr]) ? catPrices.prints[keyStr] : 0; }
+              
               if (lim > 0 && arr && arr.length > 0) {
                   for(var i=0; i<arr.length; i++) {
                       if(i < lim) {
                           arr[i].isExtra = false;
-                          arr[i].priceCetak = 0; // Ubah otomatis jadi gratis
+                          if(isEdit) arr[i].price = 0; else arr[i].priceCetak = 0; 
                       } else {
                           arr[i].isExtra = true;
-                          // Pastikan harga cetak dikembalikan normal jika terlanjur diset 0
-                          if(arr[i].priceCetak === 0) {
-                              arr[i].priceCetak = basePriceCetak; 
-                          }
+                          if(isEdit) { if(arr[i].price === 0) arr[i].price = basePrice; } 
+                          else { if(arr[i].priceCetak === 0) arr[i].priceCetak = basePrice; }
                       }
                   }
               }
               
-              // AUTO ADJUST KEBUTUHAN ALBUM 4R JIKA KUOTA TURUN
-              if (keyStr === "4R" && lim > 0 && arr) {
+              // AUTO ADJUST ALBUM 4R (HANYA UNTUK CETAK)
+              if (!isEdit && keyStr === "4R" && lim > 0 && arr) {
                   var E_after = arr.length - lim;
                   var maxAllowedAlbum = getRequiredAlbumSizeForExtra(E_after);
                   var currentAuto = cartAlbums["AUTO_4R_ALBUM"] || 0;
@@ -1753,143 +1468,66 @@ function prosesLogin() {
               }
           }
       }
-      // ==========================================
-      // FUNGSI BARU: RENDER INSTAN (ANTI JEDUG-JEDUG)
-      // ==========================================
-      function updateCardVisualOnly(fid, isChecked) {
-          var chk = document.getElementById('chk_' + fid);
-          if (chk) {
-              chk.checked = isChecked;
-              var card = chk.closest('.gallery-card');
-              if (card) {
-                  if (isChecked) {
-                      card.classList.add('selected');
-                  } else {
-                      card.classList.remove('selected');
-                  }
-              }
-          }
-      }
-      // ==========================================
-      // FUNGSI BARU: PENYELARAS LABEL BERBAYAR (ANTI KEDIP)
-      // ==========================================
-      function syncAllCardsVisual() {
-          var sel = [];
-          if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-              sel = (globalSelections["Edit Utama"]||[]).concat(globalSelections["Edit Tambahan"]||[]);
-          } else {
-              sel = globalSelections[currentMode]||[];
-          }
-
-          var cards = document.querySelectorAll('.gallery-card');
-          for(var i=0; i<cards.length; i++) {
-              var card = cards[i];
-              var cb = card.querySelector('input[type="checkbox"]');
-              if(!cb) continue;
-
-              var fid = cb.id.replace('chk_', '');
-              
-              // Cek apakah foto ini masih tercentang di memori
-              var f = null;
-              for(var j=0; j<sel.length; j++) {
-                  if(sel[j].id === fid) { f = sel[j]; break; }
-              }
-
-              // 1. Sapu bersih semua label "💎" lama di kotak ini secara instan
-              var divs = card.querySelectorAll('div');
-              for(var d=0; d<divs.length; d++) {
-                  if(divs[d].innerText.indexOf('💎') !== -1) {
-                      divs[d].remove();
-                  }
-              }
-
-              // 2. Jika foto ini ternyata masih tercentang dan masuk kuota berbayar (isExtra), pasang labelnya lagi!
-              if(f && f.isExtra) {
-                  var badgeTxt = f.mode === "Edit Tambahan" ? "Rp " + (f.price||0).toLocaleString('id') : "Add-on Premium";
-                  var badgeHtml = '<div style="font-size:10px; color:#FF3B30; font-weight:800; margin-top:6px; background:#ffe5e5; padding:4px; border-radius:6px; display:inline-block;">💎 ' + badgeTxt + '</div>';
-                  card.insertAdjacentHTML('beforeend', badgeHtml);
-              }
-          }
-      }
 
       function toggleSel(cb, fname, fid) {
         // ---- JIKA KLIEN BATAL CENTANG (UNCHECK) ----
         if(!cb.checked) { 
-            if (currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-                globalSelections["Edit Utama"] = (globalSelections["Edit Utama"]||[]).filter(function(item) { return item.id !== fid; });
-                globalSelections["Edit Tambahan"] = (globalSelections["Edit Tambahan"]||[]).filter(function(item) { return item.id !== fid; });
-            } else {
-                globalSelections[currentMode] = (globalSelections[currentMode]||[]).filter(function(item) { return item.id !== fid; });
-            }
+            globalSelections[currentMode] = (globalSelections[currentMode]||[]).filter(function(item) { return item.id !== fid; });
+            applyAutoSliding();
             
-            // Sistem akan menghitung ulang mana yang gratis dan berbayar
-            applyAutoSliding(); 
-            
-            // 🔥 PERBAIKAN UNCHECK ANTI-KEDIP
-            if (isReviewMode) {
-                // HANYA jika sedang di menu "Pilihan Saya", kita wajib render ulang karena fotonya harus disembunyikan/hilang dari layar
-                renderGallery(); 
-            } else {
-                // Di menu Galeri Normal, matikan lampu fotonya...
-                updateCardVisualOnly(fid, false);
-                // ...lalu rapikan label berbayar pada foto lainnya tanpa berkedip!
-                syncAllCardsVisual();
-            }
+            if (isReviewMode) { renderGallery(); } 
+            else { updateCardVisualOnly(fid, false); syncAllCardsVisual(); }
             
             updateGalleryCounter(); 
             return;
         }
         
         // ---- JIKA KLIEN MENAMBAH CENTANG (CHECK) ----
-        if (currentMode === "Edit Utama" || currentMode === "Edit Tambahan") {
-            var lim = parsedLimits["EDIT"] || {max: 0};
-            var totalEdit = (globalSelections["Edit Utama"]||[]).length + (globalSelections["Edit Tambahan"]||[]).length;
+        var lim = parsedLimits[currentMode] || {max: 0}; 
+        var totalCount = (globalSelections[currentMode]||[]).length;
+        var isEdit = currentMode.indexOf("EDIT_") === 0;
+        var isAddon = currentMode.indexOf("ADDON_") === 0;
+        var isMagazine = currentMode.indexOf("MAGAZINE_") === 0 && !isEdit;
+        var keyStr = currentMode.replace("EDIT_","").replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
+        
+        if (isEdit) {
             var hargaPerFoto = catPrices.extraEdit || 0;
-
-            if (lim.max === 0) {
-               if (totalEdit === 0 && hargaPerFoto > 0) {
-                  cb.checked = false;
-                  showModal("Seluruh edit foto dikenakan biaya sebesar Rp " + hargaPerFoto.toLocaleString('id') + " per foto. Lanjutkan?", function() {
-                      globalSelections["Edit Tambahan"] = globalSelections["Edit Tambahan"] || [];
-                      globalSelections["Edit Tambahan"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Tambahan", isExtra:true, price: hargaPerFoto}); 
-                      renderGallery();
-                  }); 
-                  return;
-               }
-               globalSelections["Edit Tambahan"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Tambahan", isExtra:true, price: hargaPerFoto});
+            if (lim.max > 0 && totalCount >= lim.max) {
+                if (hargaPerFoto === 0) { 
+                    cb.checked = false;
+                    showModal("Paket kuota edit ukuran ini sudah penuh!\nStudio tidak melayani penambahan edit ekstra."); 
+                    return;
+                }
+                
+                // FIX LOGIC: Munculkan popup peringatan HANYA SAAT TEPAT menyentuh batas
+                if (totalCount === lim.max) {
+                    cb.checked = false;
+                    showModal("Batas paket kuota " + lim.max + " foto terpenuhi!\n\nFoto selanjutnya dikenakan biaya edit ekstra sebesar Rp " + hargaPerFoto.toLocaleString('id') + " per foto. Lanjutkan?", function() {
+                        if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+                        globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, price: hargaPerFoto}); 
+                        updateCardVisualOnly(fid, true); updateGalleryCounter(); syncAllCardsVisual();
+                    });
+                    return;
+                } else {
+                    // JIKA totalCount > lim.max : Klien sudah setuju sebelumnya, jadi langsung masukkan diam-diam (Silent Push)
+                    if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+                    globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, price: hargaPerFoto}); 
+                    updateCardVisualOnly(fid, true); updateGalleryCounter(); syncAllCardsVisual();
+                    return;
+                }
+                
             } else {
-               if (totalEdit < lim.max) {
-                   globalSelections["Edit Utama"] = globalSelections["Edit Utama"] || [];
-                   globalSelections["Edit Utama"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Utama", isExtra:false});
-                   
-                   // 🔥 FIX: Render Instan untuk Edit Gratis!
-                   updateCardVisualOnly(fid, true);
-                   updateGalleryCounter();
-                   return;
-
-               } else if (totalEdit === lim.max && hargaPerFoto > 0) {
-                   cb.checked = false;
-                   showModal("Kuota Edit Utama Gratis penuh (" + lim.max + " foto)!\n\nFoto berikutnya akan dialihkan ke menu Edit Tambahan dengan biaya sebesar Rp " + hargaPerFoto.toLocaleString('id') + " per foto. Lanjutkan?", function() {
-                       globalSelections["Edit Tambahan"] = globalSelections["Edit Tambahan"] || [];
-                       globalSelections["Edit Tambahan"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Tambahan", isExtra:true, price: hargaPerFoto}); 
-                       renderGallery();
-                   });
-                   return;
-               } else if (totalEdit >= lim.max) {
-                   if (hargaPerFoto === 0) { 
-                       cb.checked = false;
-                       showModal("Kuota Edit Utama Gratis penuh (" + lim.max + " foto)!\nStudio tidak menetapkan harga edit tambahan."); 
-                       return;
-                   }
-                   globalSelections["Edit Tambahan"].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:"Edit Tambahan", isExtra:true, price: hargaPerFoto});
-               }
+                // MASIH GRATIS
+                if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
+                globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false});
+                updateCardVisualOnly(fid, true); updateGalleryCounter();
+                return;
             }
-        } 
-        else if (currentMode.indexOf("ADDON_") === 0) {
+        }
+        else if (isAddon) {
            var sizeKey = currentMode.replace("ADDON_PRINT_", "");
            var pCetak = catPrices.prints[sizeKey] || 0;
            var pFrame = (catPrices.frames && catPrices.frames[sizeKey]) ? catPrices.frames[sizeKey] : 0;
-           
            if (pFrame > 0 && sizeKey !== "4R") {
               pendingAddon = { file:fname, id:fid, size:sizeKey, mode:currentMode };
               var html = '<div class="addon-row"><input type="checkbox" id="chkCetak" checked><label>Cetak Tambahan</label><span class="price">+Rp ' + pCetak.toLocaleString('id') + '</span></div>';
@@ -1899,23 +1537,18 @@ function prosesLogin() {
               return;
            } else {
               if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
-              globalSelections[currentMode].push({
-                  folder: currentFolderName, file: fname, id: fid, note: "", mode: currentMode, 
-                  isExtra: true, priceCetak: pCetak, priceFrame: 0
-              });
+              globalSelections[currentMode].push({ folder: currentFolderName, file: fname, id: fid, note: "", mode: currentMode, isExtra: true, priceCetak: pCetak, priceFrame: 0 });
+              updateCardVisualOnly(fid, true); updateGalleryCounter();
+              return;
            }
         }
-        else if (currentMode.indexOf("MAGAZINE_") === 0) {
-           var keyStr = currentMode.replace("MAGAZINE_","");
-           var lim = parsedLimits[currentMode] || {max: 0};
-           var totalCount = (globalSelections[currentMode]||[]).length;
-           
+        else if (isMagazine) {
            if (lim.max > 0 && totalCount >= lim.max) {
                if (totalCount % lim.max === 0) {
                    var pMag = (catPrices.magazines && catPrices.magazines[keyStr]) ? catPrices.magazines[keyStr] : 0;
                    if (pMag === 0) { 
                        cb.checked = false;
-                       showModal("Kuota cetak " + keyStr + " sudah penuh!\nStudio tidak melayani penambahan album ekstra."); 
+                       showModal("Paket kuota cetak " + keyStr + " sudah penuh!\nStudio tidak melayani penambahan album ekstra."); 
                        return;
                    }
                    cb.checked = false;
@@ -1923,32 +1556,23 @@ function prosesLogin() {
                    showModal("Batas " + totalCount + " foto terpenuhi!\n\nTambahkan 1 Album Magazine " + keyStr + " baru seharga Rp " + pMag.toLocaleString('id') + " agar kamu bisa memilih hingga " + nextCap + " foto?", function() {
                        if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
                        globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false}); 
-                       renderGallery();
+                       updateCardVisualOnly(fid, true); updateGalleryCounter();
                    });
                    return;
                }
            }
-           
            if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
            globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false});
-           
-           // 🔥 FIX: Render Instan untuk Magazine Gratis!
-           updateCardVisualOnly(fid, true);
-           updateGalleryCounter();
+           updateCardVisualOnly(fid, true); updateGalleryCounter();
            return;
         }
         else {
-           var lim = parsedLimits[currentMode] || {max: 0}; 
-           var totalCount = (globalSelections[currentMode]||[]).length;
-           var keyStr = currentMode.replace("MAGNETIC_","").replace("PEMBESARAN_","");
            var pCetak = (catPrices.prints && catPrices.prints[keyStr]) ? catPrices.prints[keyStr] : 0;
            var pFrame = (catPrices.frames && catPrices.frames[keyStr]) ? catPrices.frames[keyStr] : 0;
            
            if (keyStr === "4R" && lim.max > 0 && totalCount >= lim.max) {
                var E_next = (totalCount + 1) - lim.max;
-               var targetAlbum = 0;
-               var prevAlbum = 0;
-               
+               var targetAlbum = 0; var prevAlbum = 0;
                if (E_next === 1) targetAlbum = 40;
                else if (E_next === 41) { targetAlbum = 80; prevAlbum = 40; }
                else if (E_next === 81) { targetAlbum = 120; prevAlbum = 80; }
@@ -1961,77 +1585,54 @@ function prosesLogin() {
                        cb.checked = false;
                        var msg = "Kamu telah mencapai batas <b>" + totalCount + " foto</b>.<br><br>";
                        if (hargaAlbum > 0) {
-                           msg += "Foto selanjutnya dikenakan biaya cetak (Rp " + pCetak.toLocaleString('id') + "/lbr) ";
-                           msg += "serta penambahan <b>Album Eksklusif (Isi " + targetAlbum + ")</b> seharga Rp " + hargaAlbum.toLocaleString('id') + ".<br><br>";
-                           if (prevAlbum > 0) { 
-                               msg += "<span style='font-size:12px; color:var(--text-muted);'>*Album " + targetAlbum + " ini akan otomatis MENGGANTIKAN tambahan album " + prevAlbum + " sebelumnya.</span><br><br>";
-                           }
-                       } else { 
-                           msg += "Foto selanjutnya akan dikenakan biaya cetak tambahan sebesar Rp " + pCetak.toLocaleString('id') + " per lembar.<br><br>";
-                       }
+                           msg += "Foto selanjutnya dikenakan biaya cetak (Rp " + pCetak.toLocaleString('id') + "/lbr) serta penambahan <b>Album Eksklusif (Isi " + targetAlbum + ")</b> seharga Rp " + hargaAlbum.toLocaleString('id') + ".<br><br>";
+                           if (prevAlbum > 0) { msg += "<span style='font-size:12px; color:var(--text-muted);'>*Album " + targetAlbum + " ini akan otomatis MENGGANTIKAN tambahan album " + prevAlbum + " sebelumnya.</span><br><br>"; }
+                       } else { msg += "Foto selanjutnya akan dikenakan biaya cetak tambahan sebesar Rp " + pCetak.toLocaleString('id') + " per lembar.<br><br>"; }
                        showModal4R(msg, 
-                          function() { 
-                              if (hargaAlbum > 0) { cartAlbums["AUTO_4R_ALBUM"] = targetAlbum; }
-                              globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0}); 
-                              renderGallery();
-                          },
-                          function() { 
-                              globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0}); 
-                              renderGallery();
-                          }
+                          function() { if (hargaAlbum > 0) { cartAlbums["AUTO_4R_ALBUM"] = targetAlbum; } globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0}); updateCardVisualOnly(fid, true); updateGalleryCounter(); syncAllCardsVisual(); },
+                          function() { globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0}); updateCardVisualOnly(fid, true); updateGalleryCounter(); syncAllCardsVisual(); }
                        );
                        return; 
                    }
                }
-               
                if (pCetak === 0 && Object.keys(catPrices.albums).length === 0) { 
-                   cb.checked = false;
-                   showModal("Kuota cetak 4R sudah penuh!\nStudio tidak melayani extra pembelian."); 
-                   return;
+                   cb.checked = false; showModal("Paket kuota cetak 4R sudah penuh!\nStudio tidak melayani extra pembelian."); return;
                }
-               
                if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
                globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0}); 
-               renderGallery();
+               updateCardVisualOnly(fid, true); updateGalleryCounter(); syncAllCardsVisual();
                return;
            }
            
            if (lim.max > 0 && totalCount >= lim.max) {
               if (pCetak === 0 && pFrame === 0) { 
-                  cb.checked=false;
-                  showModal("Kuota cetak " + keyStr + " sudah penuh!\nStudio tidak melayani extra pembelian ukuran ini."); 
-                  return;
+                  cb.checked=false; showModal("Paket kuota cetak " + keyStr + " sudah penuh!\nStudio tidak melayani extra pembelian ukuran ini."); return;
               }
               if (keyStr === "4R") {
                   if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
                   globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:true, priceCetak: pCetak, priceFrame: 0});
+                  updateCardVisualOnly(fid, true); updateGalleryCounter(); syncAllCardsVisual();
+                  return;
               } else {
                   pendingAddon = { file:fname, id:fid, size:keyStr, mode:currentMode };
                   var html = '<div class="addon-row"><input type="checkbox" id="chkCetak" checked><label>Cetak Tambahan</label><span class="price">+Rp ' + pCetak.toLocaleString('id') + '</span></div>';
                   if (pFrame > 0 && keyStr!=="4R") html += '<div class="addon-row"><input type="checkbox" id="chkFrame"><label>Tambah Bingkai Mewah</label><span class="price">+Rp ' + pFrame.toLocaleString('id') + '</span></div>';
-                  document.getElementById('addonOptions').innerHTML = html; 
-                  document.getElementById('addonModalOverlay').style.display='flex';
+                  document.getElementById('addonOptions').innerHTML = html; document.getElementById('addonModalOverlay').style.display='flex';
                   return;
               }
            } else {
               if(!globalSelections[currentMode]) globalSelections[currentMode]=[];
               globalSelections[currentMode].push({folder:currentFolderName, file:fname, id:fid, note:"", mode:currentMode, isExtra:false});
-              
-              // 🔥 FIX: Render Instan untuk Cetak Normal Gratis!
-              updateCardVisualOnly(fid, true);
-              updateGalleryCounter();
+              updateCardVisualOnly(fid, true); updateGalleryCounter();
               return;
            }
         }
-        
-        // Render penuh HANYA JIKA kode mencapai titik ini (misal kena add-on berbayar)
-        renderGallery();
       }
+
       function closeAddonModal(save) {
         document.getElementById('addonModalOverlay').style.display='none';
         if(save && pendingAddon) {
-          var chkC = document.getElementById('chkCetak');
-          var chkF = document.getElementById('chkFrame');
+          var chkC = document.getElementById('chkCetak'); var chkF = document.getElementById('chkFrame');
           var pCetak = (catPrices.prints && catPrices.prints[pendingAddon.size]) ? catPrices.prints[pendingAddon.size] : 0;
           var pFrame = (catPrices.frames && catPrices.frames[pendingAddon.size]) ? catPrices.frames[pendingAddon.size] : 0;
           
@@ -2041,17 +1642,17 @@ function prosesLogin() {
               folder: currentFolderName, file: pendingAddon.file, id: pendingAddon.id, note: "", mode: pendingAddon.mode, 
               isExtra: true, priceCetak: (chkC && chkC.checked ? pCetak : 0), priceFrame: (chkF && chkF.checked ? pFrame : 0) 
           });
+          updateCardVisualOnly(pendingAddon.id, true); updateGalleryCounter(); syncAllCardsVisual();
         } 
-        pendingAddon = null; renderGallery();
+        pendingAddon = null;
       }
 
       function saveNote(el, fid) { 
           var it = null;
-          var arrs = ["Edit Utama", "Edit Tambahan"];
-          for(var x=0; x<arrs.length; x++) { 
-              if(globalSelections[arrs[x]]) { 
-                  for(var j=0; j<globalSelections[arrs[x]].length; j++) { 
-                      if(globalSelections[arrs[x]][j].id === fid) { it = globalSelections[arrs[x]][j]; break; } 
+          for(var modeKey in globalSelections) { 
+              if(modeKey.indexOf("EDIT_") === 0 && globalSelections[modeKey]) { 
+                  for(var j=0; j<globalSelections[modeKey].length; j++) { 
+                      if(globalSelections[modeKey][j].id === fid) { it = globalSelections[modeKey][j]; break; } 
                   } 
               } 
               if(it) break;
@@ -2061,36 +1662,32 @@ function prosesLogin() {
 
       function saveAndBack() {
           if (!MASTER_FOLDER_ID) {
-              hideAllViews();
-              isReviewMode=false; document.getElementById('reviewToggleCheck').checked=false; 
-              if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") { document.getElementById('mainNavView').style.display='flex'; } else { openCetakSubMenu(); } return;
+              hideAllViews(); isReviewMode=false; document.getElementById('reviewToggleCheck').checked=false; 
+              // PERBAIKAN: Gunakan openEditSubMenu() agar tampilan tombol ter-refresh, bukan sekadar mengganti display
+              if(currentMode.indexOf("EDIT_") === 0) { openEditSubMenu(); } else { openCetakSubMenu(); } 
+              return;
           }
-          var overlay = document.getElementById('saveOverlay');
-          overlay.style.display = 'flex';
-          
-          var timestamp = new Date().getTime(); 
-          var payloadObj = { selections: globalSelections, cart: cartAlbums, lastModified: timestamp };
+          var overlay = document.getElementById('saveOverlay'); overlay.style.display = 'flex';
+          var timestamp = new Date().getTime(); var payloadObj = { selections: globalSelections, cart: cartAlbums, lastModified: timestamp };
           var payload = JSON.stringify(payloadObj);
           try { localStorage.setItem('fc_draft_' + MASTER_FOLDER_ID, payload); } catch(e) {}
           
           google.script.run.withSuccessHandler(function(res) {
               setTimeout(function() { 
                   overlay.style.display = 'none'; hideAllViews(); isReviewMode=false; document.getElementById('reviewToggleCheck').checked=false; 
-                  if(currentMode === "Edit Utama" || currentMode === "Edit Tambahan") { document.getElementById('mainNavView').style.display='flex'; } else { openCetakSubMenu(); } 
+                  // PERBAIKAN: Gunakan openEditSubMenu() agar tampilan tombol ter-refresh
+                  if(currentMode.indexOf("EDIT_") === 0) { openEditSubMenu(); } else { openCetakSubMenu(); } 
               }, 800);
           }).withFailureHandler(function(err) {
-              overlay.style.display = 'none'; 
-              showModal("⚠️ GAGAL MENYIMPAN!<br>Koneksi internet kakak sepertinya terputus atau tidak stabil.<br>Mohon cari sinyal yang bagus, lalu coba klik SIMPAN lagi.");
+              overlay.style.display = 'none'; showModal("⚠️ GAGAL MENYIMPAN!<br>Koneksi internet sepertinya terputus.");
           }).saveDraftPusat(MASTER_FOLDER_ID, payload);
       }
 
       function openCartView() {
-        hideAllViews(); document.getElementById('cartView').style.display='block';
-        var html = '';
+        hideAllViews(); document.getElementById('cartView').style.display='block'; var html = '';
         var albumOptions = ["40", "80", "120", "180", "240"];
         for(var i=0; i<albumOptions.length; i++) {
-           var size = albumOptions[i];
-           var price = (catPrices.albums && catPrices.albums[size]) ? catPrices.albums[size] : 0;
+           var size = albumOptions[i]; var price = (catPrices.albums && catPrices.albums[size]) ? catPrices.albums[size] : 0;
            if(price > 0) {
               var c = cartAlbums["ALBUM_" + size] || 0;
               html += '<div class="cart-item"><div><div style="font-weight:800; font-size:15px;">Album Eksklusif Isi ' + size + '</div><div style="color:#34C759;font-size:13px; font-weight:600;">Rp ' + price.toLocaleString('id') + '</div></div><div style="display:flex;gap:8px;align-items:center;"><button class="qty-btn" onclick="updCart(\'ALBUM_' + size + '\',-1)">-</button><span style="font-weight:800;width:25px;text-align:center;">' + c + '</span><button class="qty-btn" onclick="updCart(\'ALBUM_' + size + '\',1)">+</button></div></div>';
@@ -2107,8 +1704,7 @@ function prosesLogin() {
         }
         var fdOptions = ["64GB", "128GB", "256GB"];
         for(var i=0; i<fdOptions.length; i++) {
-           var size = fdOptions[i];
-           var price = (catPrices.flashdisk && catPrices.flashdisk[size]) ? catPrices.flashdisk[size] : 0;
+           var size = fdOptions[i]; var price = (catPrices.flashdisk && catPrices.flashdisk[size]) ? catPrices.flashdisk[size] : 0;
            if(price > 0) {
               var c = cartAlbums["FD_" + size] || 0;
               html += '<div class="cart-item"><div><div style="font-weight:800; font-size:15px;">FlashDisk Premium ' + size + '</div><div style="color:#34C759;font-size:13px; font-weight:600;">Rp ' + price.toLocaleString('id') + '</div></div><div style="display:flex;gap:8px;align-items:center;"><button class="qty-btn" onclick="updCart(\'FD_' + size + '\',-1)">-</button><span style="font-weight:800;width:25px;text-align:center;">' + c + '</span><button class="qty-btn" onclick="updCart(\'FD_' + size + '\',1)">+</button></div></div>';
@@ -2126,11 +1722,7 @@ function prosesLogin() {
       function updCart(key, v) { cartAlbums[key] = (cartAlbums[key]||0)+v; if(cartAlbums[key]<0) cartAlbums[key]=0; updateCartCount(); openCartView(); }
       
       function updateCartCount() { 
-          var t = 0;
-          for(var k in cartAlbums) { 
-              if(k.indexOf("AUTO_") !== 0) t += cartAlbums[k];
-          } 
-          document.getElementById('cartCount').innerText = t;
+          var t = 0; for(var k in cartAlbums) { if(k.indexOf("AUTO_") !== 0) t += cartAlbums[k]; } document.getElementById('cartCount').innerText = t;
       }
 
       function saveFromCart() {
@@ -2138,20 +1730,17 @@ function prosesLogin() {
           var overlay = document.getElementById('saveOverlay'); overlay.style.display = 'flex';
           var payload = JSON.stringify({ selections: globalSelections, cart: cartAlbums, lastModified: new Date().getTime() });
           try { localStorage.setItem('fc_draft_' + MASTER_FOLDER_ID, payload); } catch(e) {}
-          google.script.run.withSuccessHandler(function(res) { setTimeout(function() { overlay.style.display = 'none'; hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }, 800); }).withFailureHandler(function(err){ overlay.style.display = 'none'; showModal("⚠️ GAGAL MENYIMPAN!<br>Koneksi internet kakak terputus.<br>Mohon periksa sinyal lalu coba klik SIMPAN lagi."); }).saveDraftPusat(MASTER_FOLDER_ID, payload);
+          google.script.run.withSuccessHandler(function(res) { setTimeout(function() { overlay.style.display = 'none'; hideAllViews(); document.getElementById('mainNavView').style.display='flex'; }, 800); }).withFailureHandler(function(err){ overlay.style.display = 'none'; showModal("⚠️ GAGAL MENYIMPAN!<br>Koneksi internet kakak terputus."); }).saveDraftPusat(MASTER_FOLDER_ID, payload);
       }
 
       function openVisualPreview() {
         hideAllViews(); document.getElementById('visualPreviewView').style.display = 'block';
-        var grid = document.getElementById('visualPreviewGrid'); 
-        var htmlArray = []; 
-        var isEmpty = true;
+        var grid = document.getElementById('visualPreviewGrid'); var htmlArray = []; var isEmpty = true;
         for (var key in globalSelections) {
           var items = globalSelections[key];
           if (items && items.length > 0) {
-            isEmpty = false;
-            var displayTitle = "";
-            if (key === "Edit Utama" || key === "Edit Tambahan") { displayTitle = "✨ FOTO REVISI EDIT"; } 
+            isEmpty = false; var displayTitle = "";
+            if (key.indexOf("EDIT_") === 0) { displayTitle = "✨ FOTO REVISI EDIT " + key.replace("EDIT_MAGNETIC_","").replace("EDIT_MAGAZINE_","").replace("EDIT_PEMBESARAN_",""); } 
             else if (key.indexOf("ADDON_") === 0) { displayTitle = "🛍️ TAMBAHAN " + key.replace("ADDON_PRINT_",""); } 
             else { displayTitle = "📸 UKURAN " + key.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_",""); }
             
@@ -2161,9 +1750,9 @@ function prosesLogin() {
             for(var j=0; j<items.length; j++) {
               var item = items[j];
               var gridItemHtml = '<div style="text-align:center; background:rgba(255,255,255,0.7); padding:8px; border-radius:12px; border:1px solid rgba(255,255,255,0.5);">';
-              gridItemHtml += '<img src="https://drive.google.com/thumbnail?id=' + item.id + '&sz=w200" loading="lazy" style="width:85px; height:85px; object-fit:cover; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">';
+              gridItemHtml += '<img src="https://drive.google.com/thumbnail?id=' + item.id + '&sz=w200" style="width:85px; height:85px; object-fit:cover; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">';
               if (item.isExtra) {
-                  var badgeTxt = item.mode === "Edit Tambahan" ? "Rp " + (item.price||0).toLocaleString('id') : "Add-on";
+                  var badgeTxt = item.mode.indexOf("EDIT_") === 0 ? "Rp " + (item.price||0).toLocaleString('id') : "Add-on";
                   gridItemHtml += '<div style="font-size:9px; color:#fff; font-weight:bold; margin-top:8px; background:#FF3B30; padding:3px; border-radius:4px;">💎 ' + badgeTxt + '</div>';
               }
               gridItemHtml += '</div>'; htmlArray.push(gridItemHtml);
@@ -2174,37 +1763,20 @@ function prosesLogin() {
         grid.innerHTML = isEmpty ? '<div style="text-align:center; color:var(--text-muted); padding:40px; font-weight:500;">Galeri kosong.</div>' : htmlArray.join(''); window.scrollTo(0, 0);
       }
 
-      // ==========================================
-      // OTAK BARU 2: NOTA AGREGATOR UI
-      // ==========================================
       function showPreview() {
-        hideAllViews(); 
-        var elPrev = document.getElementById('previewView');
-        elPrev.style.display = 'block';
-        elPrev.classList.add('page-animate');
-        var txt = "✅ RINCIAN PILIHAN UTAMA GRATIS\n"; 
-        var addTxt = "🛒 RINCIAN BIAYA ADD-ON (TAMBAHAN)\n\n";
-        var totalBelanja = 0;
-        var hasAddon = false;
+        hideAllViews(); var elPrev = document.getElementById('previewView'); elPrev.style.display = 'block'; elPrev.classList.add('page-animate');
+        var txt = "✅ RINCIAN PILIHAN UTAMA\n"; var addTxt = "🛒 RINCIAN BIAYA ADD-ON (TAMBAHAN)\n\n";
+        var totalBelanja = 0; var hasAddon = false;
         
         for (var key in globalSelections) {
-          if (key === "Edit Utama" || key === "Edit Tambahan") continue;
-          
           if (key.indexOf("ADDON_") === 0) {
              var labelMenuD = key.replace("ADDON_PRINT_","");
              var extArrD = globalSelections[key] || [];
              if(extArrD.length > 0) {
-                 hasAddon = true;
-                 
-                 // SISTEM AKUMULASI (AGREGATOR)
-                 var subCetak = 0;
-                 var countCetak = 0;
+                 hasAddon = true; var subCetak = 0; var countCetak = 0;
                  for(var d=0; d<extArrD.length; d++) {
                      var pC_D = extArrD[d].priceCetak || 0;
-                     if(pC_D > 0) { 
-                         countCetak++;
-                         subCetak += pC_D;
-                     }
+                     if(pC_D > 0) { countCetak++; subCetak += pC_D; }
                  }
                  if(countCetak > 0) {
                      addTxt += "- Cetak Ekstra " + labelMenuD + " (" + countCetak + " Lbr) = Rp " + subCetak.toLocaleString('id') + "\n";
@@ -2214,30 +1786,40 @@ function prosesLogin() {
              continue;
           }
           
+          if (key.indexOf("EDIT_") === 0) {
+             var labelEdit = key.replace("EDIT_MAGNETIC_","").replace("EDIT_MAGAZINE_","").replace("EDIT_PEMBESARAN_","");
+             var freeEditC = 0; var extEditArr = [];
+             
+             for(var j=0; j<globalSelections[key].length; j++) { 
+                 if(globalSelections[key][j].isExtra) extEditArr.push(globalSelections[key][j]); else freeEditC++; 
+             }
+             
+             if(freeEditC > 0) txt += "- Edit " + labelEdit + " : " + freeEditC + " Foto\n";
+             if(extEditArr.length > 0) {
+                 hasAddon = true;
+                 var subEdit = extEditArr.length * (catPrices.extraEdit || 0);
+                 addTxt += "- Edit Ekstra " + labelEdit + " (" + extEditArr.length + " Lbr) = Rp " + subEdit.toLocaleString('id') + "\n";
+                 totalBelanja += subEdit;
+             }
+             continue;
+          }
+          
+          // Cetak Utama
           var label = key.replace("MAGNETIC_","").replace("MAGAZINE_","").replace("PEMBESARAN_","");
-          var freeC = 0; 
-          var extArr = [];
+          var freeC = 0; var extArr = [];
           
           for(var j=0; j<globalSelections[key].length; j++) { 
-              if(globalSelections[key][j].isExtra) extArr.push(globalSelections[key][j]);
-              else freeC++; 
+              if(globalSelections[key][j].isExtra) extArr.push(globalSelections[key][j]); else freeC++; 
           }
           
           if(freeC > 0) txt += "- Cetak " + label + " : " + freeC + " Foto\n";
-          
           if(extArr.length > 0) {
-             hasAddon = true;
-             
-             // SISTEM AKUMULASI (AGREGATOR)
-             var subCetak = 0, countCetak = 0;
-             var subFrame = 0, countFrame = 0;
+             hasAddon = true; var subCetak = 0, countCetak = 0; var subFrame = 0, countFrame = 0;
              for(var e=0; e<extArr.length; e++) {
-                 var pC = extArr[e].priceCetak || 0; 
-                 var pF = extArr[e].priceFrame || 0;
+                 var pC = extArr[e].priceCetak || 0; var pF = extArr[e].priceFrame || 0;
                  if(pC > 0) { countCetak++; subCetak += pC; }
                  if(pF > 0) { countFrame++; subFrame += pF; }
              }
-             
              if(countCetak > 0) {
                  addTxt += "- Cetak Ekstra " + label + " (" + countCetak + " Lbr) = Rp " + subCetak.toLocaleString('id') + "\n";
                  totalBelanja += subCetak;
@@ -2249,18 +1831,6 @@ function prosesLogin() {
           }
         }
         
-        var eUtama = (globalSelections["Edit Utama"]||[]).length;
-        if(eUtama > 0) txt += "- Kuota Edit Utama : " + eUtama + " Foto\n";
-        
-        var eTambahan = (globalSelections["Edit Tambahan"]||[]).length;
-        if(eTambahan > 0) {
-           hasAddon = true;
-           var subTotalEdit = eTambahan * (catPrices.extraEdit || 0);
-           addTxt += "- Edit Foto Tambahan (" + eTambahan + " Lbr) = Rp " + subTotalEdit.toLocaleString('id') + "\n";
-           totalBelanja += subTotalEdit;
-        }
-        
-        // REKAP ALBUM FISIK (MANUAL + AUTO 4R)
         var auto4RAlbum = cartAlbums["AUTO_4R_ALBUM"] || 0;
         var albumOptions = ["40", "80", "120", "180", "240"];
         for(var i=0; i<albumOptions.length; i++) {
@@ -2278,7 +1848,6 @@ function prosesLogin() {
            }
         }
 
-        // REKAP MAGAZINE (MANUAL + AUTO KELIPATAN)
         var magOptions = ["M1", "M2"];
         for(var i=0; i<magOptions.length; i++) {
            var mKey = magOptions[i];
@@ -2286,10 +1855,8 @@ function prosesLogin() {
            var selCount = (globalSelections["MAGAZINE_" + mKey] || []).length;
            
            var qtyAutoMag = 0;
-           if(lim && lim.max > 0 && selCount > lim.max) { 
-               qtyAutoMag = Math.ceil((selCount - lim.max) / lim.max);
-           }
-           var manualQty = cartAlbums["MAG_" + mKey] || 0; 
+           if(lim && lim.max > 0 && selCount > lim.max) { qtyAutoMag = Math.ceil((selCount - lim.max) / lim.max); }
+           var manualQty = cartAlbums["MAG_" + mKey] || 0;
            var totalMagQty = manualQty + qtyAutoMag; 
            
            if(totalMagQty > 0) {
@@ -2312,8 +1879,7 @@ function prosesLogin() {
         }
         
         if(cartAlbums["COPY_ORIGINAL"] === 1) {
-           hasAddon = true;
-           var pCopy = catPrices.copyOriginal || 0;
+           hasAddon = true; var pCopy = catPrices.copyOriginal || 0;
            addTxt += "- Copy Semua Data Original = Rp " + pCopy.toLocaleString('id') + "\n";
            totalBelanja += pCopy;
         }
@@ -2351,8 +1917,7 @@ function prosesLogin() {
         if (allItems.length===0 && !adaAlbum) return showModal("Mohon pilih setidaknya 1 foto atau aksesoris terlebih dahulu!");
         
         btn.setAttribute('data-processing', 'true');
-        var ori = btn.innerText;
-        btn.innerText = "⏳ MENYIAPKAN DATA..."; btn.style.pointerEvents = "none";
+        var ori = btn.innerText; btn.innerText = "⏳ MENYIAPKAN DATA..."; btn.style.pointerEvents = "none";
 
         var overlay = document.getElementById('saveOverlay');
         document.getElementById('saveTitle').innerText = "Memproses Pilihan...";
@@ -2361,29 +1926,23 @@ function prosesLogin() {
         
         var timestamp = new Date().getTime();
         
-        // SOLUSI MASALAH 2: Menambahkan sinyal isFinal: true
+        // JAGA KEAMANAN 1: Tambahkan isFinal: true agar status di Dashboard Vendor berubah jadi "Selesai"
         var payloadObj = { selections: globalSelections, cart: cartAlbums, lastModified: timestamp, isFinal: true };
         var payload = JSON.stringify(payloadObj);
         
-        // Update Local Storage
         try { localStorage.setItem('fc_draft_' + MASTER_FOLDER_ID, payload); } catch(e) {}
         
-        // 1. Simpan Draf Pilihan Dulu
         google.script.run.withSuccessHandler(function() {
-            // 2. Buat Cangkang Folder Utama
             google.script.run.withSuccessHandler(function(res) {
                 if(!res.success) { 
                     btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
-                    overlay.style.display = 'none'; resetSaveOverlayText();
-                    btn.innerText = ori; return showModal(res.message); 
+                    overlay.style.display = 'none'; resetSaveOverlayText(); btn.innerText = ori; return showModal(res.message); 
                 }
                 
-                // Siapkan Pesan WA terlebih dahulu
                 var msg = activeVendor.waText + "\n\n" + document.getElementById('previewContent').innerText + "\n";
                 var gen = document.getElementById('generalInstruction').value.trim();
-                if(gen) msg += "💡 INSTRUKSI TAMBAHAN:\n_" + gen + "_\n\n";
+                if(gen) msg += "💡 INSTRUKSI TAMBAHAN GLOBAL:\n_" + gen + "_\n\n";
                 msg += "📁 FOLDER REKAP UTAMA:\n" + res.folderUrl;
-                
                 var vendorWa = activeVendor.nomorWa.toString().replace(/\D/g, ''); 
                 if (vendorWa.startsWith('0')) { vendorWa = '62' + vendorWa.substring(1); } 
                 else if (!vendorWa.startsWith('62')) { vendorWa = '62' + vendorWa; }
@@ -2392,229 +1951,131 @@ function prosesLogin() {
                 
                 document.getElementById('saveDesc').innerHTML = "Sedang menyalin foto ke folder rekap...<br><br><b>Tolong jangan tutup aplikasi ini sampai WhatsApp terbuka otomatis!</b>";
 
-                // 3. SOLUSI MASALAH 1: Panggil fungsi Copy dan TUNGGU konfirmasi sukses dari Google
+                // JAGA KEAMANAN 2: Tunggu copyFilesBackground Selesai, baru buka WhatsApp
                 google.script.run.withSuccessHandler(function(copyRes) {
-                    // 4. BUKA WHATSAPP HANYA SETELAH SERVER GOOGLE BERHASIL MENERIMA PERINTAH
                     btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
                     overlay.style.display = 'none'; resetSaveOverlayText();
-
-                    // Eksekusi pengalihan layar WhatsApp langsung
+                    
                     window.location.href = targetLink;
                     
-                    // Ubah Tampilan Tombol Aplikasi menjadi "Selesai"
-                    btn.innerText = "✅ REKAP SELESAI TERKIRIM";
-                    btn.style.background = "#34C759"; btn.style.color = "#fff";
+                    btn.innerText = "✅ REKAP SELESAI TERKIRIM"; btn.style.background = "#34C759"; btn.style.color = "#fff";
                     btn.onclick = function() { window.location.href = targetLink; };
-
                 }).withFailureHandler(function(err) {
                     btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
                     overlay.style.display = 'none'; resetSaveOverlayText();
                     showModal("Gagal menyalin foto. Koneksi tidak stabil, silakan coba tekan tombol kirim lagi.");
-                }).copyFilesBackground(res.folderId, JSON.stringify({
-                    items: allItems, vendor: activeVendor.namaVendor, nota: document.getElementById('previewContent').innerText
-                }));
-
+                }).copyFilesBackground(res.folderId, JSON.stringify({ items: allItems, vendor: activeVendor.namaVendor, nota: document.getElementById('previewContent').innerText }));
+                
             }).withFailureHandler(function(err){
                 btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
-                overlay.style.display = 'none'; resetSaveOverlayText();
-                showModal("Koneksi gagal saat membuat folder rekap. Silakan coba klik sekali lagi.");
+                overlay.style.display = 'none'; resetSaveOverlayText(); showModal("Koneksi gagal saat membuat folder rekap. Silakan coba klik sekali lagi.");
             }).createCangkangFolder(MASTER_FOLDER_ID, activeVendor.namaVendor);
         }).withFailureHandler(function(){
             btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
-            overlay.style.display = 'none'; resetSaveOverlayText();
-            showModal("Koneksi internet terputus! Gagal menyimpan draf terakhir. Coba klik tombol kirim lagi.");
+            overlay.style.display = 'none'; resetSaveOverlayText(); showModal("Koneksi internet terputus! Gagal menyimpan draf terakhir. Coba klik tombol kirim lagi.");
         }).saveDraftPusat(MASTER_FOLDER_ID, payload);
       }
-      // --- MODUL VENDOR PORTAL ---
 
-function openVendorPortal() {
-    // Sembunyikan halaman dashboard aslimu (Pastikan ID-nya sesuai dengan div dashboard kamu, misal 'dashboardView' atau 'mainDash')
-    document.getElementById('dashboardView').style.display = 'none'; 
-    var portal = document.getElementById('vendorPortalView');
-    portal.style.display = 'block';
-    
-    // Tampilkan loading 
-    document.getElementById('portalLoading').style.display = 'block';
-    document.getElementById('vendorTableBody').innerHTML = '';
-    
-    // Panggil fungsi di Code.gs untuk mengambil data
-    google.script.run
-        .withSuccessHandler(renderVendorTable)
-        .withFailureHandler(function(err){
-            document.getElementById('portalLoading').innerHTML = '❌ Gagal memuat data: ' + err.message;
-        })
-        .getVendorProgressData(activeVendor.namaVendor); 
-}
+      function openVendorPortal() {
+          document.getElementById('dashboardView').style.display = 'none';
+          var portal = document.getElementById('vendorPortalView'); portal.style.display = 'block';
+          document.getElementById('portalLoading').style.display = 'block'; document.getElementById('vendorTableBody').innerHTML = '';
+          google.script.run
+              .withSuccessHandler(renderVendorTable)
+              .withFailureHandler(function(err){ document.getElementById('portalLoading').innerHTML = '❌ Gagal memuat data: ' + err.message; })
+              .getVendorProgressData(activeVendor.namaVendor);
+      }
 
-function closeVendorPortal() {
-    document.getElementById('vendorPortalView').style.display = 'none';
-    document.getElementById('dashboardView').style.display = 'block'; // Kembali ke dashboard
-}
+      function closeVendorPortal() {
+          document.getElementById('vendorPortalView').style.display = 'none'; document.getElementById('dashboardView').style.display = 'block';
+      }
 
-function renderVendorTable(dataList) {
-    document.getElementById('portalLoading').style.display = 'none';
-    var tbody = document.getElementById('vendorTableBody');
-    
-    if(!dataList || dataList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="padding:20px; text-align:center; color:#888;">Belum ada data klien yang tersimpan.</td></tr>';
-        return;
-    }
+      function renderVendorTable(dataList) {
+          document.getElementById('portalLoading').style.display = 'none';
+          var tbody = document.getElementById('vendorTableBody');
+          if(!dataList || dataList.length === 0) { tbody.innerHTML = '<tr><td colspan="3" style="padding:20px; text-align:center; color:#888;">Belum ada data klien yang tersimpan.</td></tr>'; return; }
 
-    var html = '';
-    for(var i=0; i<dataList.length; i++) {
-        var row = dataList[i];
-        
-        // Logika Status
-        var statusBadge = row.isFinal 
-            ? '<span style="background:#e8f5e9; color:#2e7d32; padding:4px 8px; border-radius:6px; font-weight:bold;">Selesai (Aktif)</span>'
-            : '<span style="background:#fff3e0; color:#ef6c00; padding:4px 8px; border-radius:6px; font-weight:bold;">Sedang Memilih</span>';
-        
-        html += '<tr style="border-bottom:1px solid #eee;">';
-        html += '<td style="padding:12px;"><strong>' + row.clientName + '</strong><br><span style="color:#888; font-size:11px;">' + row.totalPhotos + ' Foto</span></td>';
-        html += '<td style="padding:12px;">' + statusBadge + '</td>';
-        html += '<td style="padding:12px;">';
-        
-        if(row.isFinal) {
-            html += '<button style="background:var(--primary-color); color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:11px; margin-right:5px; margin-bottom:5px;" onclick="window.open(\'' + row.folderLink + '\', \'_blank\')">Lihat Folder</button>';
-            html += '<button style="background:#1c1c1e; color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:11px;" onclick="regenerateClientData(\'' + row.draftId + '\')">Generate Ulang 🔄</button>';
-        } else {
-            html += '<span style="color:#888; font-size:11px;">Menunggu klien selesai...</span>';
-        }
-        
-        html += '</td></tr>';
-    }
-    tbody.innerHTML = html;
-}
+          var html = '';
+          for(var i=0; i<dataList.length; i++) {
+              var row = dataList[i];
+              var statusBadge = row.isFinal ? '<span style="background:#e8f5e9; color:#2e7d32; padding:4px 8px; border-radius:6px; font-weight:bold;">Selesai (Aktif)</span>' : '<span style="background:#fff3e0; color:#ef6c00; padding:4px 8px; border-radius:6px; font-weight:bold;">Sedang Memilih</span>';
+              html += '<tr style="border-bottom:1px solid #eee;">';
+              html += '<td style="padding:12px;"><strong>' + row.clientName + '</strong><br><span style="color:#888; font-size:11px;">' + row.totalPhotos + ' Foto</span></td>';
+              html += '<td style="padding:12px;">' + statusBadge + '</td><td style="padding:12px;">';
+              if(row.isFinal) {
+                  html += '<button style="background:var(--primary-color); color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:11px; margin-right:5px; margin-bottom:5px;" onclick="window.open(\'' + row.folderLink + '\', \'_blank\')">Lihat Folder</button>';
+                  html += '<button style="background:#1c1c1e; color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:11px;" onclick="regenerateClientData(\'' + row.draftId + '\')">Generate Ulang 🔄</button>';
+              } else { html += '<span style="color:#888; font-size:11px;">Menunggu klien selesai...</span>'; }
+              html += '</td></tr>';
+          }
+          tbody.innerHTML = html;
+      }
 
-function regenerateClientData(draftId) {
-    var konfirmasi = confirm("Apakah kamu yakin ingin membangun ulang folder rekap untuk klien ini?");
-    if(!konfirmasi) return;
-    
-    // Gunakan fungsi loading modal bawaan kamu
-    if(typeof showModal === "function") {
-        showModal("⏳ Sedang membangun ulang folder rekap. Mohon tunggu beberapa saat...");
-    }
-    
-    // Panggil fungsi eksekusi di Code.gs
-    google.script.run
-        .withSuccessHandler(function(linkBaru) {
-            if(typeof closeModal === "function") closeModal();
-            alert("✅ Berhasil! Folder dan PDF telah direkap ulang.");
-            openVendorPortal(); // Refresh data di tabel otomatis
-        })
-        .withFailureHandler(function(err) {
-            if(typeof closeModal === "function") closeModal();
-            alert("❌ Gagal: " + err.message);
-        })
-        .regenerateRekapFromDraft(draftId);
-}
-// ==========================================
-// SENSOR AUTO-LOGOUT 10 MENIT (REAL-TIME)
-// ==========================================
-var idleTimer;
-var WAKTU_IDLE = 10 * 60 * 1000; // 10 Menit (dalam milidetik)
+      function regenerateClientData(draftId) {
+          var konfirmasi = confirm("Apakah kamu yakin ingin membangun ulang folder rekap untuk klien ini?");
+          if(!konfirmasi) return;
+          if(typeof showModal === "function") { showModal("⏳ Sedang membangun ulang folder rekap. Mohon tunggu beberapa saat..."); }
+          
+          google.script.run
+              .withSuccessHandler(function(linkBaru) { if(typeof closeModal === "function") closeModal(); alert("✅ Berhasil! Folder dan PDF telah direkap ulang."); openVendorPortal(); })
+              .withFailureHandler(function(err) { if(typeof closeModal === "function") closeModal(); alert("❌ Gagal: " + err.message); })
+              .regenerateRekapFromDraft(draftId);
+      }
 
-// 2. PROSES LOGOUT (MENUNGGU RESPON GOOGLE)
-              var sess = localStorage.getItem('avSession');
-              var savedToken = localStorage.getItem('fc_device_token');
+      // SENSOR AUTO-LOGOUT 10 MENIT (REAL-TIME PADA BACKGROUND)
+      var idleTimer;
+      var WAKTU_IDLE = 10 * 60 * 1000;
 
-              if (sess) {
-                  var parsed = JSON.parse(sess);
-                  
-                  if (parsed.username && savedToken) {
-                      // A. Kirim perintah ke Google dan TUNGGU
-                      google.script.run.withSuccessHandler(function() {
-                          // B. JIKA GOOGLE SUDAH OKE, BARU HAPUS MEMORI LOKAL
-                          localStorage.removeItem('avSession');
-                          localStorage.removeItem('fc_device_token');
-                          localStorage.removeItem('fc_last_active');
-                          
-                          // C. Tampilkan peringatan dan pindah halaman
-                          showModal("Sesi telah berakhir karena tidak ada aktivitas selama 10 menit. Silakan login kembali.", function() {
-                              window.top.location.reload(); 
-                          });
-                      }).withFailureHandler(function(err) {
-                          // JIKA INTERNET PUTUS, TETAP PAKSA HAPUS MEMORI LOKAL
-                          localStorage.removeItem('avSession');
-                          localStorage.removeItem('fc_device_token');
-                          localStorage.removeItem('fc_last_active');
-                          window.top.location.reload();
-                      }).logoutVendor(parsed.username, savedToken);
-                  } else {
-                      // Hapus paksa jika data tidak lengkap
-                      localStorage.removeItem('avSession');
-                      localStorage.removeItem('fc_device_token');
-                      localStorage.removeItem('fc_last_active');
-                      window.top.location.reload();
-                  }
-              }
-      // ==========================================
-      // FITUR SLIDESHOW (NEXT / PREVIOUS FOTO)
-      // ==========================================
-      function navigateGallery(direction) {
-          // Pastikan ada foto yang sedang di-zoom
-          if (!currentZoomedCheckboxId) return;
-
-          // Ambil semua checkbox foto yang sedang tampil di layar saat ini
-          var checkboxes = document.querySelectorAll('#gallery input[type="checkbox"]');
-          var cbArray = Array.prototype.slice.call(checkboxes); // Ubah jadi Array biasa
-
-          if (cbArray.length === 0) return;
-
-          // Cari di urutan ke berapa foto yang sedang dibuka ini?
-          var currentIndex = -1;
-          for (var i = 0; i < cbArray.length; i++) {
-              if (cbArray[i].id === currentZoomedCheckboxId) {
-                  currentIndex = i;
-                  break;
+      function jalankanAutoLogoutSesi() {
+          var sess = localStorage.getItem('avSession');
+          var savedToken = localStorage.getItem('fc_device_token');
+          if (sess && savedToken) {
+              var parsed = JSON.parse(sess);
+              if (parsed.username) {
+                  google.script.run.withSuccessHandler(function() {
+                      localStorage.removeItem('avSession'); localStorage.removeItem('fc_device_token'); localStorage.removeItem('fc_last_active');
+                      showModal("Sesi telah berakhir karena tidak ada aktivitas selama 10 menit. Silakan login kembali.", function() { window.top.location.reload(); });
+                  }).withFailureHandler(function(err) {
+                      localStorage.removeItem('avSession'); localStorage.removeItem('fc_device_token'); localStorage.removeItem('fc_last_active'); window.top.location.reload();
+                  }).logoutVendor(parsed.username, savedToken);
               }
           }
+      }
 
+      function resetIdleTimer() {
+          var now = new Date().getTime();
+          localStorage.setItem('fc_last_active', now.toString());
+          clearTimeout(idleTimer);
+          idleTimer = setTimeout(jalankanAutoLogoutSesi, WAKTU_IDLE);
+      }
+
+      // Aktifkan sensor deteksi aktivitas saat user berinteraksi dengan aplikasi
+      if (localStorage.getItem('avSession')) {
+          window.addEventListener('mousemove', resetIdleTimer);
+          window.addEventListener('keypress', resetIdleTimer);
+          window.addEventListener('click', resetIdleTimer);
+          window.addEventListener('touchstart', resetIdleTimer);
+          resetIdleTimer(); // Memulai hitung mundur awal saat aplikasi terbuka
+      }
+
+      function navigateGallery(direction) {
+          if (!currentZoomedCheckboxId) return;
+          var checkboxes = document.querySelectorAll('#gallery input[type="checkbox"]');
+          var cbArray = Array.prototype.slice.call(checkboxes); 
+          if (cbArray.length === 0) return;
+          var currentIndex = -1;
+          for (var i = 0; i < cbArray.length; i++) { if (cbArray[i].id === currentZoomedCheckboxId) { currentIndex = i; break; } }
           if (currentIndex !== -1) {
-              // Tentukan mau pindah ke urutan berapa (-1 untuk kiri, +1 untuk kanan)
               var newIndex = currentIndex + direction;
-              
-              // Buat sistem looping (Kalau mentok kanan, balik ke foto paling pertama. Kalau mentok kiri, ke foto paling akhir)
               if (newIndex < 0) newIndex = cbArray.length - 1;
               if (newIndex >= cbArray.length) newIndex = 0;
-
-              // Cari kotak (card) dari foto yang dituju
               var nextCard = cbArray[newIndex].closest('.gallery-card');
               if (nextCard) {
-                  // Cari tag gambarnya dan klik secara gaib! 
-                  // Ini akan memicu openModal() otomatis sehingga status centangnya sinkron!
                   var nextImg = nextCard.querySelector('img');
                   if (nextImg) nextImg.click();
               }
           }
       }
     </script>
-    <div id="vendorPortalView" style="display:none; padding:20px; max-width:800px; margin:auto; background:var(--bg-color); border-radius:20px; min-height:80vh; margin-top:20px;">
-    
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h2 style="margin:0; font-size:18px; color:var(--text-main);">📊 Pantau Progress Klien</h2>
-        <button style="background:#FF3B30; color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="closeVendorPortal()">
-            Keluar 🚪
-        </button>
-    </div>
-    
-    <div id="portalLoading" style="text-align:center; padding:30px; display:none; font-weight:600;">
-        ⏳ Mengambil data dari server...
-    </div>
-
-    <div style="overflow-x:auto; background:white; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.05);">
-        <table style="width:100%; border-collapse: collapse; font-size:13px; text-align:left;">
-            <thead style="background:var(--primary-color); color:white;">
-                <tr>
-                    <th style="padding:12px; border-bottom:2px solid #eee;">Nama Klien</th>
-                    <th style="padding:12px; border-bottom:2px solid #eee;">Status</th>
-                    <th style="padding:12px; border-bottom:2px solid #eee;">Aksi Pemulihan</th>
-                </tr>
-            </thead>
-            <tbody id="vendorTableBody">
-                </tbody>
-        </table>
-    </div>
-</div>
   </body>
 </html>
