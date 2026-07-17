@@ -2361,8 +2361,15 @@ function prosesLogin() {
         
         var timestamp = new Date().getTime();
         
-        // SOLUSI MASALAH 2: Menambahkan sinyal isFinal: true
-        var payloadObj = { selections: globalSelections, cart: cartAlbums, lastModified: timestamp, isFinal: true };
+        /// SOLUSI MASALAH 2: Menambahkan sinyal isFinal, nota, dan nama vendor
+        var payloadObj = { 
+            selections: globalSelections, 
+            cart: cartAlbums, 
+            lastModified: timestamp, 
+            isFinal: true,
+            nota: document.getElementById('previewContent').innerText, // Menyimpan teks WA
+            vendorName: activeVendor.namaVendor // Menyimpan nama studio
+        };
         var payload = JSON.stringify(payloadObj);
         
         // Update Local Storage
