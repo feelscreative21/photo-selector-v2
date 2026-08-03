@@ -388,6 +388,16 @@
         <p style="font-size:13px; margin-top:15px; text-align:center;"><span style="color:var(--primary-color); cursor:pointer; font-weight:bold;" onclick="showLogin()">Batal & Kembali</span></p>
       </div>
     </div>
+    
+    <div id="activationView" class="view-section">
+      <div class="brand-box card-box" style="width:100%; max-width:400px;">
+        <h2 style="color:#FF3B30; text-align:center;">AKUN KADALUARSA</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; text-align:center;">Masa aktif langganan aplikasi kamu telah habis. Silakan masukkan kode voucher perpanjangan dari admin.</p>
+        <input type="text" id="voucherCode" class="dash-input solid-input" placeholder="Ketik Kode (contoh: FC-XYZ123)" style="text-align:center; font-weight:bold; letter-spacing:2px; text-transform:uppercase;">
+        <button class="btn-action btn-save" style="margin-top:20px;" onclick="prosesAktivasi()">PERPANJANG SEKARANG</button>
+        <p style="font-size:13px; margin-top:15px; text-align:center;"><span style="color:var(--primary-color); cursor:pointer; font-weight:bold;" onclick="showLogin()">Kembali ke Login</span></p>
+      </div>
+    </div>
 
     <div id="dashboardView" class="panel-section">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
@@ -697,6 +707,37 @@
       var isDataLoaded = false;
       var tempEmailDaftar = ""; 
       var tempEmailReset = "";
+      var tempEmailAktivasi = "";
+
+      function showActivation(email) {
+        tempEmailAktivasi = email;
+        hideAllViews();
+        document.getElementById('activationView').style.display='flex';
+      }
+
+      function prosesAktivasi() {
+        var code = document.getElementById('voucherCode').value.trim();
+        if(!code) return showModal("Masukkan kode voucher terlebih dahulu!");
+        
+        var btn = document.querySelector('#activationView .btn-save');
+        var ori = btn.innerText;
+        btn.innerText = "⏳ MEMPROSES..."; btn.style.pointerEvents = "none";
+        
+        google.script.run.withSuccessHandler(function(res) {
+            btn.innerText = ori; btn.style.pointerEvents = "auto";
+            if(res.success) {
+                showModal("🎉 " + res.message + "<br><br>Silakan login kembali untuk masuk ke Dashboard.", function() {
+                    document.getElementById('voucherCode').value = ""; // Bersihkan kolom
+                    showLogin();
+                });
+            } else {
+                showModal("❌ " + res.message);
+            }
+        }).withFailureHandler(function(err) {
+            btn.innerText = ori; btn.style.pointerEvents = "auto";
+            showModal("Gagal menghubungi server. Periksa koneksi internet.");
+        }).aktivasiVoucher(tempEmailAktivasi, code);
+      }
 
       function hideAllViews() {
           var views = document.querySelectorAll('.view-section, .panel-section');
@@ -1045,32 +1086,39 @@
 }
 
 function prosesLogin() {
-  var u = document.getElementById('username').value;
-  var p = document.getElementById('password').value;
-  if(!u || !p) return showModal("Mohon isi email dan password!");
-  
-  var btn = document.querySelector('#loginView .btn-save'); 
-  var ori = btn ? btn.innerText : "MASUK PORTAL"; 
-  if(btn) { btn.innerText = "⏳ MASUK..."; btn.style.pointerEvents = "none"; }
-  
-  var savedToken = localStorage.getItem('fc_device_token') || "";
-  
-  google.script.run.withSuccessHandler(function(r){
-    if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; }
-    if(r.success){ 
-      localStorage.setItem('fc_device_token', r.token); 
-      localStorage.setItem('avSession', JSON.stringify(r.data)); 
-      
-      // Mulai stopwatch saat berhasil login
-      localStorage.setItem('fc_last_active', new Date().getTime().toString()); 
-      
-      openDashboard(r.data); 
-    } else { showModal(r.message); }
-  }).withFailureHandler(function(){
-    if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; } 
-    showModal("Gagal koneksi ke server.");
-  }).loginVendor(u, p, savedToken);
-}
+        var u = document.getElementById('username').value;
+        var p = document.getElementById('password').value;
+        if(!u || !p) return showModal("Mohon isi email dan password!");
+        
+        var btn = document.querySelector('#loginView .btn-save'); 
+        var ori = btn ? btn.innerText : "MASUK PORTAL"; 
+        if(btn) { btn.innerText = "⏳ MASUK..."; btn.style.pointerEvents = "none"; }
+        
+        var savedToken = localStorage.getItem('fc_device_token') || "";
+        
+        google.script.run.withSuccessHandler(function(r){
+          if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; }
+          if(r.success){ 
+            localStorage.setItem('fc_device_token', r.token); 
+            localStorage.setItem('avSession', JSON.stringify(r.data)); 
+            
+            // Mulai stopwatch saat berhasil login
+            localStorage.setItem('fc_last_active', new Date().getTime().toString()); 
+            
+            openDashboard(r.data); 
+          } else { 
+            // CEGATAN BARU: Kalau pesan error-nya bilang habis masa aktif, lempar ke menu Aktivasi!
+            if(r.message && r.message.indexOf("Masa aktif langganan aplikasi habis") !== -1) {
+              showActivation(u);
+            } else {
+              showModal(r.message); 
+            }
+          }
+        }).withFailureHandler(function(){
+          if(btn) { btn.innerText = ori; btn.style.pointerEvents = "auto"; } 
+          showModal("Gagal koneksi ke server.");
+        }).loginVendor(u, p, savedToken);
+      }
 
       function prosesRegister() {
         var u = document.getElementById('regUser').value;
