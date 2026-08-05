@@ -2445,29 +2445,30 @@ function prosesLogin() {
                 
                 var targetLink = "https://api.whatsapp.com/send?phone=" + vendorWa + "&text=" + encodeURIComponent(msg);
                 
-                document.getElementById('saveDesc').innerHTML = "Sedang menyalin foto ke folder rekap...<br><br><b>Tolong jangan tutup aplikasi ini sampai WhatsApp terbuka otomatis!</b>";
+                document.getElementById('saveDesc').innerHTML = "Membuka WhatsApp...<br><br><b>Proses rekap sedang berjalan di latar belakang.</b>";
 
-                // 3. SOLUSI MASALAH 1: Panggil fungsi Copy dan TUNGGU konfirmasi sukses dari Google
-                google.script.run.withSuccessHandler(function(copyRes) {
-                    // 4. BUKA WHATSAPP HANYA SETELAH SERVER GOOGLE BERHASIL MENERIMA PERINTAH
-                    btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing');
-                    overlay.style.display = 'none'; resetSaveOverlayText();
-
-                    // Eksekusi pengalihan layar WhatsApp langsung
-                    window.location.href = targetLink;
-                    
-                    // Ubah Tampilan Tombol Aplikasi menjadi "Selesai"
-                    btn.innerText = "✅ REKAP SELESAI TERKIRIM";
-                    btn.style.background = "#34C759"; btn.style.color = "#fff";
-                    btn.onclick = function() { window.location.href = targetLink; };
-
-                }).withFailureHandler(function(err) {
-                    btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
-                    overlay.style.display = 'none'; resetSaveOverlayText();
-                    showModal("Gagal menyalin foto. Koneksi tidak stabil, silakan coba tekan tombol kirim lagi.");
-                }).copyFilesBackground(res.folderId, JSON.stringify({
+                // 3. SOLUSI JITU: Tembak perintah copy ke server Google (Latar Belakang)
+                // Kita hilangkan .withSuccessHandler agar layar TIDAK tertahan menunggu proses copy selesai
+                google.script.run.copyFilesBackground(res.folderId, JSON.stringify({
                     items: allItems, vendor: activeVendor.namaVendor, nota: document.getElementById('previewContent').innerText
                 }));
+
+                // 4. Langsung buka WhatsApp setelah jeda 1 detik 
+                // (Jeda sebentar ini hanya untuk memastikan sinyal perintah benar-benar sudah terkirim ke server)
+                setTimeout(function() {
+                    btn.style.pointerEvents = "auto"; 
+                    btn.removeAttribute('data-processing');
+                    overlay.style.display = 'none'; 
+                    resetSaveOverlayText();
+
+                    // Ubah Tampilan Tombol Aplikasi menjadi "Selesai"
+                    btn.innerText = "✅ REKAP SELESAI TERKIRIM";
+                    btn.style.background = "#34C759"; 
+                    btn.style.color = "#fff";
+
+                    // Eksekusi pengalihan layar WhatsApp secara instan
+                    window.location.href = targetLink;
+                }, 1000);
 
             }).withFailureHandler(function(err){
                 btn.style.pointerEvents = "auto"; btn.removeAttribute('data-processing'); btn.innerText = ori;
