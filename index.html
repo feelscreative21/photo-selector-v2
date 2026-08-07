@@ -1073,10 +1073,29 @@
         } catch (err) { console.error(err); }
       };
 
+      // Modifikasi sedikit fungsi ini agar data otomatis dimuat saat ruang admin dibuka
       function bukaSuperAdmin() {
         hideAllViews();
         document.getElementById('superAdminView').style.display = 'flex';
-        // Nanti kita tambahkan kode untuk memanggil data statistik otomatis dari server di sini
+        refreshDataSA(); // Panggil fungsi muat data otomatis
+      }
+
+      function refreshDataSA() {
+        document.getElementById('saTotalStudio').innerText = "Loading...";
+        document.getElementById('saVoucherTerpakai').innerText = "Loading...";
+        
+        google.script.run.withSuccessHandler(function(res) {
+          if(res.success) {
+            document.getElementById('saTotalStudio').innerText = res.totalVendor + " Studio";
+            document.getElementById('saVoucherTerpakai').innerText = res.usedVoucher + " Voucher";
+          } else {
+            document.getElementById('saTotalStudio').innerText = "Error Sistem";
+            document.getElementById('saVoucherTerpakai').innerText = "Error Sistem";
+          }
+        }).withFailureHandler(function(err) {
+          document.getElementById('saTotalStudio').innerText = "Gagal memuat";
+          document.getElementById('saVoucherTerpakai').innerText = "Gagal memuat";
+        }).getSuperAdminStats();
       }
 
       function tutupSuperAdmin() {
