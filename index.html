@@ -398,12 +398,47 @@
         <p style="font-size:13px; margin-top:15px; text-align:center;"><span style="color:var(--primary-color); cursor:pointer; font-weight:bold;" onclick="showLogin()">Kembali ke Login</span></p>
       </div>
     </div>
+    
+    <!-- RUANG KENDALI SUPER ADMIN -->
+    <div id="superAdminView" class="view-section">
+      <div class="brand-box card-box" style="width:100%; max-width:800px; padding:25px;">
+        <h2 style="color:var(--primary-color); text-align:center; margin-bottom:5px;">👑 SUPER ADMIN PANEL</h2>
+        <p style="text-align:center; font-size:13px; color:var(--text-muted); margin-bottom:25px;">Selamat datang, Bos! Semua kendali sistem ada di tanganmu.</p>
+        
+        <div style="display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:25px;">
+          <!-- Panel Cetak Voucher -->
+          <div style="flex:1; min-width:250px; background:#f4f6f8; padding:20px; border-radius:12px; border:1px solid #e1e4e8;">
+            <h3 style="margin-bottom:15px; font-size:16px;">🎟️ Pabrik Voucher</h3>
+            <label style="font-size:13px; font-weight:bold;">Durasi (Hari):</label>
+            <input type="number" id="saDurasiVoucher" class="dash-input solid-input" placeholder="Contoh: 30" value="30" style="margin-bottom:10px;">
+            <label style="font-size:13px; font-weight:bold;">Jumlah Voucher:</label>
+            <input type="number" id="saJumlahVoucher" class="dash-input solid-input" placeholder="Berapa lembar?" value="1">
+            <button class="btn-action btn-save" style="margin-top:15px;" onclick="generateVoucherSA()">CETAK VOUCHER</button>
+            <div id="saVoucherResult" style="margin-top:15px; font-family:monospace; font-weight:bold; color:var(--primary-color); white-space:pre-wrap; word-break:break-all;"></div>
+          </div>
+
+          <!-- Panel Statistik Cepat -->
+          <div style="flex:1; min-width:250px; background:#f4f6f8; padding:20px; border-radius:12px; border:1px solid #e1e4e8;">
+            <h3 style="margin-bottom:15px; font-size:16px;">📊 Status Sistem</h3>
+            <p style="margin-bottom:10px; font-size:14px;">Total Vendor: <span id="saTotalStudio" style="font-weight:bold; color:var(--primary-color);">Loading...</span></p>
+            <p style="margin-bottom:15px; font-size:14px;">Voucher Terpakai: <span id="saVoucherTerpakai" style="font-weight:bold; color:#FF3B30;">Loading...</span></p>
+            <button class="btn-action" style="background:#555; font-size:13px;" onclick="refreshDataSA()">🔄 Muat Ulang Data</button>
+          </div>
+        </div>
+
+        <button class="btn-action" style="background:#FF3B30;" onclick="tutupSuperAdmin()">⬅️ KEMBALI KE DASHBOARD VENDOR</button>
+      </div>
+    </div>
 
     <div id="dashboardView" class="panel-section">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
         <h2 id="dashStudioName" style="font-size: 26px; margin:0;">Dashboard V2</h2>
         <button class="btn-action btn-dark" style="width:auto; margin:0; padding:10px 20px;" onclick="toggleSettingsDrawer()">⚙️ Pengaturan</button>
       </div>
+
+      <!-- TEMPEL TOMBOL RAHASIA DI SINI -->
+      <button id="btnGodMode" class="btn-action" style="background:linear-gradient(90deg, #FFD700, #FFA500); color:#000; font-weight:bold; margin-bottom:20px; display:none; border:2px solid #000; text-shadow: 1px 1px 2px rgba(255,255,255,0.5);" onclick="bukaSuperAdmin()">👑 BUKA RUANG KENDALI ADMIN</button>
+      <!-- ============================= -->
 
       <div class="brand-logo-area">
          <img id="adminDisplayLogo" class="brand-logo-img" src="" style="display:none;">
@@ -1038,6 +1073,17 @@
         } catch (err) { console.error(err); }
       };
 
+      function bukaSuperAdmin() {
+        hideAllViews();
+        document.getElementById('superAdminView').style.display = 'flex';
+        // Nanti kita tambahkan kode untuk memanggil data statistik otomatis dari server di sini
+      }
+
+      function tutupSuperAdmin() {
+        hideAllViews();
+        document.getElementById('dashboardView').style.display = 'block';
+      }
+      
       function cekLoginSession() { 
   try { 
       var sess = localStorage.getItem('avSession');
@@ -1207,11 +1253,23 @@ function prosesLogin() {
         document.getElementById('dashboardView').style.display='block';
         document.getElementById('dashStudioName').innerText = v.namaVendor;
         
+        // --- DETEKSI SUPER ADMIN (TOMBOL RAHASIA) ---
+        var emailDewa = "feels.creative21@gmail.com"; // GANTI DENGAN EMAIL UTAMA KAMU SAAT LOGIN
+        if (v.username && v.username.toLowerCase() === emailDewa.toLowerCase()) {
+            var btnGod = document.getElementById('btnGodMode');
+            if(btnGod) btnGod.style.display = 'block';
+        } else {
+            var btnGod = document.getElementById('btnGodMode');
+            if(btnGod) btnGod.style.display = 'none';
+        }
+        // ---------------------------------------------
+        
         var elUser = document.getElementById('username'); if(elUser) elUser.value = v.username;
         var elVen = document.getElementById('setVendorName'); if(elVen) elVen.value = v.namaVendor;
         var elWa = document.getElementById('setWaNumber'); if(elWa) elWa.value = v.nomorWa;
         var elWel = document.getElementById('setWelcomeText'); if(elWel) elWel.value = v.welcomeText || '';
         var elWaT = document.getElementById('setWaText'); if(elWaT) elWaT.value = v.waText || '';
+        
         if(v.logoUrl) {
             document.getElementById('adminDisplayLogo').src = v.logoUrl;
             document.getElementById('adminDisplayLogo').style.display = 'block';
