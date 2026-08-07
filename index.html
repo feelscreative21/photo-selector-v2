@@ -1083,6 +1083,30 @@
         hideAllViews();
         document.getElementById('dashboardView').style.display = 'block';
       }
+
+      function generateVoucherSA() {
+        var durasi = document.getElementById('saDurasiVoucher').value;
+        var jumlah = document.getElementById('saJumlahVoucher').value;
+        
+        if(!durasi || !jumlah || durasi <= 0 || jumlah <= 0) {
+            return showModal("Durasi dan jumlah voucher harus lebih dari 0!");
+        }
+        
+        var resultDiv = document.getElementById('saVoucherResult');
+        resultDiv.innerText = "⏳ Mesin sedang mencetak...";
+        
+        google.script.run.withSuccessHandler(function(res) {
+          if(res.success) {
+            resultDiv.innerText = "✅ BERHASIL DICETAK:\n\n" + res.codes.join("\n");
+            // Otomatis update statistik jika kamu juga menambahkan fungsi refresh
+            if(typeof refreshDataSA === "function") refreshDataSA();
+          } else {
+            resultDiv.innerText = "❌ Gagal: " + res.message;
+          }
+        }).withFailureHandler(function(err) {
+          resultDiv.innerText = "❌ Koneksi ke server terputus.";
+        }).generateVouchers(durasi, jumlah);
+      }
       
       function cekLoginSession() { 
   try { 
